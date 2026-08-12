@@ -1,3 +1,4 @@
+---
 name: Feature Request
 title: '[FEATURE]: '
 about: 'Request a new feature or enhancement here!'
@@ -36,3 +37,4 @@ body:
     attributes:
       label: Additional Notes
       placeholder: ex. not db required, styling first then code, etc
+---
