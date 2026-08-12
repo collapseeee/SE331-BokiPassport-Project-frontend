@@ -17,50 +17,65 @@ import AdminUserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminLevelManagementView from '@/views/admin/LevelManagementView.vue'
 import AdminCourseManagementView from '@/views/admin/CourseManagementView.vue'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { 
-      path: '/', 
-      name: 'Home', 
-      component: HomeView 
+    {
+      path: '/',
+      name: 'Home',
+      component: HomeView
     },
-    { path: '/login', 
-      name: 'Login', 
-      component: LoginView 
-    },
-    { path: '/register', 
-      name: 'Register', 
-      component: RegisterView },
-    { path: '/user', 
-      name: 'UserProfile', 
-      component: UserProfileView ,
+    { path: '/login', name: 'Login', component: LoginView },
+    { path: '/register', name: 'Register', component: RegisterView },
+    {
+      path: '/user',
+      name: 'UserProfile',
+      component: UserProfileView,
       children: [
         { path: 'services', name: 'UserServices', component: UserServicesView },
         { path: 'benefits', name: 'UserBenefits', component: UserBenefitsView },
-        { path: 'course', name: 'UserCourseList', component: UserCourseListView },
+        {
+          path: 'course',
+          name: 'UserCourseList',
+          component: UserCourseListView
+        },
         { path: 'course/:id', name: 'UserCourse', component: UserCourseView },
-        { path: 'exam', name: 'UserExam', component: UserExamView },
+        { path: 'exam', name: 'UserExam', component: UserExamView }
       ]
     },
-    { 
+    {
       path: '/admin',
       name: 'AdminDashboard',
       component: AdminDashboardView,
       children: [
-        { path: 'exam-management', name: 'AdminExamManagement', component: AdminExamManagementView },
-        { path: 'user-management', name: 'AdminUserManagement', component: AdminUserManagementView },
-        { path: 'level-management', name: 'AdminLevelManagement', component: AdminLevelManagementView },
-        { path: 'course-management', name: 'AdminCourseManagement', component: AdminCourseManagementView }
+        {
+          path: 'exam-management',
+          name: 'AdminExamManagement',
+          component: AdminExamManagementView
+        },
+        {
+          path: 'user-management',
+          name: 'AdminUserManagement',
+          component: AdminUserManagementView
+        },
+        {
+          path: 'level-management',
+          name: 'AdminLevelManagement',
+          component: AdminLevelManagementView
+        },
+        {
+          path: 'course-management',
+          name: 'AdminCourseManagement',
+          component: AdminCourseManagementView
+        }
       ]
     },
     {
       path: '/:catchAll(.*)',
       name: 'NotFound',
       component: NotFoundView
-    },
-  ],
+    }
+  ]
 })
 
 export default router
