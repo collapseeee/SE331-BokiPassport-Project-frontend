@@ -6,6 +6,7 @@ assignees:
   - Krittameth
   - Nattikorn
   - Apitawan
+type: feature
 body:
   - type: input
     id: problem-statement
