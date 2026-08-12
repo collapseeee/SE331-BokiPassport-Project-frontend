@@ -28,7 +28,7 @@ body:
      id: note
      attributes:
        label: Additional Notes
-     placeholder: ex. not db required, styling first then code, etc
+       placeholder: ex. not db required, styling first then code, etc
 ---
 
 
