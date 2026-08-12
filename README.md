@@ -6,3 +6,4 @@
 - Apitawan Chirakunasin 672115050
 
 Application Demo URL: [URL]
+Vercel Deployment URL: https://se331-2026-project01-bokinarak.vercel.app/
