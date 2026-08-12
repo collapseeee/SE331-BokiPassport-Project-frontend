@@ -2,7 +2,7 @@ name: Page Request
 description: Request a new webpage here!
 title: "[WEBPAGE]: "
 labels: ["enhancement"]
-type: enhancement
+type: feature
 body:
   - type: input
     id: name
