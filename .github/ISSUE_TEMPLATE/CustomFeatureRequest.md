@@ -1,6 +1,7 @@
 ---
 name: Feature Request
 title: '[FEATURE]: '
+about: 'Feature'
 labels: ''
 assignees: 
   - Krittameth
