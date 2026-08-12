@@ -25,7 +25,7 @@ body:
     attributes:
       label: Components / Views
       description: What component should be displayed on the page?
-      placeholder:
+      placeholder: |
         - Button
         - Navbar
         - Sidebar
