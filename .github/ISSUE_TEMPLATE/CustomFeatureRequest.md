@@ -20,16 +20,16 @@ body:
   - type: textarea
     id: criteria
     attributes:
-      label: Acceptable Criteria
-    description: What proves this feature is already fully functional
-    placeholder: |
-      - Must have sorting
-      - Must be reusable
-   - type: textarea
-     id: note
-     attributes:
-       label: Additional Notes
-       placeholder: ex. not db required, styling first then code, etc
+      label: Acceptance Criteria
+      description: What proves this feature is already fully functional
+      placeholder: |
+        - Must have sorting
+        - Must be reusable
+  - type: textarea
+    id: note
+    attributes:
+      label: Additional Notes
+      placeholder: ex. not db required, styling first then code, etc
 ---
 
 
