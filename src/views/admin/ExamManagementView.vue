@@ -1,6 +1,3 @@
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
-<template>
-    Admin Exam Management Page
-</template>
+<template>Admin Exam Management Page</template>
