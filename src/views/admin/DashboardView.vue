@@ -1,6 +1,3 @@
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
-<template>
-  Admin Dashboard Page
-</template>
+<template>Admin Dashboard Page</template>

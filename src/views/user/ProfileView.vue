@@ -1,6 +1,3 @@
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
-<template>
-  User Profile Page
-</template>
+<template>User Profile Page</template>

@@ -1,6 +1,3 @@
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
-<template>
-    Admin Level Management Page
-</template>
+<template>Admin Level Management Page</template>
