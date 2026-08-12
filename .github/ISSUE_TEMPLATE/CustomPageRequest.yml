@@ -17,6 +17,7 @@ body:
     attributes:
       label: Purpose and Functionality
       description: What can the page do?
+      placeholder: e.g. The page should display ...
     validations:
       required: true
   - type: textarea
