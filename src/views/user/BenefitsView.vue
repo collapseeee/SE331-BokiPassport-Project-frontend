@@ -1,6 +1,3 @@
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
-<template>
-  User Benefits Page
-</template>
+<template>User Benefits Page</template>
