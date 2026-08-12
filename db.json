@@ -1,0 +1,86 @@
+{
+  "$schema": "./node_modules/json-server/schema.json", 
+  "user": [
+    {
+        "id": 0,
+        "first_name": "Admin",
+        "last_name": "Doe",
+        "province": null,
+        "image_url": null,
+        "username": "admin",
+        "password": 123,
+        "role": "admin",
+        "is_active": null
+    }
+],
+  "level": [
+    {
+        "id": 1,
+        "name": "Level 1",
+        "description": "",
+        "pass_criteria": 0.5
+    },
+    {
+        "id": 2,
+        "name": "Level 2",
+        "description": "",
+        "pass_criteria": 0.55
+    },
+    {
+        "id": 3,
+        "name": "Level 3",
+        "description": "",
+        "pass_criteria": 0.75
+    },
+    {
+        "id": 4,
+        "name": "Level 4",
+        "description": "",
+        "pass_criteria": 0.8
+    }
+],
+  "user_level": [],
+  "benefit": [
+    {
+        "id": 1,
+        "description": "Free 1 token credit for BokiAI",
+        "level_id": 1
+    }
+],
+  "service": [],
+  "e_learning": [],
+  "badge": [],
+  "user_badge": [],
+  "exam": [
+    {
+        "id": 1,
+        "name": "Upgrade to Level 2",
+        "description": "Introduction to BokiAI",
+        "level_id": 1
+    }
+],
+  "user_exam_history": [],
+  "question": [
+    {
+        "id": 1,
+        "question_text": "What is BokiAI?",
+        "exam_id": 1
+    },
+    {
+        "id": 2,
+        "question_text": "How to use BokiAI?",
+        "exam_id": 1
+    },
+    {
+        "id": 3,
+        "question_text": "Who own BokiAI?",
+        "exam_id": 1
+    },
+    {
+        "id": 4,
+        "question_text": "Which of the following choices uses BokiAI inappropriately?",
+        "exam_id": 1
+    }
+],
+  "answer_choice": []
+}
