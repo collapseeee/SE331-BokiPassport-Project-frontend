@@ -1,6 +1,6 @@
 name: Feature Request
 title: '[FEATURE]: '
-about: 'Feature'
+about: 'Request a new feature or enhancement here!'
 labels: ''
 assignees: 
   - Krittameth
