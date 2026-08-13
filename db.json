@@ -8,58 +8,272 @@
         "province": null,
         "image_url": null,
         "username": "admin",
-        "password": 123,
+        "password": "123",
         "role": "admin",
         "is_active": null
+    },
+    {
+        "id": 1,
+        "first_name": "Boki",
+        "last_name": "Chan",
+        "province": "Chiang Rai",
+        "image_url": "https://avatars.githubusercontent.com/u/316038766?s=200&v=4",
+        "username": "boki",
+        "password": "boki123",
+        "role": "user",
+        "is_active": true
     }
+    
 ],
   "level": [
     {
         "id": 1,
         "name": "Level 1",
-        "description": "",
+        "description": "Beginner",
         "pass_criteria": 0.5
     },
     {
         "id": 2,
         "name": "Level 2",
-        "description": "",
+        "description": "Intermediate",
         "pass_criteria": 0.55
     },
     {
         "id": 3,
         "name": "Level 3",
-        "description": "",
+        "description": "Advanced",
         "pass_criteria": 0.75
     },
     {
         "id": 4,
         "name": "Level 4",
-        "description": "",
+        "description": "Master",
         "pass_criteria": 0.8
     }
 ],
-  "user_level": [],
+  "user_level": [
+    {
+        "id": 1,
+        "created_at": "2026-08-13T00:00:00Z",
+        "user_id": 1,
+        "level_id": 1
+    }
+  ],
   "benefit": [
     {
         "id": 1,
-        "description": "Free 1 token credit for BokiAI",
+        "description": "You can use BokiAI up to 1M Tokens!",
         "level_id": 1
+    },
+    {
+        "id": 2,
+        "description": "You can generate image using BokiAI!",
+        "level_id": 1
+    },
+    {
+        "id": 3,
+        "description": "You can use BokiAI up to 5M Tokens!",
+        "level_id": 2
+    },
+    {
+        "id": 4,
+        "description": "You can generate image using BokiAI!",
+        "level_id": 2
+    },
+    {
+        "id": 5,
+        "description": "You can talk with Boki!",
+        "level_id": 2
+    },
+    {
+        "id": 6,
+        "description": "You can use BokiAI up to 5M Tokens!",
+        "level_id": 3
+    },
+    {
+        "id": 7,
+        "description": "You can generate image using BokiAI!",
+        "level_id": 3
+    },
+    {
+        "id": 8,
+        "description": "You can talk with Boki!",
+        "level_id": 3
+    },
+    {
+        "id": 9,
+        "description": "You can let BokiAI to read and write the input files!",
+        "level_id": 3
+    },
+    {
+        "id": 10,
+        "description": "You can use BokiAI up to 10M Tokens!",
+        "level_id": 4
+    },
+    {
+        "id": 11,
+        "description": "You can generate image using BokiAI!",
+        "level_id": 4
+    },
+    {
+        "id": 12,
+        "description": "You can talk with Boki!",
+        "level_id": 4
+    },
+    {
+        "id": 13,
+        "description": "You can let BokiAI to read and write the input files!",
+        "level_id": 4
+    },
+    {
+        "id": 14,
+        "description": "You can customize BokiAI model based on desired proficiency field.",
+        "level_id": 4
     }
 ],
-  "service": [],
-  "e_learning": [],
-  "badge": [],
-  "user_badge": [],
+  "service": [
+    {
+        "id": 1,
+        "name": "Level 1",
+        "required_level_id": 1
+    },
+    {
+        "id": 2,
+        "name": "Level 2",
+        "required_level_id": 2
+    },
+    {
+        "id": 3,
+        "name": "Level 3",
+        "required_level_id": 3
+    },
+    {
+        "id": 4,
+        "name": "Level 4",
+        "required_level_id": 4
+    }
+],
+  "e_learning": [
+    {
+        "id": 1,
+        "created_at": "2026-08-13T00:00:00Z",
+        "video_url": "https://youtu.be/ZZ2QUCePgYw?si=4lXuVGfxJoDP-pAm",
+        "name": "Introduction to Agentic AI",
+        "description": "Demystifying AI agents, Googlers Aja Hammerly and Jason Davenport provide a comprehensive overview of their capabilities, applications, and construction. Join us as we unravel the diverse definitions, explore compelling use cases, and delve into the different architectural approaches for building intelligent agents.",
+        "level_id": 1
+    },
+    {
+        "id": 2,
+        "created_at": "2026-08-13T00:00:00Z",
+        "video_url": "https://youtu.be/GDm_uH6VxPY?si=74ARxW17-x57awYW",
+        "name": "AI agent design patterns",
+        "description": "Learn how to design and build AI agentic systems! In Part 1 of this series, we use the Agent Development Kit (ADK) to walk through code and live demos for the three foundational AI agent architectures.",
+        "level_id": 2
+    },
+    {
+        "id": 3,
+        "created_at": "2026-08-13T00:00:00Z",
+        "video_url": "https://youtu.be/89KKm_a4M7A?si=v_dNzKfoqGnU25Hx",
+        "name": "3 Advanced AI agent design patterns",
+        "description": "Learn advanced AI agent design patterns for building dynamic, multi-agent systems. In Part 2 of this agentic AI tutorial, we use the Agent Development Kit (ADK) to build Loop, Coordinator, and Agent-as-Tool workflows.",
+        "level_id": 3
+    },
+    {
+        "id": 4,
+        "created_at": "2026-08-13T00:00:00Z",
+        "video_url": "https://youtu.be/pX0_iIfRilU?si=9FE1KLwhjtD0ylTs",
+        "name": "Foundations of multi-agent systems with ADK",
+        "description": "Discover the fundamentals of Multi-Agent Systems and how Google's Agent Development Kit (ADK) simplifies their creation. This video introduces the core concepts of multi-agent systems, including decentralized control, local views, and emergent behavior. We then explore how ADK supports development through its distinct agent types: LLM, Workflow (Sequential, Parallel, Loop), and Custom agents. Finally, understand the foundational concept of agent hierarchy for structuring your multi-agent applications.",
+        "level_id": 4
+    }
+],
+  "badge": [
+    {
+        "id": 1,
+        "name": "Welcome to Boki Passport!",
+        "description": "You've logged into Boki Passport for the first time!"
+    },
+    {
+        "id": 2,
+        "name": "Hello World!",
+        "description": "You've learned the first course!"
+    },
+    {
+        "id": 3,
+        "name": "\"Easy peasy lemon squeezy!\"",
+        "description": "Passed the level 1 exam."
+    },
+    {
+        "id": 4,
+        "name": "\"Showtime!\"",
+        "description": "Passed the level 2 exam."
+    },
+    {
+        "id": 5,
+        "name": "Dance with the BokiAI",
+        "description": "Passed the level 3 exam."
+    },
+    {
+        "id": 6,
+        "name": "Stairway to BokiAI expert",
+        "description": "Passed the level 4 exam."
+    },
+    {
+        "id": 7,
+        "name": "Better luck next time!",
+        "description": "Failed the exam for the first time."
+    }
+    
+],
+  "user_badge": [
+    {
+        "id": 1,
+        "earned_at": "2026-08-13T00:00:00Z",
+        "user_id": 1,
+        "badge_id": 1
+    },
+    {
+        "id": 2,
+        "earned_at": "2026-09-13T00:00:00Z",
+        "user_id": 1,
+        "badge_id": 2
+    },
+    {
+        "id": 3,
+        "earned_at": "2026-09-13T00:00:00Z",
+        "user_id": 1,
+        "badge_id": 7
+    }
+],
   "exam": [
     {
         "id": 1,
-        "name": "Upgrade to Level 2",
-        "description": "Introduction to BokiAI",
+        "name": "Upgrade to Level 2 examination",
+        "description": "Introduction to BokiAI.",
         "level_id": 1
+    },
+    {
+        "id": 2,
+        "name": "Upgrade to Level 3 examination",
+        "description": "BokiAI design patterns.",
+        "level_id": 2
+    },
+    {
+        "id": 3,
+        "name": "Upgrade to Level 4 examination",
+        "description": "3 Advanced BokiAI design.",
+        "level_id": 3
     }
 ],
-  "user_exam_history": [],
+  "user_exam_history": [
+    {
+        "id": 1,
+        "created_at": "2026-09-13T10:00:00Z",
+        "total_score": 1,
+        "is_passed": false,
+        "exam_id": 1
+    }
+],
   "question": [
     {
         "id": 1,
@@ -80,7 +294,133 @@
         "id": 4,
         "question_text": "Which of the following choices uses BokiAI inappropriately?",
         "exam_id": 1
+    },
+    {
+        "id": 5,
+        "question_text": "What is the incorrect way of using BokiAI?",
+        "exam_id": 1
     }
 ],
-  "answer_choice": []
+"answer_choice": [
+    {
+      "id": 1,
+      "answer_text": "The real boki",
+      "is_correct": false,
+      "question_id": 1
+    },
+    {
+      "id": 2,
+      "answer_text": "The Agentic Artificial Inteligence",
+      "is_correct": true,
+      "question_id": 1
+    },
+    {
+      "id": 3,
+      "answer_text": "One of the BokiNarak Group member",
+      "is_correct": false,
+      "question_id": 1
+    },
+    {
+      "id": 4,
+      "answer_text": "953331 Component-Based Software Development",
+      "is_correct": false,
+      "question_id": 1
+    },
+    {
+      "id": 5,
+      "answer_text": "By typing prompts into the chat interface",
+      "is_correct": true,
+      "question_id": 2
+    },
+    {
+      "id": 6,
+      "answer_text": "By inserting a physical USB drive into the computer",
+      "is_correct": false,
+      "question_id": 2
+    },
+    {
+      "id": 7,
+      "answer_text": "By pressing the power button twice",
+      "is_correct": false,
+      "question_id": 2
+    },
+    {
+      "id": 8,
+      "answer_text": "By calling the BokiNarak hotline service",
+      "is_correct": false,
+      "question_id": 2
+    },
+    {
+      "id": 9,
+      "answer_text": "The BokiNarak Group",
+      "is_correct": true,
+      "question_id": 3
+    },
+    {
+      "id": 10,
+      "answer_text": "OpenAI Corporation",
+      "is_correct": false,
+      "question_id": 3
+    },
+    {
+      "id": 11,
+      "answer_text": "Google LLC",
+      "is_correct": false,
+      "question_id": 3
+    },
+    {
+      "id": 12,
+      "answer_text": "Microsoft Corporation",
+      "is_correct": false,
+      "question_id": 3
+    },
+    {
+      "id": 13,
+      "answer_text": "Using BokiAI to brainstorm ideas for a software project",
+      "is_correct": false,
+      "question_id": 4
+    },
+    {
+      "id": 14,
+      "answer_text": "Using BokiAI to debug code components",
+      "is_correct": false,
+      "question_id": 4
+    },
+    {
+      "id": 15,
+      "answer_text": "Using BokiAI to generate unauthorized malware to hack systems",
+      "is_correct": true,
+      "question_id": 4
+    },
+    {
+      "id": 16,
+      "answer_text": "Using BokiAI to summarize meeting notes",
+      "is_correct": false,
+      "question_id": 4
+    },
+    {
+      "id": 17,
+      "answer_text": "Using BokiAI to generate malicious phishing emails",
+      "is_correct": true,
+      "question_id": 4
+    },
+    {
+      "id": 18,
+      "answer_text": "Using BokiAI to help write software documentation",
+      "is_correct": false,
+      "question_id": 4
+    },
+    {
+      "id": 19,
+      "answer_text": "Using BokiAI to explain complex component-based architecture concepts",
+      "is_correct": false,
+      "question_id": 4
+    },
+    {
+      "id": 20,
+      "answer_text": "Using BokiAI to assist in refactoring code for better performance",
+      "is_correct": false,
+      "question_id": 4
+    }
+  ]
 }
