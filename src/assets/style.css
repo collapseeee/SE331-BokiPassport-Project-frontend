@@ -1,1 +1,19 @@
 @import 'tailwindcss';
+
+@font-face {
+    font-family: 'raleway';
+    src: url('/public/fonts/Raleway-VariableFont_wght.ttf');
+    font-style: normal;
+    font-weight: 100 900;
+}
+
+@font-face {
+    font-family: 'raleway';
+    src: url('/public/fonts/Raleway-Italic-VariableFont_wght.ttf');
+    font-style: italic;
+    font-weight: 100 900;
+}
+
+:root {
+    font-family: 'raleway';
+}
