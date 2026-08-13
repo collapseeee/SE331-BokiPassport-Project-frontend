@@ -299,6 +299,56 @@
         "id": 5,
         "question_text": "What is the incorrect way of using BokiAI?",
         "exam_id": 1
+    },
+    {
+        "id": 6,
+        "question_text": "What is design pattern?",
+        "exam_id": 2
+    },
+    {
+        "id": 7,
+        "question_text": "Why BokiAI design pattern is different from other AI?",
+        "exam_id": 2
+    },
+    {
+        "id": 8,
+        "question_text": "What are the advantage of using BokiAI?",
+        "exam_id": 2
+    },
+    {
+        "id": 9,
+        "question_text": "When was the BokiNarak group established?",
+        "exam_id": 2
+    },
+    {
+        "id": 10,
+        "question_text": "Imagine BokiAI did not function correctly, what would you do?",
+        "exam_id": 2
+    },
+    {
+        "id": 11,
+        "question_text": "Why there are 3 different BokiAI advanced design patterns?",
+        "exam_id": 3
+    },
+    {
+        "id": 12,
+        "question_text": "Who proposed 3 different BokiAI advanced design patterns?",
+        "exam_id": 3
+    },
+    {
+        "id": 13,
+        "question_text": "How many 3 BokiAI advanced design patterns are there? And what are they?",
+        "exam_id": 3
+    },
+    {
+        "id": 14,
+        "question_text": "What to do when BokiAI stopped working?",
+        "exam_id": 3
+    },
+    {
+        "id": 15,
+        "question_text": "What should you ran out of BokiAI token?",
+        "exam_id": 3
     }
 ],
 "answer_choice": [
@@ -402,25 +452,265 @@
       "id": 17,
       "answer_text": "Using BokiAI to generate malicious phishing emails",
       "is_correct": true,
-      "question_id": 4
+      "question_id": 5
     },
     {
       "id": 18,
       "answer_text": "Using BokiAI to help write software documentation",
       "is_correct": false,
-      "question_id": 4
+      "question_id": 5
     },
     {
       "id": 19,
       "answer_text": "Using BokiAI to explain complex component-based architecture concepts",
       "is_correct": false,
-      "question_id": 4
+      "question_id": 5
     },
     {
       "id": 20,
       "answer_text": "Using BokiAI to assist in refactoring code for better performance",
       "is_correct": false,
-      "question_id": 4
+      "question_id": 5
+    },
+    {
+      "id": 21,
+      "answer_text": "A blueprint for code that is definitely not copied from StackOverflow",
+      "is_correct": true,
+      "question_id": 6
+    },
+    {
+      "id": 22,
+      "answer_text": "The secret recipe of Mama instant noodles",
+      "is_correct": false,
+      "question_id": 6
+    },
+    {
+      "id": 23,
+      "answer_text": "A fashion styling guide for oversized streetwear",
+      "is_correct": false,
+      "question_id": 6
+    },
+    {
+      "id": 24,
+      "answer_text": "A random layout you draw when you are sleepy in class",
+      "is_correct": false,
+      "question_id": 6
+    },
+    {
+      "id": 25,
+      "answer_text": "It can talk back and roast your spaghetti code like a true friend",
+      "is_correct": true,
+      "question_id": 7
+    },
+    {
+      "id": 26,
+      "answer_text": "It requires you to sacrifice 5 baht to the computer shrine",
+      "is_correct": false,
+      "question_id": 7
+    },
+    {
+      "id": 27,
+      "answer_text": "It automatically passes all your midterms without studying",
+      "is_correct": false,
+      "question_id": 7
+    },
+    {
+      "id": 28,
+      "answer_text": "It runs on pure iced Thai milk tea energy",
+      "is_correct": false,
+      "question_id": 7
+    },
+    {
+      "id": 29,
+      "answer_text": "Saves you from pulling an all-nighter before the project deadline",
+      "is_correct": true,
+      "question_id": 8
+    },
+    {
+      "id": 30,
+      "answer_text": "Instantly boosts your Wi-Fi speed to 10Gbps",
+      "is_correct": false,
+      "question_id": 8
+    },
+    {
+      "id": 31,
+      "answer_text": "Cooks instant noodles for you while compiling",
+      "is_correct": false,
+      "question_id": 8
+    },
+    {
+      "id": 32,
+      "answer_text": "Pays your university tuition fees automatically",
+      "is_correct": false,
+      "question_id": 8
+    },
+    {
+      "id": 33,
+      "answer_text": "When the group members finally woke up and decided to do work",
+      "is_correct": true,
+      "question_id": 9
+    },
+    {
+      "id": 34,
+      "answer_text": "During King Rama V's reign",
+      "is_correct": false,
+      "question_id": 9
+    },
+    {
+      "id": 35,
+      "answer_text": "Right after everyone finished their last can of M-150 energy drink",
+      "is_correct": false,
+      "question_id": 9
+    },
+    {
+      "id": 36,
+      "answer_text": "Yesterday at 3 AM when panic set in",
+      "is_correct": false,
+      "question_id": 9
+    },
+    {
+      "id": 37,
+      "answer_text": "Blame your teammate and pretend your internet connection dropped",
+      "is_correct": true,
+      "question_id": 10
+    },
+    {
+      "id": 38,
+      "answer_text": "Perform a sacred ritual dance to appease the server gods",
+      "is_correct": false,
+      "question_id": 10
+    },
+    {
+      "id": 39,
+      "answer_text": "Throw your laptop out the second-floor dorm window",
+      "is_correct": false,
+      "question_id": 10
+    },
+    {
+      "id": 40,
+      "answer_text": "Cry softly while waiting for the professer's extension",
+      "is_correct": false,
+      "question_id": 10
+    },
+    {
+      "id": 41,
+      "answer_text": "Because one pattern is never enough for a chaotic software project",
+      "is_correct": true,
+      "question_id": 11
+    },
+    {
+      "id": 42,
+      "answer_text": "To match the 3 distinct flavors of Mama noodles in your room",
+      "is_correct": false,
+      "question_id": 11
+    },
+    {
+      "id": 43,
+      "answer_text": "To confuse freshmen during the software engineering final exam",
+      "is_correct": false,
+      "question_id": 11
+    },
+    {
+      "id": 44,
+      "answer_text": "Just for fun, like having 3 different group chats for the same assignment",
+      "is_correct": false,
+      "question_id": 11
+    },
+    {
+      "id": 45,
+      "answer_text": "The legendary BokiNarak senior who hadn't slept in 4 days",
+      "is_correct": true,
+      "question_id": 12
+    },
+    {
+      "id": 46,
+      "answer_text": "Uncle down the soi who fixes motorbikes",
+      "is_correct": false,
+      "question_id": 12
+    },
+    {
+      "id": 47,
+      "answer_text": "A stray cat hanging around the computer science building",
+      "is_correct": false,
+      "question_id": 12
+    },
+    {
+      "id": 48,
+      "answer_text": "Your mom when she asks why you are staring at a blank screen",
+      "is_correct": false,
+      "question_id": 12
+    },
+    {
+      "id": 49,
+      "answer_text": "There are 3: Copy, Paste, and Pray",
+      "is_correct": true,
+      "question_id": 13
+    },
+    {
+      "id": 50,
+      "answer_text": "There are 3: Sleep, Eat, and Repeat",
+      "is_correct": false,
+      "question_id": 13
+    },
+    {
+      "id": 51,
+      "answer_text": "There are 3: Bug, Crash, and Fix",
+      "is_correct": false,
+      "question_id": 13
+    },
+    {
+      "id": 52,
+      "answer_text": "There are 3: HTML, CSS, and pure despair",
+      "is_correct": false,
+      "question_id": 13
+    },
+    {
+      "id": 53,
+      "answer_text": "Close laptop, go buy grilled pork skewers (moo ping), and sleep",
+      "is_correct": true,
+      "question_id": 14
+    },
+    {
+      "id": 54,
+      "answer_text": "Scream loudly until the code magically starts working",
+      "is_correct": false,
+      "question_id": 14
+    },
+    {
+      "id": 55,
+      "answer_text": "Blame the university Wi-Fi provider",
+      "is_correct": false,
+      "question_id": 14
+    },
+    {
+      "id": 56,
+      "answer_text": "Change your major to finance immediately",
+      "is_correct": false,
+      "question_id": 14
+    },
+    {
+      "id": 57,
+      "answer_text": "Accept your fate and prepare your wallet for top-up",
+      "is_correct": true,
+      "question_id": 15
+    },
+    {
+      "id": 58,
+      "answer_text": "Borrow your friend's tokens like borrowing money for lunch",
+      "is_correct": false,
+      "question_id": 15
+    },
+    {
+      "id": 59,
+      "answer_text": "Stare blankly at the IDE while questioning your life choices",
+      "is_correct": false,
+      "question_id": 15
+    },
+    {
+      "id": 60,
+      "answer_text": "Write the rest of the code by hand on a piece of paper",
+      "is_correct": false,
+      "question_id": 15
     }
   ]
 }
