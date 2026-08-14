@@ -27,7 +27,13 @@ import { role } from '@/stores/user.ts';
           </div>
       </div>
   </div>
-  <div v-else>
+  <div v-else-if="$route.name != 'Login' && $route.name != 'Register'">
+    <NavBar/>
+    <div class="p-4">
+        <RouterView/>
+    </div>
+  </div>
+  <div v-else class="p-4">
     <RouterView/>
   </div>
   <SpeedInsights/>
