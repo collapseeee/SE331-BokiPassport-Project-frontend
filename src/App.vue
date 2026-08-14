@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SpeedInsights } from '@vercel/speed-insights/vue';
-import UserSideBar from '@/components/SideBar/UserSideBar.vue';
-import AdminSideBar from '@/components/SideBar/AdminSideBar.vue';
+import UserSideBar from '@/components/sidebar/UserSideBar.vue';
+import AdminSideBar from '@/components/sidebar/AdminSideBar.vue';
 import NavBar from '@/components/NavBar.vue';
 
 import { role } from '@/stores/user.ts';
