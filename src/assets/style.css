@@ -2,16 +2,26 @@
 
 @font-face {
     font-family: 'raleway';
-    src: url('/public/fonts/Raleway-VariableFont_wght.ttf');
+    src: url('/fonts/Raleway-VariableFont_wght.ttf');
     font-style: normal;
     font-weight: 100 900;
 }
 
 @font-face {
     font-family: 'raleway';
-    src: url('/public/fonts/Raleway-Italic-VariableFont_wght.ttf');
+    src: url('/fonts/Raleway-Italic-VariableFont_wght.ttf');
     font-style: italic;
     font-weight: 100 900;
+}
+
+@theme {
+    --color-brand-blue: #00A1EE;
+    --color-brand-light-blue: #36BFFF;
+    --color-brand-sky-blue: #97DEFF;
+    --color-brand-dark-blue: #324953;
+    --color-brand-black: #293033;
+    --color-brand-white: #FAFAFA;
+    --color-brand-gray: #E0E0E0;
 }
 
 :root {
