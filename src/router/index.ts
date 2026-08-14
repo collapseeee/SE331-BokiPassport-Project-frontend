@@ -4,11 +4,13 @@ import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 
-import UserProfileView from '@/views/user/ProfileView.vue'
+import UserProfileView from '@/views/user/profile/ProfileView.vue'
+import UserProfileBadgesView from '@/views/user/profile/BadgesView.vue'
+import UserProfileExamHistoryView from '@/views/user/profile/ExamHistoryView.vue'
 import UserServicesView from '@/views/user/ServicesView.vue'
-import UserBenefitsView from '@/views/user/BenefitsView.vue'
 import UserCourseListView from '@/views/user/CourseListView.vue'
 import UserCourseView from '@/views/user/CourseView.vue'
+import UserExamListView from '@/views/user/ExamListView.vue'
 import UserExamView from '@/views/user/ExamView.vue'
 
 import AdminDashboardView from '@/views/admin/DashboardView.vue'
@@ -32,15 +34,41 @@ const router = createRouter({
       name: 'UserProfile',
       component: UserProfileView,
       children: [
-        { path: 'services', name: 'UserServices', component: UserServicesView },
-        { path: 'benefits', name: 'UserBenefits', component: UserBenefitsView },
-        {
-          path: 'course',
-          name: 'UserCourseList',
-          component: UserCourseListView
+        { path: 'badges', 
+          name: 'UserProfileBadgesView', 
+          component: UserProfileBadgesView 
         },
-        { path: 'course/:id', name: 'UserCourse', component: UserCourseView },
-        { path: 'exam', name: 'UserExam', component: UserExamView }
+        { path: 'history', 
+          name: 'UserProfileExamHistoryView', 
+          component: UserProfileExamHistoryView 
+        },
+      ]
+    },
+    {
+      path: '/user/services', 
+      name: 'UserServices', 
+      component: UserServicesView 
+    },
+    {
+      path: '/courses',
+      name: 'CourseList',
+      component: UserCourseListView,
+      children: [
+        { path: ':id', 
+          name: 'CourseView', 
+          component: UserCourseView 
+        },
+      ]
+    },
+    {
+      path: '/exam',
+      name: 'ExamList',
+      component: UserExamListView,
+      children: [
+        { path: ':id', 
+          name: 'ExamView', 
+          component: UserExamView
+        },
       ]
     },
     {
