@@ -13,6 +13,7 @@ import UserCourseView from '@/views/user/CourseView.vue'
 import UserExamListView from '@/views/user/ExamListView.vue'
 import UserExamView from '@/views/user/ExamView.vue'
 
+import AdminView from '@/views/AdminView.vue'
 import AdminDashboardView from '@/views/admin/DashboardView.vue'
 import AdminExamManagementView from '@/views/admin/ExamManagementView.vue'
 import AdminUserManagementView from '@/views/admin/UserManagementView.vue'
@@ -73,9 +74,14 @@ const router = createRouter({
     },
     {
       path: '/admin',
-      name: 'AdminDashboard',
-      component: AdminDashboardView,
+      name: 'AdminView',
+      component: AdminView,
       children: [
+        {
+          path: 'dashboard',
+          name: 'AdminDashboard',
+          component: AdminDashboardView
+        },
         {
           path: 'exam-management',
           name: 'AdminExamManagement',
