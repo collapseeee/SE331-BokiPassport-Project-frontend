@@ -1,8 +1,38 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { CircleUserRound, UserRound, Lock, EyeOff, Eye} from '@lucide/vue';
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 
+const authStore = useAuthStore()
+const router = useRouter()
 const showPassword = ref(false)
+
+const username = ref('')
+const password = ref('')
+const errorMessage = ref('')
+const isLoading = ref(false)
+
+async function handleLogin(){
+    errorMessage.value = ''
+
+    if (!username.value || !password.value) {
+        errorMessage.value = 'Please enter both username and password.'
+        return
+    }
+
+    isLoading.value = true
+    const result = await authStore.login(username.value, password.value)
+    isLoading.value = false
+
+    if (result.success) {
+        router.push({ name: 'UserProfile' })
+    } else {
+        errorMessage.value = result.error ?? 'Login failed. Please try again.'
+    }
+}
+
+
 </script>
 
 <template>
@@ -19,7 +49,7 @@ const showPassword = ref(false)
                     <p class="text-brand-black">Sign in to access your AI.</p>
                 </div>
 
-                
+                <form @submit.prevent="handleLogin" class="space-y-4">
                     <!-- Username -->
                     <div>
                         <label for="username" class="block text-sm font-medium text-gray-800 mb-1">Username</label>
@@ -65,8 +95,13 @@ const showPassword = ref(false)
                         class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors">
                         Sign In
                     </button>
+                    <!-- Error banner -->
+                    <div v-if="errorMessage"
+                    class="px-4 py-2 text-sm text-brand-red bg-red-100 border border-red-300 rounded-md">
+                    {{ errorMessage }}
+                    </div>
                 
-
+                </form>
                 <!-- Register link -->
                 <p class="text-center text-brand-black">
                     Don't have account?
