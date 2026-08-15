@@ -27,8 +27,10 @@ const showPassword = ref(false)
                             <span class="absolute inset-y-0 left-3 flex items-center text-brand-gray">
                                 <UserRound class="w-5 h-5" />
                             </span>
+
                             <input type="text" id="username" name="username" placeholder="alex.turing" required
                                 class="w-full pl-10 pr-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
+
                         </div>
                     </div>
 
@@ -38,7 +40,7 @@ const showPassword = ref(false)
                             <label for="password" class="block text-sm font-medium text-gray-800">Password</label>
 
                             <!-- will implement later -->
-                            <router-link to="" class="text-sm text-brand-sky-blue underline hover:text-brand-light-blue">Forgot
+                            <router-link to="" class="text-sm text-brand-blue underline hover:text-brand-light-blue">Forgot
                                 password?</router-link>
 
                         </div>
@@ -46,8 +48,10 @@ const showPassword = ref(false)
                             <span class="absolute inset-y-0 left-3 flex items-center text-brand-gray">
                                 <Lock />
                             </span>
+
                             <input :type="showPassword ? 'text' : 'password'" id="password" name="password" required
                                 class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
+
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute inset-y-0 right-3 flex items-center text-brand-gray hover:text-brand-light-blue">
                                 <Eye v-if="showPassword" class="w-5 h-5" />
@@ -58,15 +62,15 @@ const showPassword = ref(false)
 
                     <!-- Sign In button -->
                     <button type="submit"
-                        class="w-full px-4 py-3 mt-2 text-white font-medium bg-sky-500 rounded-md hover:bg-sky-600 focus:outline-none focus:ring focus:ring-sky-400 transition-colors">
+                        class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors">
                         Sign In
                     </button>
                 </form>
 
                 <!-- Register link -->
-                <p class="text-center text-gray-700">
+                <p class="text-center text-brand-black">
                     Don't have account?
-                    <router-link to="/register" class="text-brand-sky-blue underline hover:text-brand-light-blue">Register</router-link>
+                    <router-link to="/register" class="text-brand-blue underline hover:text-brand-light-blue">Register</router-link>
                 </p>
             </div>
         </div>
