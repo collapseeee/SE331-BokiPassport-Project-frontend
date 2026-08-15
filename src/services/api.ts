@@ -1,8 +1,9 @@
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:3001';
 
 // Pull data from Json server
+// Use this command to start the server: npx json-server --watch db.json --port 3001
 export async function fetchUsers() {
-    const response = await fetch(`${BASE_URL}/users`);
+    const response = await fetch(`${BASE_URL}/user`);
     if (!response.ok) {
         throw new Error('Failed to fetch users');
     }
