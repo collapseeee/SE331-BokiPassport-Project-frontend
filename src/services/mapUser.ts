@@ -1,5 +1,5 @@
-import type { ApiUser } from '@/services/api.ts';
-import type { User } from '@/types.ts'
+import type { ApiUser } from '@/services/api'
+import type { User } from '@/types'
 
 // Map the ApiUser interface to the User interface
 // Make the data easier to use
