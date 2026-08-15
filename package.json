@@ -16,6 +16,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@lucide/vue": "^1.31.0",
     "@tailwindcss/vite": "^4.3.3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",

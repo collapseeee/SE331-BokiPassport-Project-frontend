@@ -1,3 +1,6 @@
 <script lang="ts" setup></script>
 
-<template>Admin Dashboard Page</template>
+<template>
+    <p>Admin Dashboard Page</p>
+    <RouterView/>
+</template>

@@ -22,8 +22,30 @@
     --color-brand-black: #293033;
     --color-brand-white: #FAFAFA;
     --color-brand-gray: #E0E0E0;
+    --color-brand-green: #58A700;
+    --color-brand-red: #D70000;
 }
 
 :root {
     font-family: 'raleway';
+}
+
+h1 {
+    @apply text-4xl font-bold;
+}
+
+h2 {
+    @apply text-3xl font-bold;
+}
+
+h3 {
+    @apply text-2xl font-bold;
+}
+
+h4 {
+    @apply text-xl font-bold;
+}
+
+h5 {
+    @apply text-lg font-bold;
 }
