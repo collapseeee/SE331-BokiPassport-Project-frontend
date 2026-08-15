@@ -1,5 +1,6 @@
 const BASE_URL = 'http://localhost:3000';
 
+// Pull data from Json server
 export async function fetchUsers() {
     const response = await fetch(`${BASE_URL}/users`);
     if (!response.ok) {
@@ -8,6 +9,7 @@ export async function fetchUsers() {
     return response.json();
 }
 
+    //Format the out put after fetchUsers
 export interface ApiUser {
     id: number
     first_name: string
