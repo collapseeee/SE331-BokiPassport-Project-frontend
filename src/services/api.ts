@@ -7,3 +7,15 @@ export async function fetchUsers() {
     }
     return response.json();
 }
+
+export interface ApiUser {
+    id: number
+    first_name: string
+    last_name: string
+    province: string | null
+    image_url: string | null
+    username: string
+    password: string
+    role: string
+    is_active: boolean | null
+}
