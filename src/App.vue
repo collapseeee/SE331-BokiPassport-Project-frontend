@@ -35,7 +35,7 @@ import { role } from '@/stores/user.ts';
         <RouterView/>
     </div>
   </div>
-  <div v-else class="p-4">
+    <div v-else>
     <RouterView/>
   </div>
   <SpeedInsights/>

@@ -6,7 +6,7 @@ const showPassword = ref(false)
 </script>
 
 <template>
-    <div class="w-full min-h-screen bg-gradient-to-b from-sky-400 via-sky-200 to-white">
+    <div class="w-full min-h-screen bg-linear-to-b from-brand-blue to-brand-white">
         <div class="flex flex-col items-center justify-center min-h-screen py-8 px-4">
             <div class="w-full max-w-md p-8 space-y-6 bg-gray-200 rounded-lg shadow-xl">
 
