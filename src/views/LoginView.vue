@@ -19,7 +19,7 @@ const showPassword = ref(false)
                     <p class="text-brand-black">Sign in to access your AI.</p>
                 </div>
 
-                <form class="space-y-4">
+                
                     <!-- Username -->
                     <div>
                         <label for="username" class="block text-sm font-medium text-gray-800 mb-1">Username</label>
@@ -28,7 +28,7 @@ const showPassword = ref(false)
                                 <UserRound class="w-5 h-5" />
                             </span>
 
-                            <input type="text" id="username" name="username" placeholder="alex.turing" required
+                            <input v-model="username" id="username" name="username" placeholder="alex.turing" required
                                 class="w-full pl-10 pr-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
 
                         </div>
@@ -49,7 +49,7 @@ const showPassword = ref(false)
                                 <Lock />
                             </span>
 
-                            <input :type="showPassword ? 'text' : 'password'" id="password" name="password" required
+                            <input v-model="password" :type="showPassword ? 'text' : 'password'" id="password" name="password" required
                                 class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-brand-blue focus:border-brand-blue" />
 
                             <button type="button" @click="showPassword = !showPassword"
@@ -65,7 +65,7 @@ const showPassword = ref(false)
                         class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors">
                         Sign In
                     </button>
-                </form>
+                
 
                 <!-- Register link -->
                 <p class="text-center text-brand-black">
