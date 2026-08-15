@@ -50,7 +50,7 @@ const showPassword = ref(false)
                             </span>
 
                             <input :type="showPassword ? 'text' : 'password'" id="password" name="password" required
-                                class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
+                                class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-brand-blue focus:border-brand-blue" />
 
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute inset-y-0 right-3 flex items-center text-brand-gray hover:text-brand-light-blue">
