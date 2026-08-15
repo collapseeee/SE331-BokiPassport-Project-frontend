@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import type  { User } from '@/types';
 import type { ApiUser } from '@/services/api'
 import { mapApiUserToUser } from '@/services/mapUser'
@@ -15,6 +15,8 @@ export const useAuthStore = defineStore('auth', () => {
         currentUser.value = JSON.parse(savedUser)
         isAuthenticated.value = true
     }
+
+    const isAdmin = computed(() => currentUser.value?.role === 'admin')
 
     async function login(username: string, password: string): Promise<{success: boolean, error?: string}> {
         try {
@@ -41,5 +43,5 @@ export const useAuthStore = defineStore('auth', () => {
         localStorage.removeItem('currentUser')
     }
 
-    return { currentUser, isAuthenticated, login, logout }
+    return { currentUser, isAuthenticated, isAdmin, login, logout }
 })
