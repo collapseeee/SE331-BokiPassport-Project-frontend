@@ -26,7 +26,7 @@ async function handleLogin(){
     isLoading.value = false
 
     if (result.success) {
-        router.push({ name: 'UserProfile' })
+        router.push(authStore.isAdmin ? { name: 'AdminView' } : { name: 'UserProfile' })
     } else {
         errorMessage.value = result.error ?? 'Login failed. Please try again.'
     }
