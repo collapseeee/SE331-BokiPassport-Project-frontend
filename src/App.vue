@@ -9,7 +9,8 @@ import { role } from '@/stores/user.ts';
 </script>
 
 <template>
-  <div v-if="role == 'USER'" class="h-screen bg-gray-100 overflow-hidden grid grid-cols-5">
+  <div v-if="role == 'USER' && $route.name != 'Login' && $route.name != 'Register' && $route.name != 'Home'" 
+  class="h-screen bg-gray-100 overflow-hidden grid grid-cols-5">
       <UserSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
@@ -18,7 +19,8 @@ import { role } from '@/stores/user.ts';
           </div>
       </div>
   </div>
-  <div v-else-if="role == 'ADMIN'" class="h-screen bg-gray-100 overflow-hidden grid grid-cols-5">
+  <div v-else-if="role == 'ADMIN' && $route.name != 'Login' && $route.name != 'Register' && $route.name != 'Home'" 
+  class="h-screen bg-gray-100 overflow-hidden grid grid-cols-5">
       <AdminSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
@@ -33,7 +35,7 @@ import { role } from '@/stores/user.ts';
         <RouterView/>
     </div>
   </div>
-  <div v-else class="p-4">
+    <div v-else>
     <RouterView/>
   </div>
   <SpeedInsights/>
