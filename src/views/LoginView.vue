@@ -105,7 +105,7 @@ async function handleLogin(){
                 <!-- Register link -->
                 <p class="text-center text-brand-black">
                     Don't have account?
-                    <router-link to="/register" class="text-brand-blue underline hover:text-brand-light-blue">Register</router-link>
+                    <router-link :to="{ name: 'Register' }" class="text-brand-blue underline hover:text-brand-light-blue">Register</router-link>
                 </p>
             </div>
         </div>
