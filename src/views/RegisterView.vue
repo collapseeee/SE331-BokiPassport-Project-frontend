@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { CircleUserRound, UserRound, Lock, EyeOff, Eye, MapPin } from '@lucide/vue';
 import SubmitButton from '@/components/Button.vue';
+import FormInput from '@/components/FormInput.vue'
 // (auth store + router will be used when registration API is implemented)
 
 
@@ -39,31 +40,12 @@ const handleRegister = async () => {
                 <form @submit.prevent="handleRegister" class="space-y-4">
                     <!-- first name and last name -->
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="firstName" class="block text-sm font-medium text-gray-800 mb-1">First Name</label>
-                            <input v-model="firstname" id="firstName" name="firstName" placeholder="Boki" required
-                                class="w-full px-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
-                        </div>
-                        <div>
-                            <label for="lastName" class="block text-sm font-medium text-gray-800 mb-1">Last Name</label>
-                            <input v-model="lastname" id="lastName" name="lastName" placeholder="Naraku" required
-                                class="w-full px-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
-                        </div>
+                        <FormInput v-model="firstname" id="firstName" label="First Name" placeholder="Boki" required />
+                        <FormInput v-model="lastname" id="lastName" label="Last Name" placeholder="Naraku" required />
                     </div>
 
                     <!-- Username -->
-                    <div>
-                        <label for="username" class="block text-sm font-medium text-gray-800 mb-1">Username</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-3 flex items-center text-brand-gray">
-                                <UserRound class="w-5 h-5" />
-                            </span>
-
-                            <input v-model="username" id="username" name="username" placeholder="alex.turing" required
-                                class="w-full pl-10 pr-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
-
-                        </div>
-                    </div>
+                    <FormInput v-model="username" id="username" label="Username" placeholder="alex.turing" :icon="UserRound" required />
 
                     <!-- Password -->
                     <div>

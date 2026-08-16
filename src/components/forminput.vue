@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import type { Component } from 'vue'
+    import type { Component } from 'vue'
 
-const props = defineProps<{
-  modelValue: string
-  id: string
-  label: string
-  placeholder?: string
-  icon?: Component
-  required?: boolean
-  type?: string
-}>()
+    const props = defineProps<{
+        modelValue: string
+         id: string
+         label: string
+         placeholder?: string
+        icon?: Component
+        required?: boolean
+        type?: string
+    }>()
 
-const emit = defineEmits<{
-  'update:modelValue': [value: string]
-}>()
+    const emit = defineEmits<{
+        'update:modelValue': [value: string]
+    }>()
 
 </script>
 
