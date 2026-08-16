@@ -79,7 +79,7 @@ async function handleLogin(){
                                 <Lock />
                             </span>
 
-                            <input v-model="password" :type="showPassword ? 'text' : 'password'" id="password" name="password" required
+                            <input v-model="password" :type="showPassword ? 'text' : 'password'" id="password" name="password" placeholder="••••••••" required
                                 class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-brand-blue focus:border-brand-blue" />
 
                             <button type="button" @click="showPassword = !showPassword"
@@ -90,16 +90,18 @@ async function handleLogin(){
                         </div>
                     </div>
 
-                    <!-- Sign In button -->
-                    <button type="submit"
-                        class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors">
-                        Sign In
-                    </button>
                     <!-- Error banner -->
                     <div v-if="errorMessage"
                     class="px-4 py-2 text-sm text-brand-red bg-red-100 border border-red-300 rounded-md">
                     {{ errorMessage }}
                     </div>
+                    
+                    <!-- Sign In button -->
+                    <button type="submit"
+                        class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors">
+                        Sign In
+                    </button>
+                    
                 
                 </form>
                 <!-- Register link -->

@@ -123,17 +123,18 @@ const errorMessage = ref('')
                         </div>
                     </div>
                     
+                    <!-- Error banner -->
+                    <div v-if="errorMessage"
+                    class="px-4 py-2 text-sm text-brand-red bg-red-100 border border-red-300 rounded-md">
+                    {{ errorMessage }}
+                    </div>
 
                     <!-- Sign up button -->
                     <button type="submit"
                         class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors">
                         Sign Up
                     </button>
-                    <!-- Error banner -->
-                    <div v-if="errorMessage"
-                    class="px-4 py-2 text-sm text-brand-red bg-red-100 border border-red-300 rounded-md">
-                    {{ errorMessage }}
-                    </div>
+                    
                 
                 </form>
                 <!-- Register link -->
