@@ -6,10 +6,12 @@ import { useRouter } from 'vue-router'
 
 
 const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 const firstname = ref('')
 const lastname = ref('')
 const username = ref('')
 const password = ref('')
+const confirmPassword = ref('')
 const errorMessage = ref('')
 
 
@@ -64,10 +66,6 @@ const errorMessage = ref('')
                         <div class="flex items-center justify-between mb-1">
                             <label for="password" class="block text-sm font-medium text-gray-800">Password</label>
 
-                            <!-- will implement later -->
-                            <router-link to="" class="text-sm text-brand-blue underline hover:text-brand-light-blue">Forgot
-                                password?</router-link>
-
                         </div>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-3 flex items-center text-brand-gray">
@@ -85,6 +83,29 @@ const errorMessage = ref('')
                         </div>
                     </div>
 
+                    <!-- confirm password -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-800">Confirm Password</label>
+
+                        </div>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-3 flex items-center text-brand-gray">
+                                <Lock />
+                            </span>
+
+                            <input v-model="confirmPassword" :type="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" name="confirmPassword" required
+                                class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-brand-blue focus:border-brand-blue" />
+
+                            <button type="button" @click="showConfirmPassword = !showConfirmPassword"
+                                class="absolute inset-y-0 right-3 flex items-center text-brand-gray hover:text-brand-light-blue">
+                                <Eye v-if="showConfirmPassword" class="w-5 h-5" />
+                                <EyeOff v-else class="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
+                    
+
                     <!-- Sign In button -->
                     <button type="submit"
                         class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors">
@@ -99,8 +120,8 @@ const errorMessage = ref('')
                 </form>
                 <!-- Register link -->
                 <p class="text-center text-brand-black">
-                    Don't have account?
-                    <router-link to="/register" class="text-brand-blue underline hover:text-brand-light-blue">Register</router-link>
+                    Already have an account?
+                    <router-link :to="{ name: 'Login' }" class="text-brand-blue underline hover:text-brand-light-blue">Login</router-link>
                 </p>
             </div>
         </div>
