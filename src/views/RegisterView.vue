@@ -116,7 +116,7 @@ const handleRegister = async () => {
                                 <MapPin class="w-5 h-5" />
                             </span>
 
-                            <input v-model="province" id="province" name="province" placeholder="chiang Rai" required
+                            <input v-model="province" id="province" name="province" placeholder="Chiang Rai" required
                                 class="w-full pl-10 pr-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
 
                         </div>

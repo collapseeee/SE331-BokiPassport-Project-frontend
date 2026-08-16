@@ -58,7 +58,7 @@ async function handleLogin(){
                                 <UserRound class="w-5 h-5" />
                             </span>
 
-                            <input v-model="username" id="username" name="username" placeholder="alex.turing" required
+                            <input v-model="username" id="username" name="username" placeholder="BokiChan_narak" required
                                 class="w-full pl-10 pr-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
 
                         </div>
