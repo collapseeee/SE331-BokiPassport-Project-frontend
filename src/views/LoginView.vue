@@ -97,10 +97,9 @@ async function handleLogin(){
                     </div>
                     
                     <!-- Sign In button -->
-                    <button type="submit"
-                        class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors">
-                        Sign In
-                    </button>
+                    <SubmitButton type="submit"
+                        class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors"
+                        label="Sign In"/>
                     
                 
                 </form>
