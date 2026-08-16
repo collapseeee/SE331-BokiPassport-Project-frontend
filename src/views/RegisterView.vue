@@ -15,6 +15,9 @@ const confirmPassword = ref('')
 const province = ref('')
 const errorMessage = ref('')
 
+// Will implement handleRegister later
+// That includes confirming password check
+
 
 </script>
 
@@ -73,7 +76,7 @@ const errorMessage = ref('')
                                 <Lock />
                             </span>
 
-                            <input v-model="password" :type="showPassword ? 'text' : 'password'" id="password" name="password" required
+                            <input v-model="password" :type="showPassword ? 'text' : 'password'" id="password" name="password" placeholder="••••••••" required
                                 class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-brand-blue focus:border-brand-blue" />
 
                             <button type="button" @click="showPassword = !showPassword"
@@ -95,7 +98,7 @@ const errorMessage = ref('')
                                 <Lock />
                             </span>
 
-                            <input v-model="confirmPassword" :type="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" name="confirmPassword" required
+                            <input v-model="confirmPassword" :type="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required
                                 class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-brand-blue focus:border-brand-blue" />
 
                             <button type="button" @click="showConfirmPassword = !showConfirmPassword"
