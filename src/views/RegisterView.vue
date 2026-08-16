@@ -6,7 +6,8 @@ import { useRouter } from 'vue-router'
 
 
 const showPassword = ref(false)
-
+const firstname = ref('')
+const lastname = ref('')
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
@@ -25,11 +26,25 @@ const errorMessage = ref('')
                         <CircleUserRound class="w-20 h-20" />
                     </div>
                     <h1 class="text-3xl font-bold text-brand-black">Boki Passport</h1>
-                    <p class="text-brand-black">Sign in to access your AI.</p>
+                    <p class="text-brand-black">Create your account to meet your AI.</p>
                 </div>
 
                 <!-- will implement later -->
                 <form @submit.prevent="handleRegister" class="space-y-4">
+                    <!-- first name and last name -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="firstName" class="block text-sm font-medium text-gray-800 mb-1">First Name</label>
+                            <input v-model="firstname" id="firstName" name="firstName" placeholder="Boki" required
+                                class="w-full px-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
+                        </div>
+                        <div>
+                            <label for="lastName" class="block text-sm font-medium text-gray-800 mb-1">Last Name</label>
+                            <input v-model="lastname" id="lastName" name="lastName" placeholder="Naraku" required
+                                class="w-full px-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
+                        </div>
+                    </div>
+
                     <!-- Username -->
                     <div>
                         <label for="username" class="block text-sm font-medium text-gray-800 mb-1">Username</label>
