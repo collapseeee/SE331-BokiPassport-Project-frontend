@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { CircleUserRound, UserRound, Lock, EyeOff, Eye, MapPin } from '@lucide/vue';
-import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
+// (auth store + router will be used when registration API is implemented)
 
 
 const showPassword = ref(false)
