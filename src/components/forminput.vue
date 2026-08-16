@@ -2,7 +2,6 @@
 import type { Component } from 'vue'
 
 const props = defineProps<{
-  modelValue: string
   id: string
   label: string
   placeholder?: string
@@ -11,7 +10,7 @@ const props = defineProps<{
   type?: string
 }>()
 
-const emit = defineEmits(['update:modelValue'])
+const model = defineModel<string>()
 </script>
 
 <template>
@@ -27,8 +26,7 @@ const emit = defineEmits(['update:modelValue'])
         :type="props.type ?? 'text'"
         :placeholder="props.placeholder"
         :required="props.required"
-        :value="props.modelValue"
-        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+        v-model="model"
         :class="[
           'w-full py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400',
           props.icon ? 'pl-10 pr-3' : 'px-3',

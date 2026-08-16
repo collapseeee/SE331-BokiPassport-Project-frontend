@@ -3,15 +3,13 @@ import { ref } from 'vue'
 import { Lock, Eye, EyeOff } from '@lucide/vue'
 
 const props = defineProps<{
-  modelValue: string
   id: string
   label: string
   placeholder?: string
   required?: boolean
 }>()
 
-const emit = defineEmits(['update:modelValue'])
-
+const model = defineModel<string>()
 const showPassword = ref(false)
 const passworPlaceholder = props.placeholder ? props.placeholder : 'Enter your password'
 </script>
@@ -28,9 +26,8 @@ const passworPlaceholder = props.placeholder ? props.placeholder : 'Enter your p
         :name="props.id"
         :type="showPassword ? 'text' : 'password'"
         :required="props.required"
-        :value="props.modelValue"
         :placeholder="passworPlaceholder"
-        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+        v-model="model"
         class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-brand-blue focus:border-brand-blue"
       />
       <button
