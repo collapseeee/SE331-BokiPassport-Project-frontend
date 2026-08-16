@@ -15,10 +15,10 @@ const confirmPassword = ref('')
 const province = ref('')
 const errorMessage = ref('')
 
-// Will implement handleRegister later
-// That includes confirming password check
-
-
+// Will implement handleRegister later (API + password confirmation)
+const handleRegister = async () => {
+  errorMessage.value = 'Registration is not available yet.'
+}
 </script>
 
 <template>
