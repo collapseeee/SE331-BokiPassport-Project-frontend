@@ -106,10 +106,10 @@ const errorMessage = ref('')
                     </div>
                     
 
-                    <!-- Sign In button -->
+                    <!-- Sign up button -->
                     <button type="submit"
                         class="w-full px-4 py-3 mt-2 text-brand-white font-medium bg-brand-blue rounded-md hover:bg-brand-light-blue focus:outline-none focus:ring focus:ring-brand-blue transition-colors">
-                        Sign In
+                        Sign Up
                     </button>
                     <!-- Error banner -->
                     <div v-if="errorMessage"
