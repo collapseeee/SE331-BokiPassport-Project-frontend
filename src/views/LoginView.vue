@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { CircleUserRound, UserRound, Lock, EyeOff, Eye} from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import SubmitButton from '@/components/Button.vue';
 
 const authStore = useAuthStore()
 const router = useRouter()
