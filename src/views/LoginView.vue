@@ -4,8 +4,8 @@ import { CircleUserRound, UserRound} from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import SubmitButton from '@/components/Button.vue';
-import FormInput from '@/components/FormInput.vue'
-import PasswordInput from '@/components/PasswordInput.vue'
+import FormInput from '@/components/form/FormInput.vue'
+import PasswordInput from '@/components/form/FormPasswordInput.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()

@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { CircleUserRound, UserRound, MapPin } from '@lucide/vue';
 import SubmitButton from '@/components/Button.vue'
-import FormInput from '@/components/FormInput.vue'
-import PasswordInput from '@/components/PasswordInput.vue'
+import FormInput from '@/components/form/FormInput.vue'
+import PasswordInput from '@/components/form/FormPasswordInput.vue'
 // (auth store + router will be used when registration API is implemented)
 
 
