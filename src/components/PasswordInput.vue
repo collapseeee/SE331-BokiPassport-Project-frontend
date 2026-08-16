@@ -10,6 +10,8 @@ const props = defineProps<{
   required?: boolean
 }>()
 
+const emit = defineEmits(['update:modelValue'])
+
 const showPassword = ref(false)
 const passworPlaceholder = props.placeholder ? props.placeholder : 'Enter your password'
 </script>
@@ -28,6 +30,7 @@ const passworPlaceholder = props.placeholder ? props.placeholder : 'Enter your p
         :required="props.required"
         :value="props.modelValue"
         :placeholder="passworPlaceholder"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         class="w-full pl-10 pr-10 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-brand-blue focus:border-brand-blue"
       />
       <button

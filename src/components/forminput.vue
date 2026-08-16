@@ -11,6 +11,7 @@ const props = defineProps<{
   type?: string
 }>()
 
+const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
@@ -27,6 +28,7 @@ const props = defineProps<{
         :placeholder="props.placeholder"
         :required="props.required"
         :value="props.modelValue"
+        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         :class="[
           'w-full py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400',
           props.icon ? 'pl-10 pr-3' : 'px-3',
