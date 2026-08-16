@@ -47,13 +47,13 @@ async function handleLogin(){
                     <div class="flex items-center justify-center w-14 h-14 text-brand-black">
                         <CircleUserRound class="w-20 h-20" />
                     </div>
-                    <h1 class="text-3xl font-bold text-brand-black">Boki Passport</h1>
+                    <h1 class="text-brand-black">Boki Passport</h1>
                     <p class="text-brand-black">Sign in to access your AI.</p>
                 </div>
 
                 <form @submit.prevent="handleLogin" class="space-y-4">
                     <!-- Username -->
-                    <FormInput v-model="username" id="username" label="Username" placeholder="boki_narak" :icon="UserRound" required />
+                    <FormInput v-model="username" id="username" label="Username" placeholder="Enter your username" :icon="UserRound" required />
 
                     <!-- Password -->
                     <div>
