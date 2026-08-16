@@ -27,6 +27,10 @@
     --color-brand-red: #D70000;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 :root {
     font-family: 'raleway';
 }
