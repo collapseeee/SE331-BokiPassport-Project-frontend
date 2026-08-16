@@ -1,14 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { CircleUserRound, UserRound, Lock, EyeOff, Eye, MapPin } from '@lucide/vue';
+import { CircleUserRound, UserRound, MapPin } from '@lucide/vue';
 import SubmitButton from '@/components/Button.vue'
 import FormInput from '@/components/FormInput.vue'
 import PasswordInput from '@/components/PasswordInput.vue'
 // (auth store + router will be used when registration API is implemented)
 
 
-const showPassword = ref(false)
-const showConfirmPassword = ref(false)
 const firstname = ref('')
 const lastname = ref('')
 const username = ref('')

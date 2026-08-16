@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { CircleUserRound, UserRound, Lock, EyeOff, Eye} from '@lucide/vue';
+import { CircleUserRound, UserRound} from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import SubmitButton from '@/components/Button.vue';
@@ -9,7 +9,6 @@ import PasswordInput from '@/components/PasswordInput.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
-const showPassword = ref(false)
 
 const username = ref('')
 const password = ref('')
