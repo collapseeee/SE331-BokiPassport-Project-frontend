@@ -19,22 +19,22 @@
 
 <template>
   <div>
-    <label :for="id" class="block text-sm font-medium text-gray-800 mb-1">{{ label }}</label>
+    <label :for="id" class="block text-sm font-medium text-gray-800 mb-1">{{ props.label }}</label>
     <div class="relative">
-      <span v-if="icon" class="absolute inset-y-0 left-3 flex items-center text-brand-gray">
-        <component :is="icon" class="w-5 h-5" />
+      <span v-if="props.icon" class="absolute inset-y-0 left-3 flex items-center text-brand-gray">
+        <component :is="props.icon" class="w-5 h-5" />
       </span>
       <input
-        :id="id"
-        :name="id"
-        :type="type ?? 'text'"
-        :placeholder="placeholder"
-        :required="required"
-        :value="modelValue"
+        :id="props.id"
+        :name="props.id"
+        :type="props.type ?? 'text'"
+        :placeholder="props.placeholder"
+        :required="props.required"
+        :value="props.modelValue"
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         :class="[
           'w-full py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400',
-          icon ? 'pl-10 pr-3' : 'px-3',
+          props.icon ? 'pl-10 pr-3' : 'px-3',
         ]"
       />
     </div>
