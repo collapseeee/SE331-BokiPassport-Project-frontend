@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { CircleUserRound, UserRound, Lock, EyeOff, Eye} from '@lucide/vue';
+import { CircleUserRound, UserRound, Lock, EyeOff, Eye, MapPin } from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
@@ -12,6 +12,7 @@ const lastname = ref('')
 const username = ref('')
 const password = ref('')
 const confirmPassword = ref('')
+const province = ref('')
 const errorMessage = ref('')
 
 
@@ -102,6 +103,20 @@ const errorMessage = ref('')
                                 <Eye v-if="showConfirmPassword" class="w-5 h-5" />
                                 <EyeOff v-else class="w-5 h-5" />
                             </button>
+                        </div>
+                    </div>
+
+                    <!-- Province -->
+                    <div>
+                        <label for="province" class="block text-sm font-medium text-gray-800 mb-1">Province</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-3 flex items-center text-brand-gray">
+                                <MapPin class="w-5 h-5" />
+                            </span>
+
+                            <input v-model="province" id="province" name="province" placeholder="chiang Rai" required
+                                class="w-full pl-10 pr-3 py-2.5 border border-brand-gray rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400" />
+
                         </div>
                     </div>
                     
