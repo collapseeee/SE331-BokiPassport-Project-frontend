@@ -23,7 +23,7 @@ if (props.leftArrow && props.rightArrow) paddingClass = 'py-2 px-10'
 </script>
 
 <template>
-    <div class="relative hover:scale-105">
+    <div class="relative hover:scale-105 duration-300">
         <span v-if="props.leftArrow" class="absolute inset-y-0 left-3 flex items-center text-brand-black">
             <MoveLeftIcon :class="textColorClass" />
         </span>
