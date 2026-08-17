@@ -18,7 +18,7 @@ import AdminDashboardView from '@/views/admin/DashboardView.vue'
 import AdminExamManagementView from '@/views/admin/ExamManagementView.vue'
 import AdminUserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminLevelManagementView from '@/views/admin/LevelManagementView.vue'
-import AdminCourseManagementView from '@/views/admin/CourseManagementView.vue'
+import AdminCourseManagementView from '@/views/admin/course/CourseManagementView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -101,7 +101,13 @@ const router = createRouter({
         {
           path: 'course-management',
           name: 'AdminCourseManagement',
-          component: AdminCourseManagementView
+          component: AdminCourseManagementView,
+          beforeEnter: (to) => {
+            if (to.query.level) {
+              return
+            }
+            to.query.level = 'all'
+          }
         }
       ]
     },
