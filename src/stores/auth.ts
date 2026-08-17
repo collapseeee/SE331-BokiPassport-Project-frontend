@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type  { User } from '@/types';
 import type { ApiUser } from '@/services/api'
-import { mapApiUserToUser } from '@/services/mapUser'
+import { mapApiUserToUser } from '@/services/mapdata'
 import UserApi from '@/services/api'
 
 export const useAuthStore = defineStore('auth', () => {
