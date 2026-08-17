@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type  { User } from '@/types';
 import type { ApiUser } from '@/services/api'
-import { mapApiUserToUser } from '@/services/mapdata'
 import UserApi from '@/services/api'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -27,13 +26,13 @@ export const useAuthStore = defineStore('auth', () => {
             if (!matched) {
                 return { success: false, error: 'Invalid username or password' }
             }
-
-            const user = mapApiUserToUser(matched)
+            
+            const user = matched as User
             currentUser.value = user
             isAuthenticated.value = true
             localStorage.setItem('currentUser', JSON.stringify(user))
             return { success: true }
-        } catch (error) {
+        } catch {
             return { success: false, error: 'An error occurred while logging in' }
         }
     }
