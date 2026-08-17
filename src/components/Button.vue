@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useAttrs } from 'vue'
 import { MoveLeftIcon, MoveRightIcon } from '@lucide/vue';
+
+const attrs = useAttrs()
 const props = withDefaults(defineProps<{
     label: string
     bgColor?: string
@@ -10,7 +13,7 @@ const props = withDefaults(defineProps<{
     rightArrow?: boolean
 }>(), {
     leftArrow: false,
-    rightArrow: false
+    rightArrow: false,
 })
 
 const bgColorClass = props.bgColor ? 'bg-' + props.bgColor : 'bg-brand-blue';
@@ -28,9 +31,9 @@ if (props.leftArrow && props.rightArrow) paddingClass = 'py-2 px-10'
             <MoveLeftIcon :class="textColorClass" />
         </span>
         <router-link v-if="props.toName" :to="{ name: props.toName}">
-            <button class="cursor-pointer rounded-2xl" :class="[bgColorClass, textColorClass, boldClass, paddingClass]">{{ props.label }}</button>
+            <button v-bind="attrs" class="cursor-pointer rounded-2xl" :class="[bgColorClass, textColorClass, boldClass, paddingClass]">{{ props.label }}</button>
         </router-link>
-        <button v-else class="cursor-pointer rounded-2xl" :class="[bgColorClass, textColorClass, boldClass, paddingClass]">{{ props.label }}</button>
+        <button v-else v-bind="attrs" class="cursor-pointer rounded-2xl" :class="[bgColorClass, textColorClass, boldClass, paddingClass]">{{ props.label }}</button>
         <span v-if="props.rightArrow" class="absolute inset-y-0 right-3 flex items-center text-brand-black">
             <MoveRightIcon :class="textColorClass" />
         </span>
