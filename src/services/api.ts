@@ -23,11 +23,26 @@ export interface ApiUser {
   is_active: boolean | null
 }
 
+export interface Apicourse {
+  id: number
+  name: string
+  description: string
+  videoUrl: string
+  createdAt: Date
+  serviceId: number
+}
+
 export default {
   getUsers() {
     return apiClient.get<ApiUser[]>('/user')
   },
   getUser(id: number) {
     return apiClient.get<ApiUser>(`/user/${id}`)
+  },
+   getCourses() {
+    return apiClient.get<Apicourse[]>('/course')
+  },
+  getCourse(id: number) {
+    return apiClient.get<Apicourse>(`/course/${id}`)
   },
 }
