@@ -26,8 +26,8 @@ const logout = (() => {
                     </div>
                     </template>
                     <template #content>
-                        <DropdownItem label="Badges" to-name="UserProfileBadgesView"></DropdownItem>
-                        <DropdownItem label="Exam History" to-name="UserProfileExamHistoryView"></DropdownItem>
+                        <DropdownItem label="Badges" toName="UserProfileBadgesView"></DropdownItem>
+                        <DropdownItem label="Exam History" toName="UserProfileExamHistoryView"></DropdownItem>
                         <DropdownItem label="Log Out" class="text-brand-red" @click="logout"></DropdownItem>
                     </template>
                 </Dropdown>

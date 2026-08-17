@@ -33,6 +33,7 @@ const router = createRouter({
     {
       path: '/user',
       name: 'UserProfile',
+      redirect: { name: 'UserProfileBadgesView' }, // Redirect to badge when entering the user profile
       component: UserProfileView,
       children: [
         { path: 'badges', 
