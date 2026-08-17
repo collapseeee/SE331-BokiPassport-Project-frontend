@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import type  { User } from '@/types';
 import type { ApiUser } from '@/services/api'
 import { mapApiUserToUser } from '@/services/mapUser'
-import { fetchUsers } from '@/services/api'
+import UserApi from '@/services/api'
 
 export const useAuthStore = defineStore('auth', () => {
     const currentUser = ref<User | null>(null)
@@ -20,7 +20,8 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function login(username: string, password: string): Promise<{success: boolean, error?: string}> {
         try {
-            const users: ApiUser[] = await fetchUsers()
+            const response = await UserApi.getUsers()
+            const users: ApiUser[] = response.data
             const matched = users.find((u) => u.username === username && u.password === password)
             
             if (!matched) {
