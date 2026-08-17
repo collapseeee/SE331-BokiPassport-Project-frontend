@@ -5,6 +5,7 @@ import AdminSideBar from '@/components/sidebar/AdminSideBar.vue';
 import NavBar from '@/components/NavBar.vue';
 
 import { role } from '@/stores/user.ts';
+import Footer from './components/Footer.vue';
 
 </script>
 
@@ -14,9 +15,8 @@ import { role } from '@/stores/user.ts';
       <UserSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
-          <div class="p-4">
-              <RouterView/>
-          </div>
+          <RouterView/>
+          <Footer/>
       </div>
   </div>
   <div v-else-if="role == 'ADMIN' && $route.name != 'Login' && $route.name != 'Register' && $route.name != 'Home'" 
@@ -24,16 +24,14 @@ import { role } from '@/stores/user.ts';
       <AdminSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
-          <div class="p-4">
-              <RouterView/>
-          </div>
+          <RouterView/>
+          <Footer/>
       </div>
   </div>
   <div v-else-if="$route.name != 'Login' && $route.name != 'Register'">
     <NavBar/>
-    <div class="p-4">
-        <RouterView/>
-    </div>
+    <RouterView/>
+    <Footer/>
   </div>
     <div v-else>
     <RouterView/>

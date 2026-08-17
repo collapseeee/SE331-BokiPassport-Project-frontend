@@ -35,7 +35,7 @@ const logout = (() => {
             <div v-else class="flex gap-x-10 items-center w-full justify-between">
                 <h1 class="text-brand-blue">Boki Passport</h1>
                 <div class="flex gap-x-12 items-center">
-                    <a href="#about" class="text-brand-white underline">About Us</a>
+                    <a href="#footer" class="text-brand-white underline">About Us</a>
                     <Button label="Log in" to-name="Login" class="w-fit"></Button>
                 </div>
             </div>
