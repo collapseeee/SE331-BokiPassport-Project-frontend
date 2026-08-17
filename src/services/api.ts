@@ -13,14 +13,14 @@ const apiClient = axios.create({
 
 export interface ApiUser {
   id: number
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   province: string | null
-  image_url: string | null
+  imageUrl: string | null
   username: string
   password: string
   role: string
-  is_active: boolean | null
+  isActive: boolean | null
 }
 
 export interface Apicourse {
