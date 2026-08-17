@@ -12,16 +12,16 @@ const logout = (() => {
 </script>
 
 <template>
-    <div class="bg-brand-black w-full h-fit py-4 px-12">
+    <div class="bg-brand-black w-full h-fit py-2 px-12">
         <div class="flex justify-end items-center">
             <div v-if="role === 'USER' || role === 'ADMIN'">
                 <Dropdown>
                     <template #trigger>
-                        <div class="flex gap-2">
-                        <img class="w-14 h-14 rounded-full border border-brand-blue" :src="imgUrl">
+                        <div class="flex">
+                        <img class="w-12 h-12 rounded-full border border-brand-blue" :src="imgUrl">
                         <div class="flex flex-col px-2">
-                            <h5 class="text-brand-blue">{{ nameText }}</h5>
-                            <p class="text-brand-blue font-medium">{{ levelText }}</p>
+                            <p class="text-brand-blue font-bold">{{ nameText }}</p>
+                            <p class="text-brand-blue font-medium text-sm">{{ levelText }}</p>
                         </div>
                     </div>
                     </template>
