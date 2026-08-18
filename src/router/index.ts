@@ -55,7 +55,20 @@ const router = createRouter({
         }
       }
     },
-    { path: '/register', name: 'Register', component: RegisterView },
+    { path: '/register', 
+      name: 'Register', 
+      component: RegisterView,
+      beforeEnter: () => {
+        const authStore = useAuthStore()
+        const userStore = useUserStore()
+        if (authStore.isAuthenticated()) {
+          if (userStore.role === 'ADMIN') {
+            return { name: 'AdminView' }
+          }
+          return { name: 'UserProfile' }
+        }
+      }
+    },
     {
       path: '/user',
       name: 'UserProfile',
@@ -148,7 +161,7 @@ const router = createRouter({
 
 router.beforeEach(to => {
   const authStore = useAuthStore()
-  if (!authStore.isAuthenticated() && to.name !== 'Login' && to.name !== 'Home') {
+  if (!authStore.isAuthenticated() && to.name !== 'Login' && to.name !== 'Home' && to.name !== 'Register') {
     return { name: 'Home' }
   }
 })
