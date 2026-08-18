@@ -1,24 +1,22 @@
 import { defineStore } from 'pinia';
-import type { ApiUser } from '@/services/api'
-import { mapApiUserToUser } from '@/services/mapUser'
-import { fetchUsers } from '@/services/api'
 import { useUserStore } from './user';
 import { ref } from 'vue';
+import type { User } from '@/types';
+import api from '@/services/api';
 
 export const useAuthStore = defineStore('auth', () => {
     const userStore = useUserStore()
     function login(username: string, password: string) {
-            const matched = ref<ApiUser | null>(null)
-            return fetchUsers()
+            const matchedUser = ref<User | null>(null)
+            return api.getUsers()
                 .then(res => {
-                    matched.value = res.data.find((u: ApiUser) => u.username === username && u.password === password)
-                    if (!matched.value) {
+                    matchedUser.value = res.data.find((u: User) => u.username === username && u.password === password)
+                    if (!matchedUser.value) {
                         return { success: false, error: 'Invalid username or password' }
                     }
 
-                    const user = mapApiUserToUser(matched.value)
-                    userStore.saveUser(user)
-                    return { success: true, user: user }
+                    userStore.saveUser(matchedUser.value)
+                    return { success: true, user: matchedUser.value }
                 })
                 .catch(() => {
                     return { success: false, error: 'An error occurred while logging in', user: null }
