@@ -1,3 +1,5 @@
+// Must match data in jsonserver
+
 export interface User {
   id: number
   firstName: string
@@ -8,9 +10,6 @@ export interface User {
   password: string
   role: string // This may changed to Role interface later.
   isActive: boolean
-  examHistory: Exam[]
-  levelId: number
-  badgesId: number[]
 }
 
 export interface UserState {
@@ -21,6 +20,14 @@ export interface Level {
   id: number
   name: string
   description: string
+  passCriteria: number
+}
+
+export interface UserLevel {
+  id: number
+  createdAt: Date
+  userId: number
+  levelId: number
   pass_criteria: number
 }
 
@@ -69,17 +76,27 @@ export interface Exam {
   description: string
   createdAt: Date
   questions: Question[]
+  levelId: number
+}
+
+export interface ExamHistory {
+  id: number
+  createdAt: Date
+  totalScore: number
+  isPassed: boolean
+  examId: number
 }
 
 export interface Question {
   id: number
-  text: string
+  questionText: string
   choices: AnswerChoice[]
+  examId: number
 }
 
 export interface AnswerChoice {
   id: number
-  questionId: number
-  text: string
+  answerText: string
   isCorrect: boolean
+  questionId: number
 }

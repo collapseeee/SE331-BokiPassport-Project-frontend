@@ -33,7 +33,6 @@ export const useUserStore = defineStore('user', ({
                 lastName: user.lastName,
                 province: user.province,
                 imageUrl: user.imageUrl,
-                level: user.levelId,
                 role: user.role
             }))
         },
