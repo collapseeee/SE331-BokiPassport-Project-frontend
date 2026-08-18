@@ -1,25 +1,48 @@
-import axios from "axios";
+import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3001';
-
+// Pull data from json-server
+// Start it with: npx json-server --watch db.json --port 3001
 const apiClient = axios.create({
-    baseURL: BASE_URL
+  baseURL: 'http://localhost:3001',
+  withCredentials: false,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
 })
-// Pull data from Json server
-// Use this command to start the server: npx json-server --watch db.json --port 3001
-export function fetchUsers() {
-    return apiClient.get('user')
+
+export interface ApiUser {
+  id: number
+  firstName: string
+  lastName: string
+  province: string | null
+  imageUrl: string | null
+  username: string
+  password: string
+  role: string
+  isActive: boolean | null
 }
 
-    //Format the out put after fetchUsers
-export interface ApiUser {
-    id: number
-    first_name: string
-    last_name: string
-    province: string | null
-    image_url: string | null
-    username: string
-    password: string
-    role: string
-    is_active: boolean | null
+export interface Apicourse {
+  id: number
+  name: string
+  description: string
+  videoUrl: string
+  createdAt: Date
+  serviceId: number
+}
+
+export default {
+  getUsers() {
+    return apiClient.get<ApiUser[]>('/user')
+  },
+  getUser(id: number) {
+    return apiClient.get<ApiUser>(`/user/${id}`)
+  },
+   getCourses() {
+    return apiClient.get<Apicourse[]>('/course')
+  },
+  getCourse(id: number) {
+    return apiClient.get<Apicourse>(`/course/${id}`)
+  },
 }
