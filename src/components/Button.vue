@@ -32,7 +32,7 @@ if (props.leftArrow && props.rightArrow) paddingClass = 'py-2 px-10'
 
 <template>
     <div v-if="props.locked" class="relative hover:scale-105 duration-300">
-        <button class="bg-brand-dark-blue text-brand-blue rounded-2xl w-full flex items-center justify-center" :class="paddingClass"><Lock/></button>
+        <button class="bg-brand-dark-blue text-brand-blue rounded-2xl w-full flex items-center justify-center cursor-not-allowed" :class="paddingClass"><Lock/></button>
     </div>
     <div v-else class="relative hover:scale-105 duration-300">
         <span v-if="props.leftArrow" class="absolute inset-y-0 left-3 flex items-center text-brand-black">
