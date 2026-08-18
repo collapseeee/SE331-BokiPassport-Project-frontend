@@ -6,7 +6,7 @@
         "first_name": "Admin",
         "last_name": "Doe",
         "province": null,
-        "image_url": null,
+        "image_url": "https://thumbs.dreamstime.com/b/sad-man-silhouette-worried-beach-sunset-sun-background-51640055.jpg",
         "username": "admin",
         "password": "123",
         "role": "admin",
