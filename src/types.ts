@@ -28,7 +28,7 @@ export interface UserLevel {
   createdAt: Date
   userId: number
   levelId: number
-  pass_criteria: number
+  passCriteria: number
 }
 
 export interface LevelsState {
@@ -38,7 +38,7 @@ export interface LevelsState {
 export interface Benefit {
   id: number
   description: string
-  level_id: number
+  levelId: number
 }
 
 export interface BenefitsState {
@@ -47,7 +47,7 @@ export interface BenefitsState {
 
 export interface Service {
   id: number
-  required_level_id: number
+  requiredLevelId: number
   name: string
 }
 

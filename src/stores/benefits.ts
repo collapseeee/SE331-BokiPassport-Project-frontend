@@ -7,7 +7,7 @@ export const useBenefitsStore = defineStore('benefit', {
   }),
   getters: {
     getBenefitsByLevelId: (state) => {
-      return (levelId: number) => state.benefits.filter((b) => b.level_id == levelId)
+      return (levelId: number) => state.benefits.filter((b) => b.levelId == levelId)
     }
   },
   actions: {

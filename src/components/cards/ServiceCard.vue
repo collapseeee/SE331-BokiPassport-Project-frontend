@@ -14,9 +14,9 @@ const props = defineProps<{
 const levelsStore = useLevelsStore();
 const benefitsStore = useBenefitsStore();
 
-const level = computed(() => levelsStore.getLevelById(props.service.required_level_id)!);
-const benefits = computed(() => benefitsStore.getBenefitsByLevelId(props.service.required_level_id));
-const isLocked = computed(() => props.userLevel < props.service.required_level_id);
+const level = computed(() => levelsStore.getLevelById(props.service.requiredLevelId)!);
+const benefits = computed(() => benefitsStore.getBenefitsByLevelId(props.service.requiredLevelId));
+const isLocked = computed(() => props.userLevel < props.service.requiredLevelId);
 </script>
 <template>
     <CardContainer class="px-6! py-10! justify-start">
