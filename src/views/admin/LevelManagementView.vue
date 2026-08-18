@@ -1,3 +1,24 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import LevelCard from '@/components/cards/LevelCard.vue';
+import level from '@/services/level';
+import type { Level } from '@/types';
+import { onMounted, ref, watchEffect } from 'vue';
 
-<template>Admin Level Management Page</template>
+const levels = ref<Level[] | null>(null)
+onMounted(() => {
+    watchEffect(() => {
+        level.getLevels()
+            .then(res => levels.value = res.data)
+    })
+})
+</script>
+
+<template>
+    <div class="p-5 flex flex-col gap-2">
+        <h2>Level Management</h2>
+        <p>Boki Passport level management system</p>
+        <div class="grid grid-cols-2 gap-3">
+            <LevelCard v-for="level in levels" :key="level.id" :level="level"/>
+        </div>
+    </div>
+</template>
