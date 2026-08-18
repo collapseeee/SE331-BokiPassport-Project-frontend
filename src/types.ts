@@ -13,6 +13,10 @@ export interface User {
   badgesId: number[]
 }
 
+export interface UserState {
+  user: User | null
+}
+
 export interface Level {
   id: number
   name: string

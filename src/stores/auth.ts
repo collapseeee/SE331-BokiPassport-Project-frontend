@@ -1,47 +1,38 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import type  { User } from '@/types';
 import type { ApiUser } from '@/services/api'
 import { mapApiUserToUser } from '@/services/mapUser'
 import { fetchUsers } from '@/services/api'
+import { useUserStore } from './user';
+import { ref } from 'vue';
 
 export const useAuthStore = defineStore('auth', () => {
-    const currentUser = ref<User | null>(null)
-    const isAuthenticated = ref(false)
+    const userStore = useUserStore()
+    function login(username: string, password: string) {
+            const matched = ref<ApiUser | null>(null)
+            return fetchUsers()
+                .then(res => {
+                    matched.value = res.data.find((u: ApiUser) => u.username === username && u.password === password)
+                    if (!matched.value) {
+                        return { success: false, error: 'Invalid username or password' }
+                    }
 
-    // Make sure User didn't logout when refresh the page
-    const savedUser = localStorage.getItem('currentUser')
-    if (savedUser) {
-        currentUser.value = JSON.parse(savedUser)
-        isAuthenticated.value = true
+                    const user = mapApiUserToUser(matched.value)
+                    userStore.saveUser(user)
+                    return { success: true, user: user }
+                })
+                .catch(() => {
+                    return { success: false, error: 'An error occurred while logging in', user: null }
+                })
     }
 
-    const isAdmin = computed(() => currentUser.value?.role === 'admin')
-
-    async function login(username: string, password: string): Promise<{success: boolean, error?: string}> {
-        try {
-            const users: ApiUser[] = await fetchUsers()
-            const matched = users.find((u) => u.username === username && u.password === password)
-            
-            if (!matched) {
-                return { success: false, error: 'Invalid username or password' }
-            }
-
-            const user = mapApiUserToUser(matched)
-            currentUser.value = user
-            isAuthenticated.value = true
-            localStorage.setItem('currentUser', JSON.stringify(user))
-            return { success: true }
-        } catch (error) {
-            return { success: false, error: 'An error occurred while logging in' }
-        }
+    function isAuthenticated(): boolean {
+        return userStore.isStored
     }
 
     function logout() {
-        currentUser.value = null
-        isAuthenticated.value = false
-        localStorage.removeItem('currentUser')
+        userStore.user = null
+        userStore.clearUser()
     }
 
-    return { currentUser, isAuthenticated, isAdmin, login, logout }
+    return { isAuthenticated, login, logout }
 })
