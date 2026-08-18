@@ -24,16 +24,28 @@ export interface Level {
   pass_criteria: number
 }
 
+export interface LevelsState {
+  levels: Level[] | []
+}
+
 export interface Benefit {
   id: number
   description: string
   level_id: number
 }
 
+export interface BenefitsState {
+  benefits: Benefit[] | []
+}
+
 export interface Service {
   id: number
   required_level_id: number
   name: string
+}
+
+export interface ServicesState {
+  services: Service[] | []
 }
 
 export interface Badge {
