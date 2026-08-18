@@ -2,13 +2,13 @@ import { defineStore } from 'pinia';
 import { useUserStore } from './user';
 import { ref } from 'vue';
 import type { User } from '@/types';
-import api from '@/services/api';
+import UserService from '@/services/UserService';
 
 export const useAuthStore = defineStore('auth', () => {
     const userStore = useUserStore()
     function login(username: string, password: string) {
             const matchedUser = ref<User | null>(null)
-            return api.getUsers()
+            return UserService.getUsers()
                 .then(res => {
                     matchedUser.value = res.data.find((u: User) => u.username === username && u.password === password)
                     if (!matchedUser.value) {
