@@ -19,6 +19,8 @@ import AdminExamManagementView from '@/views/admin/ExamManagementView.vue'
 import AdminUserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminLevelManagementView from '@/views/admin/LevelManagementView.vue'
 import AdminCourseManagementView from '@/views/admin/CourseManagementView.vue'
+import { useAuthStore } from '@/stores/auth'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,9 +28,33 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: HomeView
+      component: HomeView,
+      beforeEnter: () => {
+        const authStore = useAuthStore()
+        const userStore = useUserStore()
+        if (authStore.isAuthenticated()) {
+          if (userStore.role === 'ADMIN') {
+            return { name: 'AdminView' }
+          }
+          return { name: 'UserProfile' }
+        }
+      }
     },
-    { path: '/login', name: 'Login', component: LoginView },
+    { 
+      path: '/login',
+      name: 'Login',
+      component: LoginView,
+      beforeEnter: () => {
+        const authStore = useAuthStore()
+        const userStore = useUserStore()
+        if (authStore.isAuthenticated()) {
+          if (userStore.role === 'ADMIN') {
+            return { name: 'AdminView' }
+          }
+          return { name: 'UserProfile' }
+        }
+      }
+    },
     { path: '/register', name: 'Register', component: RegisterView },
     {
       path: '/user',
@@ -77,6 +103,7 @@ const router = createRouter({
       path: '/admin',
       name: 'AdminView',
       component: AdminView,
+      redirect: { name: 'AdminDashboard' },
       children: [
         {
           path: 'dashboard',
@@ -101,7 +128,13 @@ const router = createRouter({
         {
           path: 'course-management',
           name: 'AdminCourseManagement',
-          component: AdminCourseManagementView
+          component: AdminCourseManagementView,
+          beforeEnter: (to) => {
+            if (to.query.level) {
+              return
+            }
+            to.query.level = 'all'
+          }
         }
       ]
     },
@@ -111,6 +144,13 @@ const router = createRouter({
       component: NotFoundView
     }
   ]
+})
+
+router.beforeEach(to => {
+  const authStore = useAuthStore()
+  if (!authStore.isAuthenticated() && to.name !== 'Login' && to.name !== 'Home') {
+    return { name: 'Home' }
+  }
 })
 
 export default router

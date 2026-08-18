@@ -13,6 +13,10 @@ export interface User {
   badgesId: number[]
 }
 
+export interface UserState {
+  user: User | null
+}
+
 export interface Level {
   id: number
   name: string
@@ -43,11 +47,11 @@ export interface Badge {
 
 export interface Course {
   id: number
+  createdAt: Date
+  videoUrl: string
   name: string
   description: string
-  videoUrl: string
-  createdAt: Date
-  serviceId: number
+  levelId: number
 }
 
 export interface Exam {
