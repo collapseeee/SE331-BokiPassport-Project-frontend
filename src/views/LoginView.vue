@@ -2,10 +2,10 @@
 import { ref } from 'vue'
 import { CircleUserRound, UserRound} from '@lucide/vue';
 import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
 import SubmitButton from '@/components/Button.vue';
 import FormInput from '@/components/form/FormInput.vue'
 import PasswordInput from '@/components/form/FormPasswordInput.vue'
+import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -15,7 +15,7 @@ const password = ref('')
 const errorMessage = ref('')
 const isLoading = ref(false)
 
-async function handleLogin(){
+function handleLogin(){
     errorMessage.value = ''
 
     if (!username.value || !password.value) {
@@ -24,14 +24,15 @@ async function handleLogin(){
     }
 
     isLoading.value = true
-    const result = await authStore.login(username.value, password.value)
-    isLoading.value = false
-
-    if (result.success) {
-        router.push(authStore.isAdmin ? { name: 'AdminView' } : { name: 'UserProfile' })
-    } else {
-        errorMessage.value = result.error ?? 'Login failed. Please try again.'
-    }
+    authStore.login(username.value, password.value)
+        .then((res) => {
+            if (res.success && res.user) {
+                router.go(0)
+                router.push( res.user.role === 'ADMIN' ? { name: 'AdminView' } : { name: 'UserProfile' } )
+            }
+            return errorMessage.value = res.error ?? 'Login failed. Please try again.'
+        })
+                    
 }
 
 
