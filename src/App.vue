@@ -4,14 +4,14 @@ import UserSideBar from '@/components/sidebar/UserSideBar.vue';
 import AdminSideBar from '@/components/sidebar/AdminSideBar.vue';
 import NavBar from '@/components/NavBar.vue';
 
-import { role } from '@/stores/user.ts';
 import Footer from './components/Footer.vue';
-
+import { useUserStore } from './stores/user.ts';
+const userStore = useUserStore()
 </script>
 
 <template>
-  <div v-if="role == 'USER' && $route.name != 'Login' && $route.name != 'Register' && $route.name != 'Home'" 
-  class="h-screen bg-gray-100 overflow-hidden grid grid-cols-5">
+  <div v-if="userStore.role === 'USER' && $route.name !== 'Login' && $route.name != 'Register' && $route.name !== 'Home'" 
+  class="h-screen bg-gray-100 grid grid-cols-5 bg-linear-to-b from-brand-sky-blue to-brand-white">
       <UserSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
@@ -19,8 +19,8 @@ import Footer from './components/Footer.vue';
           <Footer/>
       </div>
   </div>
-  <div v-else-if="role == 'ADMIN' && $route.name != 'Login' && $route.name != 'Register' && $route.name != 'Home'" 
-  class="h-screen bg-gray-100 overflow-hidden grid grid-cols-5">
+  <div v-else-if="userStore.role === 'ADMIN' && $route.name !== 'Login' && $route.name != 'Register' && $route.name !== 'Home'" 
+  class="h-screen bg-gray-100 grid grid-cols-5">
       <AdminSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
@@ -38,5 +38,3 @@ import Footer from './components/Footer.vue';
   </div>
   <SpeedInsights/>
 </template>
-
-<style scoped></style>

@@ -11,7 +11,7 @@ import { BookOpenCheck, Brain, Star } from '@lucide/vue';
             <p class="text-3xl text-brand-dark-blue">Learn, Level up your skill, and Unlock exclusive services for free!</p>
         </div>
         <Button label="Get Started!" to-name="Register" right-arrow class="text-2xl font-medium"></Button>
-        <div class="grid grid-cols-3 gap-8">
+        <div class="grid md-grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 px-8">
             <IconCard 
                 :icon="Brain" 
                 icon-color="brand-red" 

@@ -11,7 +11,7 @@ const brandBlueColor = getComputedStyle(document.documentElement).getPropertyVal
     <div class="bg-brand-black h-full w-full p-6 border-r border-[#323232]">
         <div class="border-b border-brand-gray pb-4 flex flex-col gap-y-2">
             <h1 class="text-brand-blue">Boki Passport</h1>
-            <p class="text-brand-gray">Learn and Use AI</p>
+            <p class="text-brand-gray">Management Page</p>
         </div>
         <div class="mt-8">
             <SideBarItem label="Overview" route-name="AdminDashboard">

@@ -21,11 +21,16 @@
     --color-brand-fade-blue: #D5F1FF;
 
     --color-brand-dark-blue: #324954;
+    --color-brand-navy-blue: #4246A3;
     --color-brand-black: #293033;
     --color-brand-white: #FAFAFA;
     --color-brand-gray: #E0E0E0;
     --color-brand-green: #58A700;
     --color-brand-red: #D70000;
+    --color-brand-dark-red: #AD0000;
+    --color-brand-orange: #FF9600;
+    --color-brand-purple: #7D00CD;
+
 }
 
 html {

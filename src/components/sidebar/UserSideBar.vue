@@ -16,7 +16,7 @@ const brandBlueColor = getComputedStyle(document.documentElement).getPropertyVal
         <div class="mt-8">
             <!-- Profile -->
             <div class="mb=2">
-                <h3 class="text-brand-white mb-2">Profile</h3>
+                <h4 class="text-brand-white mb-2">Profile</h4>
                 <SideBarItem label="Profile" route-name="UserProfile">
                     <template #icon>
                         <User :color="brandBlueColor" />
@@ -30,7 +30,7 @@ const brandBlueColor = getComputedStyle(document.documentElement).getPropertyVal
             </div>
             <!-- Learning -->
             <div class="mb=2">
-                <h3 class="text-brand-white mb-2">Learning</h3>
+                <h4 class="text-brand-white mb-2">Learning</h4>
                 <SideBarItem label="Courses" route-name="CourseList">
                     <template #icon>
                         <BookText :color="brandBlueColor" />

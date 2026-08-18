@@ -1,33 +1,41 @@
 <script lang="ts" setup>
 import Dropdown from '@/components/dropdown/Dropdown.vue';
-import { role, name, imgUrl, level} from '@/stores/user'
 import DropdownItem from './dropdown/DropdownItem.vue';
 import Button from './Button.vue';
+import { useUserStore } from '@/stores/user.ts';
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/auth.ts';
+import { useRouter } from 'vue-router';
 
-const nameText = role === 'USER' ? name : 'Admin'
-const levelText = role === 'USER' ? 'Level ' + level : 'Super User'
+const userStore = useUserStore()
+const authStore = useAuthStore()
+const router = useRouter()
+
+const nameText = computed(() => userStore.role === 'USER' ? userStore.fullName : 'Admin')
+const levelText = computed(() => userStore.role === 'USER' ? 'Level ' + userStore.level: 'Super User')
 const logout = (() => {
-    alert("Logged Out Complete!")
+    authStore.logout()
+    router.go(0)
 })
 </script>
 
 <template>
-    <div class="bg-brand-black w-full h-fit py-4 px-12">
+    <div class="bg-brand-black w-full h-fit py-2 px-12">
         <div class="flex justify-end items-center">
-            <div v-if="role === 'USER' || role === 'ADMIN'">
+            <div v-if="userStore.role === 'ADMIN' || userStore.role === 'USER'">
                 <Dropdown>
                     <template #trigger>
-                        <div class="flex gap-2">
-                        <img class="w-14 h-14 rounded-full border border-brand-blue" :src="imgUrl">
+                        <div class="flex">
+                        <img class="w-12 h-12 rounded-full border border-brand-blue" :src="userStore.imageUrl">
                         <div class="flex flex-col px-2">
-                            <h5 class="text-brand-blue">{{ nameText }}</h5>
-                            <p class="text-brand-blue font-medium">{{ levelText }}</p>
+                            <p class="text-brand-blue font-bold">{{ nameText }}</p>
+                            <p class="text-brand-blue font-medium text-sm">{{ levelText }}</p>
                         </div>
                     </div>
                     </template>
                     <template #content>
-                        <DropdownItem label="Badges" to-name="UserProfileBadgesView"></DropdownItem>
-                        <DropdownItem label="Exam History" to-name="UserProfileExamHistoryView"></DropdownItem>
+                        <DropdownItem label="Badges" toName="UserProfileBadgesView"></DropdownItem>
+                        <DropdownItem label="Exam History" toName="UserProfileExamHistoryView"></DropdownItem>
                         <DropdownItem label="Log Out" class="text-brand-red" @click="logout"></DropdownItem>
                     </template>
                 </Dropdown>
