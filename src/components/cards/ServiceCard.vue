@@ -1,23 +1,28 @@
 <script lang="ts" setup>
-import type { Level, Service, Benefit } from '@/types.ts';
+import type { Service } from '@/types.ts';
+import { useLevelsStore } from '@/stores/levels';
+import { useBenefitsStore } from '@/stores/benefits';
 import CardContainer from './CardContainer.vue';
 import Button from '../Button.vue';
 import { computed } from 'vue';
 
 const props = defineProps<{
     service: Service
-    level: Level
-    benefits: Benefit[]
     userLevel: number
 }>();
 
-const isLocked = computed(() => props.userLevel >= props.level.id);
+const levelsStore = useLevelsStore();
+const benefitsStore = useBenefitsStore();
+
+const level = computed(() => levelsStore.getLevelById(props.service.required_level_id)!);
+const benefits = computed(() => benefitsStore.getBenefitsByLevelId(props.service.required_level_id));
+const isLocked = computed(() => props.userLevel < props.service.required_level_id);
 </script>
 <template>
-    <CardContainer class="px-6! py-10!">
+    <CardContainer class="px-6! py-10! justify-start">
         <div class="flex flex-col items-center px-4 gap-y-0.5 w-full">
             <h1 class="font-medium!">{{ props.service.name }}</h1>
-            <p class="mb-2 font-medium">{{ props.level.description }}</p>
+            <p class="mb-2 font-medium">{{ level.description }}</p>
             <Button label="Use This Service" class="w-full" :locked="isLocked"/>
         </div>
         <hr class="bg-brand-black w-full">
