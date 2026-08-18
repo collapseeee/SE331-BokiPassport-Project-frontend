@@ -21,22 +21,19 @@ export interface Level {
   id: number
   name: string
   description: string
-  passCriteria: number
-  maxScore: number
+  pass_criteria: number
 }
 
 export interface Benefit {
   id: number
   description: string
-  level: number
+  level_id: number
 }
 
 export interface Service {
   id: number
-  requiredLevelId: number
+  required_level_id: number
   name: string
-  badgeList: Badge[]
-  description: string
 }
 
 export interface Badge {
