@@ -36,7 +36,7 @@ const handleCancel = () => {
 <template>
     <div class="flex flex-col gap-1.5 bg-brand-gray rounded-2xl p-5">
         <h3>{{ level.name }}</h3>
-        <p>{{ level.description }}</p>
+        <h5>{{ level.description }}</h5>
         <hr>
         <p>Benefits</p>
         <div>
