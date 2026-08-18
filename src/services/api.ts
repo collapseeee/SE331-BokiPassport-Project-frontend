@@ -1,13 +1,14 @@
+import axios from "axios";
+
 const BASE_URL = 'http://localhost:3001';
 
+const apiClient = axios.create({
+    baseURL: BASE_URL
+})
 // Pull data from Json server
 // Use this command to start the server: npx json-server --watch db.json --port 3001
-export async function fetchUsers() {
-    const response = await fetch(`${BASE_URL}/user`);
-    if (!response.ok) {
-        throw new Error('Failed to fetch users');
-    }
-    return response.json();
+export function fetchUsers() {
+    return apiClient.get('user')
 }
 
     //Format the out put after fetchUsers
