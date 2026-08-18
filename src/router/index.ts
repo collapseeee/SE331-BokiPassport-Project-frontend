@@ -18,7 +18,7 @@ import AdminDashboardView from '@/views/admin/DashboardView.vue'
 import AdminExamManagementView from '@/views/admin/ExamManagementView.vue'
 import AdminUserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminLevelManagementView from '@/views/admin/LevelManagementView.vue'
-import AdminCourseManagementView from '@/views/admin/course/CourseManagementView.vue'
+import AdminCourseManagementView from '@/views/admin/CourseManagementView.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
 
