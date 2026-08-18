@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAttrs } from 'vue'
-import { MoveLeftIcon, MoveRightIcon } from '@lucide/vue';
+import { Lock, MoveLeftIcon, MoveRightIcon } from '@lucide/vue';
 
 const attrs = useAttrs()
 const props = withDefaults(defineProps<{
@@ -12,10 +12,12 @@ const props = withDefaults(defineProps<{
     leftArrow?: boolean
     rightArrow?: boolean
     disable?: boolean
+    locked?: boolean
 }>(), {
     leftArrow: false,
     rightArrow: false,
     disable: false,
+    locked: false
 })
 
 const bgColorClass = props.bgColor ? 'bg-' + props.bgColor : 'bg-brand-blue';
@@ -29,14 +31,17 @@ if (props.leftArrow && props.rightArrow) paddingClass = 'py-2 px-10'
 </script>
 
 <template>
-    <div class="relative hover:scale-105 duration-300">
+    <div v-if="props.locked" class="relative hover:scale-105 duration-300">
+        <button class="bg-brand-dark-blue text-brand-blue rounded-2xl w-full flex items-center justify-center" :class="paddingClass"><Lock/></button>
+    </div>
+    <div v-else class="relative hover:scale-105 duration-300">
         <span v-if="props.leftArrow" class="absolute inset-y-0 left-3 flex items-center text-brand-black">
             <MoveLeftIcon :class="textColorClass" />
         </span>
         <router-link v-if="props.toName" :to="{ name: props.toName}">
-            <button v-bind="attrs" class="rounded-2xl" :class="[bgColorClass, textColorClass, boldClass, paddingClass, disableStyle]" :disabled="disable">{{ props.label }}</button>
+            <button v-bind="attrs" class="rounded-2xl w-full" :class="[bgColorClass, textColorClass, boldClass, paddingClass, disableStyle]" :disabled="disable">{{ props.label }}</button>
         </router-link>
-        <button v-else v-bind="attrs" class="rounded-2xl" :class="[bgColorClass, textColorClass, boldClass, paddingClass, disableStyle]" :disabled="disable">{{ props.label }}</button>
+        <button v-else v-bind="attrs" class="rounded-2xl w-full" :class="[bgColorClass, textColorClass, boldClass, paddingClass, disableStyle]" :disabled="disable">{{ props.label }}</button>
         <span v-if="props.rightArrow" class="absolute inset-y-0 right-3 flex items-center text-brand-black">
             <MoveRightIcon :class="textColorClass" />
         </span>
