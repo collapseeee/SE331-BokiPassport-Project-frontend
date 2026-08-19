@@ -94,6 +94,12 @@ const router = createRouter({
       path: '/courses',
       name: 'CourseList',
       component: UserCourseListView,
+      beforeEnter: (to) => {
+            if (to.query.level) {
+              return
+            }
+            to.query.level = 'all'
+      },
       children: [
         { path: ':id', 
           name: 'CourseView', 
