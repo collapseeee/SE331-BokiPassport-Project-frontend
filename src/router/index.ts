@@ -93,6 +93,7 @@ const router = createRouter({
     {
       path: '/courses',
       name: 'CourseList',
+      props: true,
       component: UserCourseListView,
       beforeEnter: (to) => {
             if (to.query.level) {
@@ -104,7 +105,8 @@ const router = createRouter({
     {
       path: '/courses/:id',
       name: 'CourseView',
-      component: UserCourseView
+      component: UserCourseView,
+      props: true
     },
     {
       path: '/exam',

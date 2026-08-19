@@ -1,55 +1,162 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue';
-import { defineCustomElement, MediaPlayerElement } from 'vidstack/elements';
+import { ref, watchEffect, computed } from 'vue';
 import type { Course } from '@/types';
 import courseService from '@/services/course';
 import 'vidstack/player/styles/default/theme.css';
 import 'vidstack/player';
 import 'vidstack/player/ui';
 import 'vidstack/player/layouts/default';
+import 'vidstack/icons';
 
-const prop = defineProps<{
-  Id: string;
+const props = defineProps<{
+  id: string;
 }>();
 
 const course = ref<Course | null>(null);
+  
 
 watchEffect(() => {
-  if (prop.Id) {
-    courseService
-      .getCourse(Number(prop.Id))
-      .then((res) => {
-        course.value = res.data;
-      })
-      .catch((error) => {
-        console.error('Error fetching course:', error);
-      });
-  }
+  course.value = null;
+  courseService
+    .getCourse(Number(props.id))
+    .then((res) => {
+      console.log('Fetched course:', res.data);
+      course.value = res.data;
+    })
+    .catch((error) => {
+      console.error('Error fetching course:', error);
+    });
 });
 
-const videoSrc = 'youtube/omB2JkC4QfA';
+const videoId = computed(() => {
+  const url = course.value?.videoUrl;
+  if (!url) return null
+
+  // Matches standard, share, embed, and shorts YouTube URLs
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+  const match = url.match(regExp)
+  return match && match[2]?.length === 11 ? match[2] : null
+})
+
+const videoSrc = computed(() => {
+  return videoId.value ? `youtube/${videoId.value}` : 'youtube/QDia3e12czc';
+
+});
+
 </script>
 
 <template>
   <div class="w-full min-h-screen bg-linear-to-b from-brand-light-blue to-brand-white">
     <div class="flex min-h-screen flex-col items-center px-4 py-8">
       <!-- video  -->
-       <media-player class="mx-auto h-auto w-full max-w-4xl grid grid-cols-12" crossorigin playsinline :src="videoSrc">
+      <media-player class="relative aspect-video w-full max-w-4xl overflow-hidden rounded-lg bg-black" 
+        crossorigin 
+        playsinline 
+        :src='videoSrc'>
+            <!-- Video provider, positioned over the video -->
             <media-provider />
+            <!-- Controls bar, positioned over the video -->
+            <media-controls class="pointer-events-none absolute position:bottom inset-0 z-10 flex h-full w-full flex-col bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity data-[visible]:opacity-100">
 
-            <media-play-button
-                class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 data-[focus]:ring-4"
-                >
-                <!-- See "Icons" component page for setup before using the following: -->
-                <media-icon type="play" class="hidden h-8 w-8 group-data-[paused]:block"></media-icon>
-                <media-icon type="pause" class="h-8 w-8 group-data-[paused]:hidden"></media-icon>
-            </media-play-button>
-            
-  </media-player>
+                <!-- Scrubber -->
+                <media-time-slider class="group relative mx-4 h-2 cursor-pointer">
+                    <media-slider-track class="relative h-1 w-full rounded-full bg-white/30">
+                        <media-slider-progress class="absolute h-full rounded-full bg-sky-400"></media-slider-progress>
+                    </media-slider-track>
+                    <media-slider-thumb class="h-3 w-3 rounded-full bg-white shadow"></media-slider-thumb>
+                </media-time-slider>
+                <media-controls-group class="pointer-events-auto flex w-full items-center px-2">
+                    <!-- Top Controls Group -->
+                    </media-controls-group>
+                    <div class="flex-1"></div>
+                <media-controls-group class="pointer-events-auto flex w-full items-center px-2">
+                    <!-- Center Controls Group -->
+                    </media-controls-group>
+                    <div class="flex-1"></div>
+                <!-- Bottom row: play, time, volume, fullscreen -->
+                <media-controls-group class="pointer-events-auto flex w-full items-center px-2">
+                    <media-play-button
+                        class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 data-[focus]:ring-4"
+                        >
+                    <!-- See "Icons" component page for setup before using the following: -->
+                        <media-icon type="play" class="hidden h-8 w-8 group-data-[paused]:block"></media-icon>
+                        <media-icon type="pause" class="h-8 w-8 group-data-[paused]:hidden"></media-icon>
+                    </media-play-button>
+
+                    <media-time class="text-sm text-white" type="current"></media-time>
+                    <span class="text-sm text-white/60">/</span>
+                    <media-time class="text-sm text-white" type="duration"></media-time>
+                    
+                    <media-time-slider
+                      class="group relative mx-[7.5px] inline-flex h-10 w-full cursor-pointer touch-none select-none items-center outline-none aria-hidden:hidden"
+                    >
+                      <!-- Track -->
+                      <div
+                        class="relative z-0 h-[5px] w-full rounded-sm bg-white/30 ring-sky-400 group-data-[focus]:ring-[3px]"
+                      >
+                        <!-- Track Fill -->
+                        <div
+                          class="absolute h-full w-[var(--slider-fill)] rounded-sm bg-indigo-400 will-change-[width]"
+                        ></div>
+                        <!-- Progress -->
+                        <div
+                          class="absolute z-10 h-full w-[var(--slider-progress)] rounded-sm bg-white/50 will-change-[width]"
+                        ></div>
+                      </div>
+                      <!-- Thumb -->
+                      <div
+                        class="absolute left-[var(--slider-fill)] top-1/2 z-20 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity will-change-[left] group-data-[active]:opacity-100 group-data-[dragging]:ring-4"
+                      ></div>
+                    </media-time-slider>
+                      
+                    <!-- <div class="flex-1"></div> -->
+
+                    <media-mute-button
+                      class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 data-[focus]:ring-4"
+                    >
+                      <!-- See "Icons" component page for setup before using the following: -->
+                      <media-icon type="mute" class="hidden h-8 w-8 group-data-[state='muted']:block"></media-icon>
+                      <media-icon type="volume-low" class="hidden h-8 w-8 group-data-[state='low']:block"></media-icon>
+                      <media-icon
+                        type="volume-high"
+                        class="hidden h-8 w-8 group-data-[state='high']:block"
+                      ></media-icon>
+                    </media-mute-button>
+
+                    <media-volume-slider
+                      class="group relative mx-[7.5px] inline-flex h-10 w-full max-w-[80px] cursor-pointer touch-none select-none items-center outline-none aria-hidden:hidden"
+                    >
+                      <!-- Track -->
+                      <div
+                        class="relative z-0 h-[5px] w-full rounded-sm bg-white/30 ring-sky-400 group-data-[focus]:ring-[3px]"
+                      >
+                        <!-- Track Fill -->
+                        <div
+                          class="absolute h-full w-[var(--slider-fill)] rounded-sm bg-indigo-400 will-change-[width]"
+                        ></div>
+                      </div>
+                      <!-- Thumb -->
+                      <div
+                        class="absolute left-[var(--slider-fill)] top-1/2 z-20 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity will-change-[left] group-data-[active]:opacity-100 group-data-[dragging]:ring-4"
+                      ></div>
+                    </media-volume-slider>
+
+                    <media-fullscreen-button
+                      class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 aria-hidden:hidden data-[focus]:ring-4"
+                    >
+                      <!-- See "Icons" component page for setup before using the following: -->
+                      <media-icon type="fullscreen" class="h-8 w-8 group-data-[active]:hidden"></media-icon>
+                      <media-icon type="fullscreen-exit" class="hidden h-8 w-8 group-data-[active]:block"></media-icon>
+                    </media-fullscreen-button>
+                </media-controls-group>
+            </media-controls>
+        </media-player>
     </div>
     <div class="mx-auto w-full max-w-4xl p-4">
-      <div class="flex flex-col items-center justify-center gap-4">
+      <div v-if="course" class="flex flex-col items-center justify-center gap-4">
         <!-- video information -->
+        <h3>{{ course.name }}</h3>
+        <p class="text-sm h-full text-wrap truncate">{{ course.description }}</p>
       </div>
       <div class="mt-8 flex flex-col items-center justify-center gap-4">
         <!-- Next video card -->
