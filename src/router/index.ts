@@ -99,13 +99,12 @@ const router = createRouter({
               return
             }
             to.query.level = 'all'
-      },
-      children: [
-        { path: ':id', 
-          name: 'CourseView', 
-          component: UserCourseView 
-        },
-      ]
+      }
+    },
+    {
+      path: '/courses/:id',
+      name: 'CourseView',
+      component: UserCourseView
     },
     {
       path: '/exam',
