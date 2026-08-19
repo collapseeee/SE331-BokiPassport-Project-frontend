@@ -28,20 +28,31 @@ export interface UserLevel {
   createdAt: Date
   userId: number
   levelId: number
+  passCriteria: number
+}
+
+export interface LevelsState {
+  levels: Level[] | []
 }
 
 export interface Benefit {
   id: number
   description: string
-  level: number
+  levelId: number
+}
+
+export interface BenefitsState {
+  benefits: Benefit[] | []
 }
 
 export interface Service {
   id: number
   requiredLevelId: number
   name: string
-  badgeList: Badge[]
-  description: string
+}
+
+export interface ServicesState {
+  services: Service[] | []
 }
 
 export interface Badge {

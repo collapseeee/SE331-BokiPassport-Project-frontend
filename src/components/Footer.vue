@@ -10,7 +10,7 @@ const scrollToTop = () => {
 
 </script>
 <template>
-    <footer id="footer" class="border-t border-brand-gray py-16 px-12 flex justify-between">
+    <footer id="footer" class="border-t border-brand-gray py-16 px-12 flex justify-between bg-brand-white">
         <div>
             <h1 class="text-brand-black"><span class="text-brand-blue">Boki Passport</span> Platform</h1>
             <div class="flex items-center gap-2">

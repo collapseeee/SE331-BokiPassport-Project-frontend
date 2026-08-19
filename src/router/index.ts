@@ -21,6 +21,12 @@ import AdminLevelManagementView from '@/views/admin/LevelManagementView.vue'
 import AdminCourseManagementView from '@/views/admin/CourseManagementView.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
+import { useLevelsStore } from '@/stores/levels'
+import { useBenefitsStore } from '@/stores/benefits'
+import { useServicesStore } from '@/stores/services'
+import LevelService from '@/services/LevelService'
+import BenefitService from '@/services/BenefitService'
+import ServicesService from '@/services/ServiceService'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,7 +94,20 @@ const router = createRouter({
     {
       path: '/user/services', 
       name: 'UserServices', 
-      component: UserServicesView 
+      component: UserServicesView, 
+      beforeEnter: (async () => {
+        const servicesStore = useServicesStore();
+        const levelStore = useLevelsStore();
+        const benefitStore = useBenefitsStore();
+        const [servicesRes, levelsRes, benefitsRes] = await Promise.all([
+            ServicesService.getServices(),
+            LevelService.getLevels(),
+            BenefitService.getBenefits()
+        ]);
+        servicesStore.updateServices(servicesRes.data);
+        levelStore.updateLevels(levelsRes.data);
+        benefitStore.updateBenefits(benefitsRes.data);
+      })
     },
     {
       path: '/courses',
