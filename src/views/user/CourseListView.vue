@@ -48,7 +48,7 @@ watchEffect(() => {
             </div>
         </div>
         <!-- course card -->
-        <div class="grid grid-cols-3 gap-x-0.5 gap-y-6">
+        <div class="flex flex-wrap justify-center gap-4 ">
                 <videoCard v-for="course in filteredCourses" :key="course.id" :course="course"/> 
         </div>
         
