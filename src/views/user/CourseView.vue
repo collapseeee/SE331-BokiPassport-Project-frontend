@@ -2,6 +2,7 @@
 import { ref, watchEffect, computed } from 'vue';
 import type { Course } from '@/types';
 import courseService from '@/services/course';
+import CardContainer from '@/components/cards/CardContainer.vue';
 import 'vidstack/player/styles/default/theme.css';
 import 'vidstack/player';
 import 'vidstack/player/ui';
@@ -13,7 +14,8 @@ const props = defineProps<{
 }>();
 
 const course = ref<Course | null>(null);
-  
+const thumbnailFailed = ref(false)
+const time = Number(ref(0))
 
 watchEffect(() => {
   course.value = null;
@@ -43,11 +45,19 @@ const videoSrc = computed(() => {
 
 });
 
+const thumbnailUrl = computed(() => {
+  if (!videoId.value) return null
+  const quality = thumbnailFailed.value ? 'hqdefault' : 'maxresdefault'
+  return `https://img.youtube.com/vi/${videoId.value}/${quality}.jpg`
+})
+
+
+
 </script>
 
 <template>
-  <div class="w-full min-h-screen bg-linear-to-b from-brand-light-blue to-brand-white">
-    <div class="flex min-h-screen flex-col items-center px-4 py-8">
+  <div class="w-full bg-linear-to-b from-brand-light-blue to-brand-white">
+    <div class="flex flex-col items-center px-4 py-8">
       <!-- video  -->
       <media-player class="relative aspect-video w-full max-w-4xl overflow-hidden rounded-lg bg-black" 
         crossorigin 
@@ -55,48 +65,52 @@ const videoSrc = computed(() => {
         :src='videoSrc'>
             <!-- Video provider, positioned over the video -->
             <media-provider />
+
+            <!-- <media-thumbnail src="thumbnailUrl"></media-thumbnail> -->
+
+
             <!-- Controls bar, positioned over the video -->
             <media-controls class="pointer-events-none absolute position:bottom inset-0 z-10 flex h-full w-full flex-col bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity data-[visible]:opacity-100">
 
-                <!-- Scrubber -->
-                <media-time-slider class="group relative mx-4 h-2 cursor-pointer">
-                    <media-slider-track class="relative h-1 w-full rounded-full bg-white/30">
-                        <media-slider-progress class="absolute h-full rounded-full bg-sky-400"></media-slider-progress>
-                    </media-slider-track>
-                    <media-slider-thumb class="h-3 w-3 rounded-full bg-white shadow"></media-slider-thumb>
-                </media-time-slider>
                 <media-controls-group class="pointer-events-auto flex w-full items-center px-2">
                     <!-- Top Controls Group -->
                     </media-controls-group>
                     <div class="flex-1"></div>
-                <media-controls-group class="pointer-events-auto flex w-full items-center px-2">
+                <media-controls-group class="pointer-events-auto flex w-full items-center justify-center px-2">
                     <!-- Center Controls Group -->
+                     <media-play-button
+                        class="group absolute inset-x-0 top-0 bottom-16 z-10 flex cursor-pointer items-center justify-center outline-none"
+                        >
+                    <!-- See "Icons" component page for setup before using the following: -->
+                        
+                    </media-play-button>
+
                     </media-controls-group>
                     <div class="flex-1"></div>
                 <!-- Bottom row: play, time, volume, fullscreen -->
                 <media-controls-group class="pointer-events-auto flex w-full items-center px-2">
                     <media-play-button
-                        class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 data-[focus]:ring-4"
+                        class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-brand-blue hover:bg-white/20 data-[focus]:ring-4"
                         >
                     <!-- See "Icons" component page for setup before using the following: -->
-                        <media-icon type="play" class="hidden h-8 w-8 group-data-[paused]:block"></media-icon>
-                        <media-icon type="pause" class="h-8 w-8 group-data-[paused]:hidden"></media-icon>
+                        <media-icon type="play" class="text-brand-blue hidden h-8 w-8 group-data-[paused]:block"></media-icon>
+                        <media-icon type="pause" class="text-brand-blue h-8 w-8 group-data-[paused]:hidden"></media-icon>
                     </media-play-button>
 
-                    <media-time class="text-sm text-white" type="current"></media-time>
-                    <span class="text-sm text-white/60">/</span>
-                    <media-time class="text-sm text-white" type="duration"></media-time>
+                    <media-time class="text-sm rounded-md bg-brand-black text-brand-white" type="current"></media-time>
                     
+                    
+
                     <media-time-slider
                       class="group relative mx-[7.5px] inline-flex h-10 w-full cursor-pointer touch-none select-none items-center outline-none aria-hidden:hidden"
                     >
                       <!-- Track -->
                       <div
-                        class="relative z-0 h-[5px] w-full rounded-sm bg-white/30 ring-sky-400 group-data-[focus]:ring-[3px]"
+                        class="relative z-0 h-[5px] w-full rounded-sm bg-brand-black ring-sky-400 group-data-[focus]:ring-[3px]"
                       >
                         <!-- Track Fill -->
                         <div
-                          class="absolute h-full w-[var(--slider-fill)] rounded-sm bg-indigo-400 will-change-[width]"
+                          class="absolute h-full w-[var(--slider-fill)] rounded-sm bg-brand-blue will-change-[width]"
                         ></div>
                         <!-- Progress -->
                         <div
@@ -108,18 +122,19 @@ const videoSrc = computed(() => {
                         class="absolute left-[var(--slider-fill)] top-1/2 z-20 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity will-change-[left] group-data-[active]:opacity-100 group-data-[dragging]:ring-4"
                       ></div>
                     </media-time-slider>
-                      
+                    
+                    <media-time class="text-sm rounded-md bg-brand-black text-brand-white" type="duration"></media-time>
                     <!-- <div class="flex-1"></div> -->
 
                     <media-mute-button
                       class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 data-[focus]:ring-4"
                     >
                       <!-- See "Icons" component page for setup before using the following: -->
-                      <media-icon type="mute" class="hidden h-8 w-8 group-data-[state='muted']:block"></media-icon>
-                      <media-icon type="volume-low" class="hidden h-8 w-8 group-data-[state='low']:block"></media-icon>
+                      <media-icon type="mute" class="text-brand-blue hidden h-8 w-8 group-data-[state='muted']:block"></media-icon>
+                      <media-icon type="volume-low" class="text-brand-blue hidden h-8 w-8 group-data-[state='low']:block"></media-icon>
                       <media-icon
                         type="volume-high"
-                        class="hidden h-8 w-8 group-data-[state='high']:block"
+                        class="text-brand-blue hidden h-8 w-8 group-data-[state='high']:block"
                       ></media-icon>
                     </media-mute-button>
 
@@ -128,11 +143,11 @@ const videoSrc = computed(() => {
                     >
                       <!-- Track -->
                       <div
-                        class="relative z-0 h-[5px] w-full rounded-sm bg-white/30 ring-sky-400 group-data-[focus]:ring-[3px]"
+                        class="relative z-0 h-[5px] w-full rounded-sm bg-brand-black ring-sky-400 group-data-[focus]:ring-[3px]"
                       >
                         <!-- Track Fill -->
                         <div
-                          class="absolute h-full w-[var(--slider-fill)] rounded-sm bg-indigo-400 will-change-[width]"
+                          class="absolute h-full w-[var(--slider-fill)] rounded-sm bg-brand-blue will-change-[width]"
                         ></div>
                       </div>
                       <!-- Thumb -->
@@ -145,22 +160,31 @@ const videoSrc = computed(() => {
                       class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 aria-hidden:hidden data-[focus]:ring-4"
                     >
                       <!-- See "Icons" component page for setup before using the following: -->
-                      <media-icon type="fullscreen" class="h-8 w-8 group-data-[active]:hidden"></media-icon>
-                      <media-icon type="fullscreen-exit" class="hidden h-8 w-8 group-data-[active]:block"></media-icon>
+                      <media-icon type="fullscreen" class="text-brand-blue h-8 w-8 group-data-[active]:hidden"></media-icon>
+                      <media-icon type="fullscreen-exit" class="text-brand-blue hidden h-8 w-8 group-data-[active]:block"></media-icon>
                     </media-fullscreen-button>
                 </media-controls-group>
             </media-controls>
         </media-player>
-    </div>
-    <div class="mx-auto w-full max-w-4xl p-4">
-      <div v-if="course" class="flex flex-col items-center justify-center gap-4">
-        <!-- video information -->
-        <h3>{{ course.name }}</h3>
-        <p class="text-sm h-full text-wrap truncate">{{ course.description }}</p>
+      <div class="mt-4 flex w-full max-w-4xl flex-col gap-4 md:flex-row">
+        <!-- video info -->
+        <div class="flex-1 rounded-lg bg-brand-black/5 p-4">
+          <h2 class="text-brand-blue text-xl font-bold">{{ course?.name }}</h2>
+          <p class="mt-1 text-sm text-brand-black/70">{{ course?.description }}</p>
+        </div>
+
+        <!-- next step -->
+        <div class="w-full rounded-lg p-6 bg-brand-black text-center text-brand-white md:w-72">
+          <p class="text-brand-blue font-semibold">Next Step</p>
+          <p class="mt-1 text-sm text-brand-white/80">Level {{ course?.levelId }} Part 2</p>
+          <button class="mt-4 w-full rounded-md bg-brand-blue py-2 font-medium hover:bg-brand-blue/80 transition-colors">
+            NEXT VIDEO
+          </button>
+        </div>
       </div>
-      <div class="mt-8 flex flex-col items-center justify-center gap-4">
-        <!-- Next video card -->
-      </div>
+
+
     </div>
+    
   </div>
 </template>
