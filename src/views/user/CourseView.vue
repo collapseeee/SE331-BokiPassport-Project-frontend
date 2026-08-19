@@ -2,7 +2,7 @@
 import { ref, watchEffect, computed } from 'vue';
 import type { Course } from '@/types';
 import courseService from '@/services/course';
-import CardContainer from '@/components/cards/CardContainer.vue';
+import Button from '@/components/Button.vue';
 import 'vidstack/player/styles/default/theme.css';
 import 'vidstack/player';
 import 'vidstack/player/ui';
@@ -15,7 +15,11 @@ const props = defineProps<{
 
 const course = ref<Course | null>(null);
 const thumbnailFailed = ref(false)
-const time = Number(ref(0))
+const nextLevel = computed(() => {
+  if (!course.value) return null;
+  const currentLevel = course.value.levelId;
+  return currentLevel < 4 ? currentLevel + 1 : null;
+});
 
 watchEffect(() => {
   course.value = null;
@@ -176,15 +180,11 @@ const thumbnailUrl = computed(() => {
         <!-- next step -->
         <div class="w-full rounded-lg p-6 bg-brand-black text-center text-brand-white md:w-72">
           <p class="text-brand-blue font-semibold">Next Step</p>
-          <p class="mt-1 text-sm text-brand-white/80">Level {{ course?.levelId }} Part 2</p>
-          <button class="mt-4 w-full rounded-md bg-brand-blue py-2 font-medium hover:bg-brand-blue/80 transition-colors">
-            NEXT VIDEO
-          </button>
+          <p class="mt-1 text-sm text-brand-white/80">Level {{ nextLevel ? nextLevel : 'Already Maxed Out' }}</p>
+          <br>
+          <Button label="Go back" right-Arrow class="group w-full" to-name="CourseList" />
         </div>
       </div>
-
-
     </div>
-    
   </div>
 </template>
