@@ -29,6 +29,7 @@ const thumbnailUrl = computed(() => {
 
 
 <template>
+    <RouterLink :to="{ name: 'CourseView', params: { id: props.course.id } }" >
     <div class="w-80 h-full bg-brand-black text-brand-white rounded-xl cursor-pointer">
         <div class="grid relative w-full">
             <p class="bg-brand-blue px-3 py-1 m-3 absolute rounded-xl">Level {{ props.course.levelId }}</p>
@@ -40,4 +41,5 @@ const thumbnailUrl = computed(() => {
             <p class="text-sm h-full text-wrap truncate overflow-hidden whitespace-nowrap">{{ props.course.description }}</p>
         </div>
     </div>
+    </RouterLink>
 </template>
