@@ -6,7 +6,7 @@
         "firstName": "Admin",
         "lastName": "Doe",
         "province": null,
-        "image_url": "https://thumbs.dreamstime.com/b/sad-man-silhouette-worried-beach-sunset-sun-background-51640055.jpg",
+        "imageUrl": "https://thumbs.dreamstime.com/b/sad-man-silhouette-worried-beach-sunset-sun-background-51640055.jpg",
         "username": "admin",
         "password": "123",
         "role": "admin",
@@ -156,8 +156,8 @@
   "eLearning": [
     {
         "id": 1,
-        "created_at": "2026-08-13T00:00:00Z",
-        "video_url": "https://youtu.be/ZZ2QUCePgYw?si=4lXuVGfxJoDP-pAm",
+        "createdAt": "2026-08-13T00:00:00Z",
+        "videoUrl": "https://youtu.be/ZZ2QUCePgYw?si=4lXuVGfxJoDP-pAm",
         "name": "Introduction to Agentic AI",
         "description": "Demystifying AI agents, Googlers Aja Hammerly and Jason Davenport provide a comprehensive overview of their capabilities, applications, and construction. Join us as we unravel the diverse definitions, explore compelling use cases, and delve into the different architectural approaches for building intelligent agents.",
         "levelId": 1

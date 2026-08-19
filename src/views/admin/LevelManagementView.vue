@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import LevelCard from '@/components/cards/LevelCard.vue';
-import level from '@/services/level';
+import LevelService from '@/services/LevelService';
 import type { Level } from '@/types';
 import { onMounted, ref, watchEffect } from 'vue';
 
 const levels = ref<Level[] | null>(null)
 onMounted(() => {
     watchEffect(() => {
-        level.getLevels()
+        LevelService.getLevels()
             .then(res => levels.value = res.data)
     })
 })

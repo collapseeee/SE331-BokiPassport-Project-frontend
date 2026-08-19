@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import benefit from '@/services/benefit';
+import BenefitService from '@/services/BenefitService';
 import type { Benefit, Level } from '@/types';
 import { onMounted, ref, watchEffect } from 'vue';
 import FormInput from '../form/FormInput.vue';
@@ -13,7 +13,7 @@ const benefits = ref<Benefit[] | null>(null)
 const defaultBenefits = ref<Benefit[] | null>(null)
 onMounted(() => {
     watchEffect(() => {
-        benefit.getBenefits(props.level.id)
+        BenefitService.getBenefitsByLevelId(props.level.id)
             .then(res => {
                 benefits.value = res.data
                 defaultBenefits.value = res.data
