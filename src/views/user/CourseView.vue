@@ -68,9 +68,14 @@ const thumbnailUrl = computed(() => {
         playsinline 
         :src='videoSrc'>
             <!-- Video provider, positioned over the video -->
-            <media-provider />
-
-            <!-- <media-thumbnail src="thumbnailUrl"></media-thumbnail> -->
+            <media-provider>
+              <media-poster
+              :src="thumbnailUrl"
+              alt="Video thumbnail"
+              class="absolute inset-0 h-full w-full object-cover data-[visible]:opacity-100 opacity-0 transition-opacity"
+            ></media-poster>
+            </media-provider>
+          
 
 
             <!-- Controls bar, positioned over the video -->

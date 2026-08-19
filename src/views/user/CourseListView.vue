@@ -27,7 +27,7 @@ watchEffect(() => {
 </script>
 
 <template>
-    <div class="w-full min-h-screen bg-linear-to-b from-light-blue to-brand-white">
+    <div class="w-full h-full bg-linear-to-b from-light-blue to-brand-white">
         <div class="flex flex-col items-center">
             <div class="w-full max-w-md p-8 space-y-6">
                 <!-- Title -->
