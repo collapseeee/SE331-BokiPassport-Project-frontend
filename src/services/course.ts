@@ -9,8 +9,8 @@ const apiClient = axios.create({
 })
 
 export default {
-   getCourses(levelId: number) {
-        return apiClient.get('course?levelId=' + levelId)
+    getCourses() {
+        return apiClient.get('course')
     },
     getCourse(id: number) {
         return apiClient.get('course/' + id)
