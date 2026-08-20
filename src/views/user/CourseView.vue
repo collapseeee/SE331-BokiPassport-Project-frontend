@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed } from 'vue';
+import { ref, computed } from 'vue';
 import type { Course } from '@/types';
-import courseService from '@/services/course';
+import courseService from '@/services/courseService';
 import Button from '@/components/Button.vue';
 import 'vidstack/player/styles/default/theme.css';
 import 'vidstack/player';
@@ -21,17 +21,10 @@ const nextLevel = computed(() => {
   return currentLevel < 4 ? currentLevel + 1 : null;
 });
 
-watchEffect(() => {
-  course.value = null;
-  courseService
-    .getCourse(Number(props.id))
-    .then((res) => {
-      console.log('Fetched course:', res.data);
-      course.value = res.data;
-    })
-    .catch((error) => {
-      console.error('Error fetching course:', error);
-    });
+courseService.getCourse(Number(props.id)).then(response => {
+  course.value = response.data;
+}).catch(error => {
+  console.error('Error fetching course:', error);
 });
 
 const videoId = computed(() => {
@@ -106,7 +99,7 @@ const thumbnailUrl = computed(() => {
                         <media-icon type="pause" class="text-brand-blue h-8 w-8 group-data-[paused]:hidden"></media-icon>
                     </media-play-button>
 
-                    <media-time class="text-sm rounded-md bg-brand-black text-brand-white" type="current"></media-time>
+                    <media-time class="text-sm rounded-md bg-brand-black text-brand-white p-0.5" type="current"></media-time>
                     
                     
 
@@ -132,7 +125,7 @@ const thumbnailUrl = computed(() => {
                       ></div>
                     </media-time-slider>
                     
-                    <media-time class="text-sm rounded-md bg-brand-black text-brand-white" type="duration"></media-time>
+                    <media-time class="text-sm rounded-md bg-brand-black text-brand-white p-0.5" type="duration"></media-time>
                     <!-- <div class="flex-1"></div> -->
 
                     <media-mute-button
