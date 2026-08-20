@@ -13,7 +13,6 @@ const props = defineProps<{
 
 const levelStore = useLevelsStore();
 const levelName = ref('Level X');
-const levelDesc = ref('-');
 const buttonLabel = ref('-');
 const isLocked = ref(false);
 const isDisable = ref(false);
@@ -21,10 +20,9 @@ const isDisable = ref(false);
 const benefitStore = useBenefitsStore();
 const benefits = ref<Benefit[]>([]);
 
-const level = levelStore.getLevelById(props.exam.levelId)!;
+const level = levelStore.getLevelById(Number(props.exam.levelId) + 1)!;
 levelName.value = level.name;
-levelDesc.value = level.description;
-benefits.value = benefitStore.getBenefitsByLevelId(props.exam.levelId)!;
+benefits.value = benefitStore.getBenefitsByLevelId(Number(props.exam.levelId) + 1)!;
 
 if (props.exam.levelId < props.userLevel) {
     // Level less than user's level
@@ -42,13 +40,13 @@ if (props.exam.levelId < props.userLevel) {
 <template>
     <CardContainer class="px-6! py-10! justify-start">
         <div class="flex flex-col items-center px-4 gap-y-0.5 w-full">
-            <h1 class="font-medium! text-center">{{ levelName }}</h1>
-            <p class="mb-2 font-medium">{{ levelDesc }}</p>
+            <h1 class="font-medium! text-center mb-2">{{ levelName }}</h1>
+            <p class="mb-2.5 font-medium text-center">{{ props.exam.name }}</p>
             <Button :label="buttonLabel" class="w-full" :disabled="isDisable" :locked="isLocked" :to="{ name: 'ExamView', params: { id: String(props.exam.id) } }"/>
         </div>
         <hr class="bg-brand-black w-full">
         <div class="flex flex-col w-full">
-            <p class="font-bold">Benefits on this level:</p>
+            <p class="font-bold">Benefits on Level {{ Number(props.exam.levelId) + 1 }}:</p>
             <ul class="list-disc pl-6">
                 <li v-for="benefit in benefits" :key="benefit.id">{{ benefit.description }}</li>
             </ul>
