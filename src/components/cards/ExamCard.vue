@@ -58,20 +58,18 @@ const colorClass: Record<number, string> = {
                 <li v-for="benefit in benefits" :key="benefit.id">{{ benefit.description }}</li>
             </ul>
         </div>
-        <div class="flex flex-row w-full mt-auto h-fit px-16">
-            <div class="grid grid-cols-2 w-full gap-16 p-2">
-                <div class="bg-brand-white rounded-2xl p-4 text-start shadow-xl flex flex-col justify-between">
-                    <p class="font-bold">Pass Criteria:</p>
-                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`">{{ Math.round((Number(level.passCriteria)) * 100) }}%</h1>
-                    <p class="text-gray-800 pt-2">Correct Answer</p>
+        <div class="grid grid-cols-1 xl:grid-cols-2 w-full items-center mt-auto h-fit px-auto gap-8">
+            <div class="bg-brand-white rounded-2xl p-4 text-start shadow-xl flex flex-col items-center w-full h-full">
+                <p class="font-bold">Pass Criteria:</p>
+                <h1 class="text-6xl!" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`">{{ Math.round((Number(level.passCriteria)) * 100) }}%</h1>
+                <p class="text-gray-800 pt-2">Correct Answer</p>
+            </div>
+            <div class="bg-brand-white rounded-2xl p-4 text-center shadow-xl flex flex-col justify-between w-full h-full">
+                <p class="font-bold">Earn Badge:</p>
+                <div class=" mx-auto">
+                    <Brain class="size-20" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`"/>
                 </div>
-                <div class="bg-brand-white rounded-2xl p-4 text-center shadow-xl flex flex-col justify-between">
-                    <p class="font-bold">Earn Badge:</p>
-                    <div class="w-1/3 h-1/3 mx-auto">
-                        <Brain class="w-full h-full" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`"/>
-                    </div>
-                    <p>foo</p>
-                </div>
+                <p>foo</p>
             </div>
         </div>
     </CardContainer>
