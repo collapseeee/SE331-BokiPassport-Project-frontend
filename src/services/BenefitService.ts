@@ -2,7 +2,7 @@ import { apiClient } from "./apiClient"
 
 export default {
   getBenefits() {
-    return apiClient.get('/benefit')
+    return apiClient.get('/benefits')
   },
   getBenefitsByLevelId(levelId: number) {
     return apiClient.get('benefit?levelId=' + levelId)

@@ -2,6 +2,6 @@ import { apiClient } from "./apiClient"
 
 export default {
   getLevels() {
-    return apiClient.get('/level')
+    return apiClient.get('/levels')
   },
 }
