@@ -10,6 +10,20 @@ export interface User {
   password: string
   role: string // This may changed to Role interface later.
   isActive: boolean
+  userLevels: UserLevel
+}
+
+export interface UserResponse {
+  id: number
+  firstName: string
+  lastName: string
+  province: string
+  imageUrl: string
+  username: string
+  password: string
+  role: string
+  isActive: boolean
+  userLevels: UserLevel[]
 }
 
 export interface UserState {
@@ -28,7 +42,6 @@ export interface UserLevel {
   createdAt: Date
   userId: number
   levelId: number
-  passCriteria: number
 }
 
 export interface LevelsState {
