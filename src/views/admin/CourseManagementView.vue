@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AdminHeader from '@/components/AdminHeader.vue';
 import Button from '@/components/Button.vue';
 import VideoCard from '@/components/cards/VideoCard.vue';
 import { useRouter } from 'vue-router';
@@ -13,9 +14,8 @@ const handleAdd = () => {
 </script>
 
 <template>
+    <AdminHeader title="Course Management" description="Boki Passport course management system"/>
     <div class="p-5 flex flex-col gap-y-2">
-        <h2>Course Management</h2>
-        <p>Boki Passport course management system</p>
         <div class="flex flex-row justify-between">
             <div class="flex gap-x-4">
                 <RouterLink :class="[linkClasses, $route.query.level === 'all' ? linkActiveClasses : '']" :to="{ query: { level: 'all' }}">ALL</RouterLink>
