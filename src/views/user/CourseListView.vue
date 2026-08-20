@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import videoCard from '@/components/cards/VideoCard.vue';
 import type { Course } from '@/types';
-import { computed, ref } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import courseService from '@/services/courseService';
 import { useRoute } from 'vue-router';
 
@@ -15,12 +15,14 @@ const filteredCourses = computed(() => {
 const linkClasses = 'bg-brand-blue hover:bg-brand-blue/60 font-bold hover:shadow-sm text-lg text-brand-white px-4 py-2 rounded-xl transition-all hover:scale-105 duration-300'
 const linkActiveClasses = 'bg-brand-blue/40 shadow-lg font-medium'
 
-courseService.getCourses().then(response => {
-    courses.value = response.data
-}).catch(error => {
-    console.error('Error fetching courses:', error)
+watchEffect(() => {
+    courses.value = null
+    courseService.getCourses().then(res => {
+        courses.value = res.data
+    }).catch(error => {
+        console.error('Error fetching courses:', error)
+    })
 })
-
 </script>
 
 <template>

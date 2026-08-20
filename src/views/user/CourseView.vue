@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
 import type { Course } from '@/types';
 import courseService from '@/services/courseService';
 import Button from '@/components/Button.vue';
@@ -21,10 +21,16 @@ const nextLevel = computed(() => {
   return currentLevel < 4 ? currentLevel + 1 : null;
 });
 
-courseService.getCourse(Number(props.id)).then(response => {
-  course.value = response.data;
-}).catch(error => {
-  console.error('Error fetching course:', error);
+watchEffect(() => {
+  course.value = null;
+  courseService
+    .getCourse(Number(props.id))
+    .then((res) => {
+      course.value = res.data;
+    })
+    .catch((error) => {
+      console.error('Error fetching course:', error);
+    });
 });
 
 const videoId = computed(() => {
