@@ -13,5 +13,6 @@ const pinia = createPinia()
 inject()
 app.use(pinia)
 app.use(router)
+app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('media-');
 
 app.mount('#app')
