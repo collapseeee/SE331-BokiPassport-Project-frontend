@@ -95,20 +95,7 @@ const router = createRouter({
     {
       path: '/user/services', 
       name: 'UserServices', 
-      component: UserServicesView, 
-      beforeEnter: (async () => {
-        const servicesStore = useServicesStore();
-        const levelStore = useLevelsStore();
-        const benefitStore = useBenefitsStore();
-        const [servicesRes, levelsRes, benefitsRes] = await Promise.all([
-            ServicesService.getServices(),
-            LevelService.getLevels(),
-            BenefitService.getBenefits()
-        ]);
-        servicesStore.updateServices(servicesRes.data);
-        levelStore.updateLevels(levelsRes.data);
-        benefitStore.updateBenefits(benefitsRes.data);
-      })
+      component: UserServicesView
     },
     {
       path: '/courses',
@@ -183,10 +170,23 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(to => {
+router.beforeEach(async to => {
   const authStore = useAuthStore()
   if (!authStore.isAuthenticated() && to.name !== 'Login' && to.name !== 'Home' && to.name !== 'Register') {
     return { name: 'Home' }
+  }
+  if (to.name !== 'Home' && to.name !== 'Login' && to.name !== 'Register') {
+    const servicesStore = useServicesStore();
+    const levelStore = useLevelsStore();
+    const benefitStore = useBenefitsStore();
+    const [servicesRes, levelsRes, benefitsRes] = await Promise.all([
+            ServicesService.getServices(),
+            LevelService.getLevels(),
+            BenefitService.getBenefits()
+        ]);
+    servicesStore.updateServices(servicesRes.data);
+    levelStore.updateLevels(levelsRes.data);
+    benefitStore.updateBenefits(benefitsRes.data);
   }
 })
 
