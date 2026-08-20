@@ -2,9 +2,9 @@ import { apiClient } from "./apiClient"
 
 export default {
     getCourses() {
-        return apiClient.get('course')
+        return apiClient.get('courses')
     },
     getCourse(id: number) {
-        return apiClient.get('course/' + id)
+        return apiClient.get('courses/' + id)
     }
 }
