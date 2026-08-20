@@ -5,6 +5,7 @@ import CardContainer from './CardContainer.vue';
 import Button from '../Button.vue';
 import { ref } from 'vue';
 import { useBenefitsStore } from '@/stores/benefits.ts';
+import { Brain } from '@lucide/vue';
 
 const props = defineProps<{
     exam: Exam
@@ -36,9 +37,15 @@ if (props.exam.levelId < props.userLevel) {
     isLocked.value = true;
 }
 
+const colorClass: Record<number, string> = {
+    2: 'brand-blue',
+    3: 'brand-navy-blue',
+    4: 'brand-red'
+}
+
 </script>
 <template>
-    <CardContainer class="px-6! py-10! justify-start">
+    <CardContainer class="px-6! py-10!">
         <div class="flex flex-col items-center px-4 gap-y-0.5 w-full">
             <h1 class="font-medium! text-center mb-2">{{ levelName }}</h1>
             <p class="mb-2.5 font-medium text-center">{{ props.exam.name }}</p>
@@ -50,6 +57,22 @@ if (props.exam.levelId < props.userLevel) {
             <ul class="list-disc pl-6">
                 <li v-for="benefit in benefits" :key="benefit.id">{{ benefit.description }}</li>
             </ul>
+        </div>
+        <div class="flex flex-row w-full mt-auto h-fit px-16">
+            <div class="grid grid-cols-2 w-full gap-16 p-2">
+                <div class="bg-brand-white rounded-2xl p-4 text-start shadow-xl flex flex-col justify-between">
+                    <p class="font-bold">Pass Criteria:</p>
+                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`">{{ Math.round((Number(level.passCriteria)) * 100) }}%</h1>
+                    <p class="text-gray-800 pt-2">Correct Answer</p>
+                </div>
+                <div class="bg-brand-white rounded-2xl p-4 text-center shadow-xl flex flex-col justify-between">
+                    <p class="font-bold">Earn Badge:</p>
+                    <div class="w-1/3 h-1/3 mx-auto">
+                        <Brain class="w-full h-full" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`"/>
+                    </div>
+                    <p>foo</p>
+                </div>
+            </div>
         </div>
     </CardContainer>
 </template>
