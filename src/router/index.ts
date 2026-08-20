@@ -10,8 +10,9 @@ import UserProfileExamHistoryView from '@/views/user/profile/ExamHistoryView.vue
 import UserServicesView from '@/views/user/ServicesView.vue'
 import UserCourseListView from '@/views/user/CourseListView.vue'
 import UserCourseView from '@/views/user/CourseView.vue'
-import UserExamListView from '@/views/user/ExamListView.vue'
-import UserExamView from '@/views/user/ExamView.vue'
+import UserExamListView from '@/views/user/exam/ExamListView.vue'
+import UserExamView from '@/views/user/exam/ExamView.vue'
+import UserExamQuestionView from '@/views/user/exam/ExamQuestionView.vue'
 
 import AdminView from '@/views/AdminView.vue'
 import AdminDashboardView from '@/views/admin/DashboardView.vue'
@@ -123,11 +124,15 @@ const router = createRouter({
     {
       path: '/exam',
       name: 'ExamList',
-      component: UserExamListView,
+      component: UserExamListView
+    },
+    { path: '/exam/:id', 
+      name: 'ExamView', 
+      component: UserExamView,
       children: [
         { path: ':id', 
-          name: 'ExamView', 
-          component: UserExamView
+          name: 'ExamQuestionView', 
+          component: UserExamQuestionView
         },
       ]
     },
