@@ -4,4 +4,7 @@ export default {
   getLevels() {
     return apiClient.get('/levels')
   },
+  getLevelUsers(level: number) {
+    return apiClient.get(`/levels/${level}?_embed=users`)
+  }
 }
