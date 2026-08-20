@@ -60,7 +60,7 @@ export interface BenefitsState {
 
 export interface Service {
   id: number
-  requiredLevelId: number
+  levelId: number
   name: string
 }
 
