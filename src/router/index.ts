@@ -100,13 +100,20 @@ const router = createRouter({
     {
       path: '/courses',
       name: 'CourseList',
+      props: true,
       component: UserCourseListView,
-      children: [
-        { path: ':id', 
-          name: 'CourseView', 
-          component: UserCourseView 
-        },
-      ]
+      beforeEnter: (to) => {
+            if (to.query.level) {
+              return
+            }
+            to.query.level = 'all'
+      }
+    },
+    {
+      path: '/courses/:id',
+      name: 'CourseView',
+      component: UserCourseView,
+      props: true
     },
     {
       path: '/exam',
