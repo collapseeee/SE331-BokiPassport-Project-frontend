@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAttrs } from 'vue'
 import { Lock, MoveLeftIcon, MoveRightIcon } from '@lucide/vue';
+import type { RouteLocationRaw } from 'vue-router';
 
 const attrs = useAttrs()
 const props = withDefaults(defineProps<{
@@ -9,6 +10,7 @@ const props = withDefaults(defineProps<{
     textColor?: string
     isBold? : boolean
     toName?: string
+    to?: RouteLocationRaw
     leftArrow?: boolean
     rightArrow?: boolean
     disabled?: boolean
@@ -38,7 +40,7 @@ if (props.leftArrow && props.rightArrow) paddingClass = 'py-2 px-10'
         <span v-if="props.leftArrow" class="absolute inset-y-0 left-3 flex items-center text-brand-black">
             <MoveLeftIcon :class="textColorClass" />
         </span>
-        <router-link v-if="props.toName" :to="{ name: props.toName}">
+        <router-link v-if="props.to || props.toName" :to="props.to || { name: props.toName }">
             <button v-bind="attrs" class="rounded-2xl w-full" :class="[bgColorClass, textColorClass, boldClass, paddingClass, disableStyle]" :disabled="disabled">{{ props.label }}</button>
         </router-link>
         <button v-else v-bind="attrs" class="rounded-2xl w-full" :class="[bgColorClass, textColorClass, boldClass, paddingClass, disableStyle]" :disabled="disabled">{{ props.label }}</button>
