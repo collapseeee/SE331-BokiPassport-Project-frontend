@@ -6,6 +6,9 @@
     // Extra safety for array and object lookups, but may have false positives.
     "noUncheckedIndexedAccess": true,
 
+    // Include Vidstack custom element typings for Vue template usage.
+    "types": ["vidstack/vue"],
+
     // Path mapping for cleaner imports.
     "paths": {
       "@/*": ["./src/*"]

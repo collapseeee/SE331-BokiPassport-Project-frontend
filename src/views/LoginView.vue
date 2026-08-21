@@ -13,7 +13,6 @@ const router = useRouter()
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
-const isLoading = ref(false)
 
 function handleLogin(){
     errorMessage.value = ''
@@ -23,7 +22,6 @@ function handleLogin(){
         return
     }
 
-    isLoading.value = true
     authStore.login(username.value, password.value)
         .then((res) => {
             if (res.success && res.user) {
@@ -32,7 +30,9 @@ function handleLogin(){
             }
             return errorMessage.value = res.error ?? 'Login failed. Please try again.'
         })
-                    
+        .catch((err) => {
+            console.error('An error occurs while login: ', err)
+        })
 }
 
 

@@ -81,6 +81,12 @@
     {
         "id": 1,
         "createdAt": "2026-08-13T00:00:00Z",
+        "userId": "0",
+        "levelId": null
+    },
+    {
+        "id": 2,
+        "createdAt": "2026-08-13T00:00:00Z",
         "userId": "1",
         "levelId": "1"
     },
