@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import type { ExamHistory, User } from '@/types.ts';
 import TableItem from './TableItem.vue';
+defineProps<{
+    rows: Array<User | ExamHistory>
+}>()
 
 // Exam history state for passing to TableItem
 // const examHistoryStore = useExamHistoryStore()
 </script>
 
-
 <template>
-    <tbody>
-        <TableItem v-for="value in [{ id: 0, date: '10/07/2026', name: 'Level 1', score: 4, status: 'Failed' }]" :key="value.id" :columns="value"/>
+    <tbody class="w-full flex flex-col">
+        <TableItem v-for="row in rows" class="bg-brand-white hover:bg-brand-gray/30" :key="row.id" :row="row" />
     </tbody>
 </template>
