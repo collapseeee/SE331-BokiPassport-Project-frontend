@@ -8,6 +8,9 @@ export const useUserStore = defineStore('user', ({
         user: null
     }),
     getters: {
+        id(): number {
+            return localStorage.getItem(userKey) ? JSON.parse(localStorage.getItem(userKey) || '').id : 1
+        },
         role(): string {
             return localStorage.getItem(userKey) ? JSON.parse(localStorage.getItem(userKey) || '').role.toUpperCase() : ''
         },
