@@ -84,7 +84,7 @@ export interface Course {
 }
 
 export interface Exam {
-  id: number
+  id: string
   name: string
   description: string
   createdAt: Date
@@ -93,7 +93,7 @@ export interface Exam {
 }
 
 export interface ExamHistory {
-  id: number
+  id: string
   createdAt: Date
   totalScore: number
   isPassed: boolean

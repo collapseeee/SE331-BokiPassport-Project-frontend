@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AdminHeader from '@/components/AdminHeader.vue';
 import LevelCard from '@/components/cards/LevelCard.vue';
 import LevelService from '@/services/LevelService';
 import type { Level } from '@/types';
@@ -14,9 +15,8 @@ onMounted(() => {
 </script>
 
 <template>
+    <AdminHeader title="Level Management" description="Boki Passport level management system"/>
     <div class="p-5 flex flex-col gap-2">
-        <h2>Level Management</h2>
-        <p>Boki Passport level management system</p>
         <div v-if="levels" class="grid grid-cols-2 gap-3">
             <LevelCard v-for="level in levels" :key="level.id" :level="level"/>
         </div>

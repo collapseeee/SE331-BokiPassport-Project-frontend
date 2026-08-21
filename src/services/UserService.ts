@@ -15,4 +15,7 @@ export default {
                 console.error("Error occurs while get data: ", err)
             })
     },
+    getUserExams(id: number) {
+        return apiClient.get(`/users/${id}?_embed=userExamHistories`)
+    }
 }

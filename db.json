@@ -10,7 +10,8 @@
         "username": "admin",
         "password": "123",
         "role": "admin",
-        "isActive": null
+        "isActive": null,
+        "levelId": null
     },
     {
         "id": 1,
@@ -21,7 +22,32 @@
         "username": "boki",
         "password": "boki123",
         "role": "user",
-        "isActive": true
+        "isActive": true,
+        "levelId": "1"
+    },
+    {
+        "id": 2,
+        "firstName": "Gerry",
+        "lastName": "Express",
+        "province": "Chiang Kai",
+        "imageUrl": "https://avatars.githubusercontent.com/u/99584671?s=200&v=4",
+        "username": "gerry",
+        "password": "123",
+        "role": "user",
+        "isActive": true,
+        "levelId": "2"
+    },
+    {
+        "id": 3,
+        "firstName": "Collapsee",
+        "lastName": "Chan",
+        "province": "Chiang Mai",
+        "imageUrl": "https://avatars.githubusercontent.com/u/134732932?s=200&v=4",
+        "username": "collapsee",
+        "password": "123",
+        "role": "user",
+        "isActive": true,
+        "levelId": "2"
     }
     
 ],
@@ -63,6 +89,18 @@
         "createdAt": "2026-08-13T00:00:00Z",
         "userId": "1",
         "levelId": "1"
+    },
+    {
+        "id": 2,
+        "createdAt": "2026-08-13T00:00:00Z",
+        "userId": "2",
+        "levelId": "3"
+    },
+    {
+        "id": 3,
+        "createdAt": "2026-08-13T00:00:00Z",
+        "userId": "3",
+        "levelId": "2"
     }
   ],
   "benefits": [

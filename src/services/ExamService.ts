@@ -1,10 +1,10 @@
-import { apiClient } from "./apiClient";
+import { apiClient } from "./apiClient"
 
 export default {
-    getExams() {
-        return apiClient.get('/exams')
-    },
-    getExamByLevelId(levelId: number) {
-        return apiClient.get('/exam?levelId=' + levelId)
-    }
+  getExams() {
+    return apiClient.get('/exams')
+  },
+  getExam(id: number) {
+    return apiClient.get(`/exams/${id}`)
+  }
 }
