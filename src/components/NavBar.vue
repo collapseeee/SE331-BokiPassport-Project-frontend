@@ -6,13 +6,15 @@ import { useUserStore } from '@/stores/user.ts';
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth.ts';
 import { useRouter } from 'vue-router';
+import { useLevelsStore } from '@/stores/levels.ts';
 
-const userStore = useUserStore()
-const authStore = useAuthStore()
-const router = useRouter()
+const userStore = useUserStore();
+const authStore = useAuthStore();
+const levelStore = useLevelsStore();
+const router = useRouter();
 
 const nameText = computed(() => userStore.role === 'USER' ? userStore.fullName : 'Admin')
-const levelText = computed(() => userStore.role === 'USER' ? 'Level ' + userStore.level: 'Super User')
+const levelText = computed(() => userStore.role === 'USER' ? levelStore.getLevelById(Number(userStore.level))?.name : 'Super User')
 const logout = (() => {
     authStore.logout()
     router.go(0)

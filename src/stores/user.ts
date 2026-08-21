@@ -17,6 +17,9 @@ export const useUserStore = defineStore('user', ({
         fullName(): string {
             return JSON.parse(localStorage.getItem(userKey) || '').firstName + ' ' +  JSON.parse(localStorage.getItem(userKey) || '').lastName
         },
+        province(): string {
+            return localStorage.getItem(userKey) ? JSON.parse(localStorage.getItem(userKey) || '').province : ''
+        },
         level(): string {
             return localStorage.getItem(userKey) ? JSON.parse(localStorage.getItem(userKey) || '').level : ''
         },
@@ -27,13 +30,15 @@ export const useUserStore = defineStore('user', ({
     actions: {
         saveUser(user: User) {
             /* Save user state to localStorage */
+            const levelId = user.userLevels.levelId
             localStorage.setItem(userKey, JSON.stringify({
                 id: user.id,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 province: user.province,
                 imageUrl: user.imageUrl,
-                role: user.role
+                role: user.role,
+                level: levelId
             }))
         },
         clearUser() {

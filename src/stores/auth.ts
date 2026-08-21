@@ -18,7 +18,8 @@ export const useAuthStore = defineStore('auth', () => {
                     userStore.saveUser(matchedUser.value)
                     return { success: true, user: matchedUser.value }
                 })
-                .catch(() => {
+                .catch((err) => {
+                    console.error('API error during login: ', err)
                     return { success: false, error: 'An error occurred while logging in', user: null }
                 })
     }

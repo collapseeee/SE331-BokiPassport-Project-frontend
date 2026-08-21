@@ -10,8 +10,9 @@ import UserProfileExamHistoryView from '@/views/user/profile/ExamHistoryView.vue
 import UserServicesView from '@/views/user/ServicesView.vue'
 import UserCourseListView from '@/views/user/CourseListView.vue'
 import UserCourseView from '@/views/user/CourseView.vue'
-import UserExamListView from '@/views/user/ExamListView.vue'
-import UserExamView from '@/views/user/ExamView.vue'
+import UserExamListView from '@/views/user/exam/ExamListView.vue'
+import UserExamView from '@/views/user/exam/ExamView.vue'
+import UserExamQuestionView from '@/views/user/exam/ExamQuestionView.vue'
 
 import AdminView from '@/views/AdminView.vue'
 import AdminDashboardView from '@/views/admin/DashboardView.vue'
@@ -94,20 +95,7 @@ const router = createRouter({
     {
       path: '/user/services', 
       name: 'UserServices', 
-      component: UserServicesView, 
-      beforeEnter: (async () => {
-        const servicesStore = useServicesStore();
-        const levelStore = useLevelsStore();
-        const benefitStore = useBenefitsStore();
-        const [servicesRes, levelsRes, benefitsRes] = await Promise.all([
-            ServicesService.getServices(),
-            LevelService.getLevels(),
-            BenefitService.getBenefits()
-        ]);
-        servicesStore.updateServices(servicesRes.data);
-        levelStore.updateLevels(levelsRes.data);
-        benefitStore.updateBenefits(benefitsRes.data);
-      })
+      component: UserServicesView
     },
     {
       path: '/courses',
@@ -130,11 +118,15 @@ const router = createRouter({
     {
       path: '/exam',
       name: 'ExamList',
-      component: UserExamListView,
+      component: UserExamListView
+    },
+    { path: '/exam/:id', 
+      name: 'ExamView', 
+      component: UserExamView,
       children: [
         { path: ':id', 
-          name: 'ExamView', 
-          component: UserExamView
+          name: 'ExamQuestionView', 
+          component: UserExamQuestionView
         },
       ]
     },
@@ -185,10 +177,23 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(to => {
+router.beforeEach(async to => {
   const authStore = useAuthStore()
   if (!authStore.isAuthenticated() && to.name !== 'Login' && to.name !== 'Home' && to.name !== 'Register') {
     return { name: 'Home' }
+  }
+  if (to.name !== 'Home' && to.name !== 'Login' && to.name !== 'Register') {
+    const servicesStore = useServicesStore();
+    const levelStore = useLevelsStore();
+    const benefitStore = useBenefitsStore();
+    const [servicesRes, levelsRes, benefitsRes] = await Promise.all([
+            ServicesService.getServices(),
+            LevelService.getLevels(),
+            BenefitService.getBenefits()
+        ]);
+    servicesStore.updateServices(servicesRes.data);
+    levelStore.updateLevels(levelsRes.data);
+    benefitStore.updateBenefits(benefitsRes.data);
   }
 })
 
