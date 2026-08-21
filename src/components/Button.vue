@@ -22,8 +22,8 @@ const props = withDefaults(defineProps<{
     locked: false
 })
 
-const bgColorClass = props.bgColor ? 'bg-' + props.bgColor : 'bg-brand-blue';
-const textColorClass = props.textColor? 'text-' + props.textColor : 'text-white';
+const bgColorClass = props.bgColor ? `bg-${props.bgColor}` : 'bg-brand-blue';
+const textColorClass = props.textColor? `text-${props.textColor}` : 'text-white';
 const boldClass = props.isBold ? 'font-bold' : 'font-medium';
 const disableStyle = props.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer';
 let paddingClass = 'px-4 py-2'
