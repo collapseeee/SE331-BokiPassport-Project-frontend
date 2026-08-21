@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAttrs } from 'vue'
+import { computed, useAttrs } from 'vue'
 import { Lock, MoveLeftIcon, MoveRightIcon } from '@lucide/vue';
 import type { RouteLocationRaw } from 'vue-router';
 
@@ -22,7 +22,18 @@ const props = withDefaults(defineProps<{
     locked: false
 })
 
-const bgColorClass = props.bgColor ? `bg-${props.bgColor}` : 'bg-brand-blue';
+const colorMap: Record<string, string> = {
+    'brand-blue': 'bg-brand-blue',
+    'brand-dark-blue': 'bg-brand-dark-blue',
+    'brand-red': 'bg-brand-red',
+    'brand-black': 'bg-brand-black',
+    'brand-green': 'bg-brand-green',
+    'brand-orange': 'bg-brand-orange',
+}
+
+const bgColorClass = computed(() => {
+    return props.bgColor ? (colorMap[props.bgColor] || `bg-${props.bgColor}`) : 'bg-brand-blue'
+})
 const textColorClass = props.textColor? `text-${props.textColor}` : 'text-white';
 const boldClass = props.isBold ? 'font-bold' : 'font-medium';
 const disableStyle = props.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer';
