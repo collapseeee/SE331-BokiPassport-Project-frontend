@@ -29,7 +29,9 @@ const isLocked = computed(() => props.userLevel < props.service.levelId);
         <div class="flex flex-col items-center px-4 gap-y-0.5 w-full">
             <h1 class="font-medium!">{{ props.service.name }}</h1>
             <p class="mb-2 font-medium">{{ levelDescription }}</p>
-            <Button label="Use This Service" class="w-full" :locked="isLocked"/>
+            <div class="w-full">
+                <Button label="Use This Service" :locked="isLocked"/>
+            </div>
         </div>
         <hr class="bg-brand-black w-full">
         <div class="flex flex-col w-full">

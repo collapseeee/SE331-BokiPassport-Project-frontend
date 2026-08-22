@@ -50,7 +50,9 @@ const colorClass: Record<number, string> = {
         <div class="flex flex-col items-center px-4 gap-y-0.5 w-full">
             <h1 class="font-medium! text-center mb-2">{{ levelName }}</h1>
             <p class="mb-2.5 font-medium text-center">{{ props.exam.name }}</p>
-            <Button :label="buttonLabel" class="w-full" :disabled="isDisable" :locked="isLocked" :to="{ name: 'ExamView', params: { id: String(props.exam.id) } }"/>
+            <div class="w-full">
+                <Button :label="buttonLabel" :disabled="isDisable" :locked="isLocked" :to="{ name: 'ExamView', params: { id: String(props.exam.id) } }"/>
+            </div>
         </div>
         <hr class="bg-brand-black w-full">
         <div class="flex flex-col w-full">
