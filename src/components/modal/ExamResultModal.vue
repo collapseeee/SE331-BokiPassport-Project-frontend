@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { computed } from 'vue';
 import { CircleCheck, CircleX } from '@lucide/vue';
 import ModalContainer from './ModalContainer.vue';
 import SubCardContainer from '../cards/SubCardContainer.vue';
@@ -10,7 +11,7 @@ const props = defineProps<{
     isPassed: boolean;
 }>();
 
-const textColorClass = props.isPassed ? 'text-brand-green' : 'text-brand-red';
+const textColorClass = computed(() => props.isPassed ? 'text-brand-green' : 'text-brand-red');
 
 const isOpen = defineModel<boolean>();
 
@@ -42,7 +43,7 @@ const isOpen = defineModel<boolean>();
             </SubCardContainer>
         </div>
         <div v-if="props.isPassed" class="flex justify-end">
-            <Button label="Proceed" @click="close"/>
+            <Button label="Proceed" class="w-fit" bg-color="brand-green" :to=" { name: 'ExamList' }" @click="close"/>
         </div>
         <div v-else class="w-full flex justify-between">
             <Button label="Exit" class="w-fit" bg-color="brand-red" :to=" { name: 'ExamList' } " @click="close"/>
