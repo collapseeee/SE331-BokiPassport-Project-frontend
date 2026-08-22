@@ -3,6 +3,10 @@ import { computed, useAttrs } from 'vue'
 import { Lock, MoveLeftIcon, MoveRightIcon } from '@lucide/vue';
 import type { RouteLocationRaw } from 'vue-router';
 
+defineOptions({
+    inheritAttrs: false
+});
+
 const attrs = useAttrs()
 const props = withDefaults(defineProps<{
     label: string
