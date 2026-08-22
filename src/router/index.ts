@@ -28,6 +28,10 @@ import { useServicesStore } from '@/stores/services'
 import LevelService from '@/services/LevelService'
 import BenefitService from '@/services/BenefitService'
 import ServicesService from '@/services/ServiceService'
+import { useExamStore } from '@/stores/exam'
+import ExamService from '@/services/ExamService'
+import QuestionService from '@/services/QuestionService'
+import { useQuestionStore } from '@/stores/questions'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -124,11 +128,21 @@ const router = createRouter({
       name: 'ExamView', 
       component: UserExamView,
       children: [
-        { path: ':id', 
+        { path: 'question/:id', 
           name: 'ExamQuestionView', 
           component: UserExamQuestionView
         },
-      ]
+      ],
+      beforeEnter: async (to) => {
+        const examStore = useExamStore();
+        const questionStore = useQuestionStore();
+        const [examRes, questionsRes] = await Promise.all([
+            ExamService.getExamById(Number(to.params.id)),
+            QuestionService.getQuestionsByExamId(Number(to.params.id))
+        ]);
+        examStore.updateExam(examRes);
+        questionStore.updateQuestions(questionsRes);
+      }
     },
     {
       path: '/admin',
