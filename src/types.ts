@@ -87,9 +87,12 @@ export interface Exam {
   id: string
   name: string
   description: string
-  createdAt: Date
-  questions: Question[]
   levelId: number
+  questions: Question[]
+}
+
+export interface ExamState {
+  exam: Exam | null
 }
 
 export interface ExamHistory {
@@ -103,8 +106,12 @@ export interface ExamHistory {
 export interface Question {
   id: number
   questionText: string
-  choices: AnswerChoice[]
   examId: number
+  answerChoices: AnswerChoice[]
+}
+
+export interface QuestionsState {
+  questions: Question[] | []
 }
 
 export interface AnswerChoice {

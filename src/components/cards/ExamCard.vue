@@ -6,6 +6,7 @@ import Button from '../Button.vue';
 import { ref } from 'vue';
 import { useBenefitsStore } from '@/stores/benefits.ts';
 import { Brain } from '@lucide/vue';
+import SubCardContainer from './SubCardContainer.vue';
 
 const props = defineProps<{
     exam: Exam
@@ -49,7 +50,9 @@ const colorClass: Record<number, string> = {
         <div class="flex flex-col items-center px-4 gap-y-0.5 w-full">
             <h1 class="font-medium! text-center mb-2">{{ levelName }}</h1>
             <p class="mb-2.5 font-medium text-center">{{ props.exam.name }}</p>
-            <Button :label="buttonLabel" class="w-full" :disabled="isDisable" :locked="isLocked" :to="{ name: 'ExamView', params: { id: String(props.exam.id) } }"/>
+            <div class="w-full">
+                <Button :label="buttonLabel" :disabled="isDisable" :locked="isLocked" :to="{ name: 'ExamView', params: { id: String(props.exam.id) } }"/>
+            </div>
         </div>
         <hr class="bg-brand-black w-full">
         <div class="flex flex-col w-full">
@@ -59,18 +62,22 @@ const colorClass: Record<number, string> = {
             </ul>
         </div>
         <div class="grid grid-cols-1 xl:grid-cols-2 w-full items-center mt-auto h-fit px-auto gap-8">
-            <div class="bg-brand-white rounded-2xl p-4 text-start shadow-xl flex flex-col items-center w-full h-full">
-                <p class="font-bold">Pass Criteria:</p>
-                <h1 class="text-6xl!" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`">{{ Math.round((Number(level.passCriteria)) * 100) }}%</h1>
-                <p class="text-gray-800 pt-2">Correct Answer</p>
-            </div>
-            <div class="bg-brand-white rounded-2xl p-4 text-center shadow-xl flex flex-col justify-between w-full h-full">
-                <p class="font-bold">Earn Badge:</p>
-                <div class=" mx-auto">
-                    <Brain class="size-20" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`"/>
-                </div>
-                <p>foo</p>
-            </div>
+            <SubCardContainer>
+                <template #default>
+                    <p class="font-bold">Pass Criteria:</p>
+                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`">{{ Math.round((Number(level.passCriteria)) * 100) }}%</h1>
+                    <p class="text-gray-800 pt-2">Correct Answer</p>
+                </template>
+            </SubCardContainer>
+            <SubCardContainer>
+                <template #default>
+                    <p class="font-bold">Earn Badge:</p>
+                    <div class="mx-auto">
+                        <Brain class="size-20" :class="`text-${colorClass[Number(props.exam.levelId) + 1]}`"/>
+                    </div>
+                    <p>foo</p>
+                </template>
+            </SubCardContainer>
         </div>
     </CardContainer>
 </template>
