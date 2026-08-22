@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CircleCheck, CircleX, Clock } from '@lucide/vue';
+import { CircleCheck, CircleX } from '@lucide/vue';
 import ModalContainer from './ModalContainer.vue';
 import SubCardContainer from '../cards/SubCardContainer.vue';
 import Button from '../Button.vue';
@@ -12,9 +12,11 @@ const props = defineProps<{
 
 const textColorClass = props.isPassed ? 'text-brand-green' : 'text-brand-red';
 
+const isOpen = defineModel<boolean>();
+
 </script>
 <template>
-    <ModalContainer v-slot="{ close }">
+    <ModalContainer v-model="isOpen" v-slot="{ close }">
         <h1>Examination Result</h1>
         <div class="flex flex-col items-center py-4">
             <div class="py-2" :class="textColorClass">

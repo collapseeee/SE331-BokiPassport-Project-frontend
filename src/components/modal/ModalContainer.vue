@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { watch } from 'vue';
 
-const isOpen = ref(true);
+const isOpen = defineModel<boolean>({ default: false });
+
 watch(isOpen, (val) => {
     if (val) {
         document.body.style.overflow = 'hidden';
@@ -9,10 +10,10 @@ watch(isOpen, (val) => {
         document.body.style.overflow = 'auto';
     }
 });
-const closeModal = (() => {
-    isOpen.value = false;
-});
 
+const closeModal = () => {
+    isOpen.value = false;
+};
 </script>
 
 <template>
