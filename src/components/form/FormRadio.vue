@@ -23,7 +23,7 @@ const model = defineModel();
                     :key="choice.id" 
                     class="flex items-center border rounded-2xl py-2 px-4 cursor-pointer transition"
                     :class="[
-                        (model === choice.answerText || model === choice.id)
+                        (model === choice || model === choice.id)
                             ? 'border-brand-blue bg-brand-sky-blue font-semibold'
                             : 'border-brand-gray hover:border-gray-400 hover:bg-gray-100'
                     ]"
@@ -32,7 +32,7 @@ const model = defineModel();
                         type="radio" 
                         :id="String(choice.id)" 
                         :name="String(questionIndex)" 
-                        :value="choice.answerText"
+                        :value="choice"
                         v-model="model"
                         class="cursor-pointer"
                     >

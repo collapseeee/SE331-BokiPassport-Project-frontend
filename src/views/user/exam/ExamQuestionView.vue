@@ -2,17 +2,19 @@
 import Button from '@/components/Button.vue';
 import FormRadio from '@/components/form/FormRadio.vue';
 import { useQuestionStore } from '@/stores/questions';
+import type { AnswerChoice } from '@/types';
 import { storeToRefs } from 'pinia';
 import { ref, computed } from 'vue';
 
 const emit = defineEmits<{
-    (e: 'submit'): void
+    (e: 'submit', score: number): void
 }>();
 
 const questionStore = useQuestionStore();
 const { questions } = storeToRefs(questionStore);
 
 const questionIndex = ref<number>(0);
+const selectedAnswers = ref<Record<number, AnswerChoice>>({});
 
 const currentQuestion = computed(() => questions.value[questionIndex.value]);
 
@@ -28,8 +30,20 @@ const handleNextButton = () => {
     }
 };
 
+const calculateScore = () => {
+    let score = 0;
+    questions.value.forEach((question) => {
+        const userChoice = selectedAnswers.value[question.id];
+        if (userChoice && userChoice.isCorrect) {
+            score++;
+        }
+    });
+    return score;
+};
+
 const handleSubmitButton = () => {
-    emit('submit');
+    const totalScore = calculateScore();
+    emit('submit', totalScore);
 };
 </script>
 
@@ -41,6 +55,7 @@ const handleSubmitButton = () => {
             :label="currentQuestion.questionText" 
             :question-index="questionIndex + 1" 
             :choices="currentQuestion.answerChoices"
+            v-model="selectedAnswers[currentQuestion.id]"
         />
         <div class="flex flex-row justify-between">
             <Button 

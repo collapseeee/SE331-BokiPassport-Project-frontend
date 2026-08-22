@@ -42,7 +42,10 @@ const stopTimer = () => {
     }
 };
 
-const handleSubmit = () => {
+const userScore = ref<number>(0);
+
+const handleSubmit = (score: number = 0) => {
+    userScore.value = score;
     stopTimer();
     isModalOpen.value = true;
 };
@@ -57,6 +60,9 @@ const { exam } = storeToRefs(examStore);
 const level = computed(() => levelStore.getLevelById(Number(exam.value!.levelId) + 1));
 const passCriteria = computed(() => Number(level.value!.passCriteria));
 const questionLength = computed(() => exam.value!.questions.length);
+const isPassed = computed(() => {
+    return userScore.value >= Math.round(passCriteria.value * questionLength.value);
+});
 
 const colorClass: Record<number, string> = {
     2: 'brand-blue',
@@ -67,9 +73,9 @@ const colorClass: Record<number, string> = {
 
 <template>
     <ExamResultModal
-        :total-score="3"
-        :max-score="5"
-        :is-passed="false"
+        :total-score="userScore"
+        :max-score="questionLength"
+        :is-passed="isPassed"
         v-model="isModalOpen"
     />
     <div class="flex flex-col py-16 px-32">
