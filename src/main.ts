@@ -6,11 +6,14 @@ import { inject } from '@vercel/analytics'
 
 import App from './App.vue'
 import router from './router'
+import 'nprogress/nprogress.css'
 
 const app = createApp(App)
+const pinia = createPinia()
 
 inject()
-app.use(createPinia())
+app.use(pinia)
 app.use(router)
+app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('media-');
 
 app.mount('#app')

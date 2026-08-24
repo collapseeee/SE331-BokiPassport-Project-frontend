@@ -1,0 +1,55 @@
+<script lang="ts" setup>
+import Container from '@/components/Container.vue';
+import NotFoundText from '@/components/NotFoundText.vue';
+import TableContainer from '@/components/table/TableContainer.vue';
+import UserService from '@/services/UserService';
+import Pagination from '@/components/Pagination.vue';
+import { useUserStore } from '@/stores/user';
+import type { ExamHistory } from '@/types';
+import { computed, onMounted, ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
+const props = defineProps<{
+    page: number
+}>()
+
+const userStore = useUserStore()
+const route = useRoute()
+
+const headers = ref<string[]>(['DATE', 'Exam Name', 'Score', 'Status'])
+
+const paginatedExam = ref<ExamHistory[] | null>(null)
+const totalExams = ref<number>(0)
+const currentItems = ref<number>(0)
+
+const assignExams = (id: number) => {
+    UserService.getPaginatedUserExams(id, props.page)
+        .then(res => {
+            paginatedExam.value = res.data.data as ExamHistory[]
+            totalExams.value = res.data.items
+            currentItems.value = res.data.data.length
+        })
+}
+
+onMounted(() => {
+    watchEffect(() => {
+        if (route.name?.toString().startsWith('Admin')) {
+            assignExams(Number(route.params.id))
+        } else {
+            assignExams(userStore.id)
+        }
+    })
+})
+
+const hasNextPage = computed(() => {
+    return props.page < Math.ceil(totalExams.value / 5)
+})
+</script>
+<template>
+    <Container title="Exam history" isPagination>
+        <div v-if="paginatedExam">
+            <TableContainer :headers="headers" :rows="paginatedExam"/>
+            <Pagination :page="Number(page)" :currentItems :totalItems="totalExams" :hasNextPage/>
+        </div>
+        <NotFoundText v-else text="No Exam Taken Yet!"/>
+    </Container>
+</template>

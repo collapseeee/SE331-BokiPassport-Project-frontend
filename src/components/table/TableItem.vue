@@ -1,0 +1,85 @@
+<script setup lang="ts">
+import ExamService from '@/services/ExamService';
+import type { Exam, ExamHistory, User } from '@/types';
+import { Menu } from '@lucide/vue';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+const props = defineProps<{
+    row: User | ExamHistory
+}>()
+
+const router = useRouter()
+const exams = ref<Exam[] | null>(null)
+onMounted(() => {
+    if (isUser(props.row)) {
+        return
+    }
+    ExamService.getExams()
+        .then(res => exams.value = res.data)
+})
+
+
+const isUser = (row: User | ExamHistory): row is User => {
+    return (<User>row).firstName !== undefined;
+}
+
+const mappedRow = computed(() => {
+    if (isUser(props.row)) {
+        const { firstName, lastName, userLevels, province } = props.row as User
+        return {
+            name: firstName,
+            surname: lastName,
+            levelId: userLevels.levelId,
+            province: province,
+            menu: ''
+        }
+    }
+    const { createdAt, examId, totalScore, isPassed } = props.row as ExamHistory
+    const examName = exams.value?.find(e => e.id === String(examId))?.name || `Upgrade to Level ${examId + 1}`
+    const date = new Date(createdAt)
+    const parsedDate = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
+    return {
+        date: parsedDate,
+        examName: examName,
+        score: totalScore,
+        status: isPassed ? 'Passed' : 'Failed'
+    }
+})
+
+
+const handleClick = () => {
+    if (isUser(props.row)) {
+        router.push({ name: 'AdminUserManagementDetail', params: { id: props.row.id }})
+        return
+    }
+    console.log('exam history clicked')
+}
+/* Filter out the object with 'id' to not let it consume a column */
+/* const visibleRow = computed(() => {
+    return Object.fromEntries(
+        Object.entries(props.row)
+                .filter(([key,value]) => {
+                    if (key !== 'id') return value
+                })
+    )
+}) */
+
+</script>
+
+<template>
+    <tr v-if="mappedRow" @click="handleClick" class="flex flex-row w-full cursor-pointer transition-all hover:scale-101 hover:font-bold">
+        <td class="px-4 py-2 w-full text-center" v-for="(value,  key, index) in mappedRow" :key="key">
+            <!-- If is user list -->
+            <p v-if="isUser(row)">{{ value }}</p>
+            <!-- Else -->
+            <div v-else>
+                <!-- Passed / Failed in User Profile -->
+                <p v-if="index === 3" :class="{ 'text-brand-red' : value === 'Failed', 'text-brand-green underline': value === 'Passed'}">
+                    {{ value }}
+                </p>
+                <p v-else>{{ value }}</p>
+            </div>
+            <Menu class="w-full" v-if="index === 4 && isUser(row)"/>
+        </td>
+    </tr>
+</template>
