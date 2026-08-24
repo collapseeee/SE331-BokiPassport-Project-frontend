@@ -21,9 +21,9 @@ export default {
         return apiClient.get(`users/${id}`)
     },
     getPaginatedUser(page: number) {
-        return apiClient.get(`/users?_embed=userLevels&role=user&_page=${page}&_per_page=5`)
+        return apiClient.get(`/users?_embed=userLevels&role=user&_limit=5&_page=${page}`)
             .then(res => {
-                const users = res.data.data.map((user: UserResponse) => ({
+                const users = res.data.map((user: UserResponse) => ({
                     ...user,
                     userLevels: user.userLevels[0]
                 }))
@@ -34,7 +34,7 @@ export default {
         return apiClient.get(`/users/${id}?_embed=userExamHistories`)
     },
     getPaginatedUserExams(id: number, page: number) {
-        return apiClient.get(`/userExamHistories?userId:eq=${id}&_page=${page}&_per_page=5`)
+        return apiClient.get(`/userExamHistories?userId=${id}&_page=${page}&_limit=5`)
     },
     getUserByLevelId(levelId: number) {
         return this.getUsers()
