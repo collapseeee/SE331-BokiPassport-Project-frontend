@@ -20,6 +20,18 @@ export default {
     getUser(id: number) {
         return apiClient.get(`users/${id}`)
     },
+    getUserUsers() {
+        return apiClient.get('/users?_embed=userLevels&role=user')
+            .then((res) => {
+                return res.data.map((user: UserResponse) => ({
+                    ...user,
+                    userLevels: user.userLevels[0]
+                }))
+            })
+            .catch((err) => {
+                console.error("Error occurs while get data: ", err)
+            })
+    },
     getPaginatedUser(page: number) {
         return apiClient.get(`/users?_embed=userLevels&role=user&_limit=5&_page=${page}`)
             .then(res => {
@@ -27,7 +39,7 @@ export default {
                     ...user,
                     userLevels: user.userLevels[0]
                 }))
-                return { users, totalItems: res.data.items }
+                return { users }
             })
     },
     getUserExams(id: number) {

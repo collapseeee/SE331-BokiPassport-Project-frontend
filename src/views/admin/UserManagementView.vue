@@ -21,8 +21,11 @@ onMounted(() => {
         UserService.getPaginatedUser(props.page)
             .then(res => {
                 paginatedUsers.value = res.users
-                totalUsers.value = res.totalItems
                 currentItems.value = res.users.length
+            })
+        UserService.getUserUsers()
+            .then(res => {
+                totalUsers.value = res.length
             })
     })
 })
