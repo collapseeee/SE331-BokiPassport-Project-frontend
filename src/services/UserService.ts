@@ -8,6 +8,7 @@ export default {
         */
         return apiClient.get('/users?_embed=userLevels')
             .then((res) => {
+                console.log(res.data)
                 return res.data.map((user: UserResponse) => ({
                     ...user,
                     userLevels: user.userLevels[0]
