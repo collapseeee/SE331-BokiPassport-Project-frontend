@@ -16,14 +16,19 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@lucide/vue": "^1.31.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/nprogress": "^0.2.3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
+    "axios": "^1.19.0",
     "json-server": "^1.0.0-beta.15",
+    "media-icons": "^1.1.5",
+    "nprogress": "^0.2.0",
     "pinia": "^4.0.2",
     "tailwindcss": "^4.3.3",
     "vue": "^3.5.40",
-    "vue-router": "^5.2.0"
+    "vue-router": "4.5.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
@@ -43,6 +48,7 @@
     "oxlint": "~1.73.0",
     "prettier": "3.9.5",
     "typescript": "~6.0.0",
+    "vidstack": "^1.15.6",
     "vite": "^8.1.5",
     "vite-plugin-vue-devtools": "^8.1.5",
     "vue-eslint-parser": "^10.4.1",

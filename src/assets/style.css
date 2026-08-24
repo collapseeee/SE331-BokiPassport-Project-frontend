@@ -1,1 +1,62 @@
 @import 'tailwindcss';
+
+@font-face {
+    font-family: 'raleway';
+    src: url('/fonts/Raleway-VariableFont_wght.ttf');
+    font-style: normal;
+    font-weight: 100 900;
+}
+
+@font-face {
+    font-family: 'raleway';
+    src: url('/fonts/Raleway-Italic-VariableFont_wght.ttf');
+    font-style: italic;
+    font-weight: 100 900;
+}
+
+@theme {
+    --color-brand-blue: #00A1EE;
+    --color-brand-light-blue: #36BFFF;
+    --color-brand-sky-blue: #97DEFF;
+    --color-brand-fade-blue: #D5F1FF;
+
+    --color-brand-dark-blue: #324954;
+    --color-brand-navy-blue: #4246A3;
+    --color-brand-black: #293033;
+    --color-brand-white: #FAFAFA;
+    --color-brand-gray: #E0E0E0;
+    --color-brand-green: #58A700;
+    --color-brand-red: #D70000;
+    --color-brand-dark-red: #AD0000;
+    --color-brand-orange: #FF9600;
+    --color-brand-purple: #7D00CD;
+
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+:root {
+    font-family: 'raleway';
+}
+
+h1 {
+    @apply text-4xl font-bold;
+}
+
+h2 {
+    @apply text-3xl font-bold;
+}
+
+h3 {
+    @apply text-2xl font-bold;
+}
+
+h4 {
+    @apply text-xl font-bold;
+}
+
+h5 {
+    @apply text-lg font-bold;
+}
