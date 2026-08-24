@@ -10,8 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
             const matchedUser = ref<User | null>(null)
             return UserService.getUsers()
                 .then(res => {
-                    console.log('Auth: ',res)
-                    matchedUser.value = res.data.find((u: User) => u.username === username && u.password === password)
+                    matchedUser.value = res.find((u: User) => u.username === username && u.password === password)
                     if (!matchedUser.value) {
                         return { success: false, error: 'Invalid username or password' }
                     }
