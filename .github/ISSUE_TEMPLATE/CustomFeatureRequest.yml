@@ -1,37 +1,69 @@
 name: Feature Request
 title: '[FEATURE]: '
-description: 'Request a new feature or an enhancement here!'
-labels: ['enhancedment']
+description: 'Request a new feature, task, or enhancement here!'
+labels: ['enhancement']
 assignees: 
   - Krittameth
   - Nattikorn
   - Apitawan
 body:
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      description: Which part of the frontend does this task belong to?
+      options:
+        - Auth Pages (Login/Register)
+        - Admin Pages (User/Level/Question)
+        - User Pages (Profile/Exam/ELearning)
+        - API Integration (Services/Interceptors)
+        - Routing & Guards
+        - UI/UX & Styling
+        - State Management (Pinia)
+        - Deployment
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - High (blocks other tasks)
+        - Medium (needed for deadline)
+        - Low (nice to have)
+    validations:
+      required: true
   - type: input
     id: problem-statement
     attributes:
-      label: Problem Statement
-      description: What problem or friction point does this feature solve?
+      label: Task Description
+      description: What needs to be done?
+      placeholder: e.g., Implement user list with pagination
     validations:
       required: true
   - type: input
     id: proposed-solution
     attributes:
       label: Proposed Solution
+      description: How should this be implemented?
+      placeholder: e.g., Create UserListView.vue with Pinia store and API service
     validations:
       required: true
   - type: textarea
     id: criteria
     attributes:
       label: Acceptance Criteria
-      description: What proves this feature is already fully functional
+      description: What proves this task is complete?
       placeholder: |
-        - Must have sorting
-        - Must be reusable
+        - Component created with props/emit
+        - API call separated into service file
+        - Pinia store updated
+        - Responsive with Tailwind CSS
+        - Form validation with VeeValidate (if applicable)
     validations:
       required: true
   - type: textarea
     id: note
     attributes:
       label: Additional Notes
-      placeholder: ex. not db required, styling first then code, etc
+      placeholder: ex. reuse AdminUserCard component, check TODO.md for details

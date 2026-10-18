@@ -7,8 +7,19 @@ body:
     id: name
     attributes:
       label: Webpage Name / Route
-      description: What should the page called.
-      placeholder: e.g. /home, landing page
+      description: What should the page be called.
+      placeholder: e.g., /admin/users, /user/exam
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Access Role
+      options:
+        - Admin only
+        - User only
+        - Both Admin and User
+        - Public (no login required)
     validations:
       required: true
   - type: input
@@ -16,24 +27,31 @@ body:
     attributes:
       label: Purpose and Functionality
       description: What can the page do?
-      placeholder: e.g. The page should display..
+      placeholder: e.g., The page should display user list with pagination and filters
     validations:
       required: true
   - type: textarea
-    id: data
+    id: components
     attributes:
-      label: Components / Views
-      description: What component should be displayed on the page?
+      label: Components / Views Needed
+      description: What components should be displayed on the page?
       placeholder: |
-        - Button
-        - Navbar
-        - Sidebar
-        - Card
-        - Badge
+        - DataTable with pagination
+        - FilterBar (name, level, province)
+        - UserCard component
+        - Action buttons (edit, deactivate)
     validations:
       required: true
+  - type: textarea
+    id: api
+    attributes:
+      label: API Endpoints Required
+      description: Which backend APIs does this page need?
+      placeholder: |
+        - GET /api/v1/admin/users?page=0&size=5
+        - PATCH /api/v1/admin/users/{id}/deactivate
   - type: upload
-    id: designed-page
+    id: design
     attributes:
       label: Design References
       description: Upload the designed UI image from Figma

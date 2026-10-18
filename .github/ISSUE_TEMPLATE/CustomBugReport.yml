@@ -3,15 +3,31 @@ description: Report an encountered bug here!
 title: "[BUG]: "
 labels: ["bug"]
 body:
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      options:
+        - Auth Pages (Login/Register)
+        - Admin Pages (User/Level/Question)
+        - User Pages (Profile/Exam/ELearning)
+        - API Integration (Services/Interceptors)
+        - Routing & Guards
+        - UI/UX & Styling
+        - State Management (Pinia)
+        - Deployment
+    validations:
+      required: true
   - type: textarea
     id: steps
     attributes:
       label: Steps to Reproduce
-      description: Tell the steps of how the bug is found.
       placeholder: |
         1. Go to ....
         2. Click ....
         3. Refresh ....
+    validations:
+      required: true
   - type: input
     id: expected-behavior
     attributes:
@@ -27,14 +43,25 @@ body:
     validations:
       required: true
   - type: upload
-    id:  screnshots
+    id: screenshots
     attributes:
       label: Screenshots / Logs
-      description: Add visual evidence, terminal output, or logs here.
+      description: Add visual evidence, browser console output, or logs here.
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical (app crashes / feature unusable)
+        - High (feature broken)
+        - Medium (feature partially works)
+        - Low (cosmetic / minor)
+    validations:
+      required: true
   - type: dropdown
     id: os
     attributes:
-      label: What operating system are you seeing the problem on?
+      label: Operating System
       options:
         - Windows
         - MacOS
@@ -44,7 +71,7 @@ body:
   - type: dropdown
     id: browser
     attributes:
-      label: What operating system are you seeing the problem on?
+      label: Browser
       options:
         - Chrome
         - Opera
@@ -52,8 +79,7 @@ body:
         - Microsoft Edge
         - Safari
         - Brave
-        - FireFox
+        - Firefox
         - Other
     validations:
       required: true
-  
