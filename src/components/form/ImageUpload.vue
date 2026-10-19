@@ -41,7 +41,7 @@ function handleDrop(event: DragEvent) {
     <span class="text-sm font-medium text-brand-black">Select your Profile</span>
     <button
       type="button"
-      class="relative w-32 h-32 rounded-full border-2 border-dashed transition-all duration-200 overflow-hidden group"
+      class="relative w-32 h-32 rounded-full border-2 border-dashed transition-all duration-200 overflow-hidden group cursor-pointer"
       :class="isDragging ? 'border-brand-blue bg-brand-blue/5 scale-105' : 'border-brand-dark-blue hover:border-brand-blue bg-gray-50'"
       @click="openFilePicker"
       @dragover.prevent="isDragging = true"
