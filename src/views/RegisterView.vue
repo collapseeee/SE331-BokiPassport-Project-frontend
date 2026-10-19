@@ -8,6 +8,9 @@ import FormInput from '@/components/form/FormInput.vue'
 import PasswordInput from '@/components/form/FormPasswordInput.vue'
 import ImageUpload from '@/components/form/ImageUpload.vue'
 import FormError from '@/components/form/FormError.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // Profile photo (v-model from ImageUpload)
 const profilePhotos = ref<string[]>([])
@@ -50,6 +53,7 @@ const { value: province } = useField<string>('province')
 const onSubmit = handleSubmit((values) => {
   // TODO: Call authStore.register(values) when registration API is ready
   console.log('Form valid:', values)
+  router.push({ name: 'Login' })
 })
 </script>
 
