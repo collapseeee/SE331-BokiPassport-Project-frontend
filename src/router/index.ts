@@ -64,7 +64,7 @@ const router = createRouter({
       beforeEnter: () => {
         const authStore = useAuthStore()
         const userStore = useUserStore()
-        if (authStore.isAuthenticated()) {
+        if (authStore.isAuthenticated) {
           if (userStore.role === 'ADMIN') {
             return { name: 'AdminView' }
           }
@@ -79,7 +79,7 @@ const router = createRouter({
       beforeEnter: () => {
         const authStore = useAuthStore()
         const userStore = useUserStore()
-        if (authStore.isAuthenticated()) {
+        if (authStore.isAuthenticated) {
           if (userStore.role === 'ADMIN') {
             return { name: 'AdminView' }
           }
@@ -93,7 +93,7 @@ const router = createRouter({
       beforeEnter: () => {
         const authStore = useAuthStore()
         const userStore = useUserStore()
-        if (authStore.isAuthenticated()) {
+        if (authStore.isAuthenticated) {
           if (userStore.role === 'ADMIN') {
             return { name: 'AdminView' }
           }
@@ -278,7 +278,7 @@ const router = createRouter({
 router.beforeEach(async to => {
   nProgress.start();
   const authStore = useAuthStore()
-  if (!authStore.isAuthenticated() && !isPublicRoute(to)) {
+  if (!authStore.isAuthenticated && !isPublicRoute(to)) {
     return { name: 'Home' }
   }
   const userStore = useUserStore();
@@ -289,7 +289,7 @@ router.beforeEach(async to => {
   if (isAdminRoute(to) && userRole !== 'Admin') {
     return { name: 'NoPermission', query: { role: userRole } }
   }
-  if (authStore.isAuthenticated() && !isPublicRoute(to)) {
+  if (authStore.isAuthenticated && !isPublicRoute(to)) {
     const servicesStore = useServicesStore();
     const levelStore = useLevelsStore();
     const benefitStore = useBenefitsStore();
