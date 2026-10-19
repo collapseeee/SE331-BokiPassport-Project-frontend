@@ -1,37 +1,61 @@
 import { defineStore } from 'pinia';
 import { useUserStore } from './user';
-import { ref } from 'vue';
+import { ref, watch, computed } from 'vue';
 import type { User } from '@/types';
 import UserService from '@/services/UserService';
 
+const TOKEN_KEY = "AUTH_TOKEN";
+
+// Rehydrate token on store creation
+const storedToken = localStorage.getItem(TOKEN_KEY);
+
 export const useAuthStore = defineStore('auth', () => {
-    const userStore = useUserStore()
+    const userStore = useUserStore();
+
+    // Token state — persisted so refresh doesn't log out
+    const token = ref<string | null>(storedToken);
+
+    // Persist token to localStorage
+    watch(token, (val) => {
+        if (val) {
+            localStorage.setItem(TOKEN_KEY, val);
+        } else {
+            localStorage.removeItem(TOKEN_KEY);
+        }
+    });
+
+    // Role derived from user store
+    const role = computed(() => userStore.role);
+
+    // Auth check based on token presence
+    const isAuthenticated = computed(() => token.value !== null);
+
     function login(username: string, password: string) {
-            const matchedUser = ref<User | null>(null)
-            return UserService.getUsers()
-                .then(res => {
-                    matchedUser.value = res.find((u: User) => u.username === username && u.password === password)
-                    if (!matchedUser.value) {
-                        return { success: false, error: 'Invalid username or password' }
-                    }
+        // TODO(backend): replace with real auth call — POST /auth/login
+        // Expected response: { token: string, user: User }
+        // For now using mock json-server pattern
+        return UserService.getUsers()
+            .then(res => {
+                const matchedUser = res.find((u: User) => u.username === username && u.password === password);
+                if (!matchedUser) {
+                    return { success: false, error: 'Invalid username or password' };
+                }
 
-                    userStore.saveUser(matchedUser.value)
-                    return { success: true, user: matchedUser.value }
-                })
-                .catch((err) => {
-                    console.error('API error during login: ', err)
-                    return { success: false, error: 'An error occurred while logging in', user: null }
-                })
-    }
-
-    function isAuthenticated(): boolean {
-        return userStore.isStored
+                // TODO(backend): use real token from response instead of placeholder
+                token.value = `mock-token-${matchedUser.id}`;
+                userStore.saveUser(matchedUser);
+                return { success: true, user: matchedUser };
+            })
+            .catch((err) => {
+                console.error('API error during login: ', err);
+                return { success: false, error: 'An error occurred while logging in', user: null };
+            });
     }
 
     function logout() {
-        userStore.user = null
-        userStore.clearUser()
+        token.value = null;
+        userStore.clearUser();
     }
 
-    return { isAuthenticated, login, logout }
-})
+    return { token, role, isAuthenticated, login, logout };
+});
