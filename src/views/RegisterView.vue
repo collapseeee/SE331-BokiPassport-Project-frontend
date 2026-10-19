@@ -4,6 +4,7 @@ import { CircleUserRound, UserRound, MapPin } from '@lucide/vue';
 import SubmitButton from '@/components/Button.vue'
 import FormInput from '@/components/form/FormInput.vue'
 import PasswordInput from '@/components/form/FormPasswordInput.vue'
+import ImageUpload from '@/components/form/ImageUpload.vue'
 // (auth store + router will be used when registration API is implemented)
 
 
@@ -13,6 +14,7 @@ const username = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const province = ref('')
+const profilePhotos = ref<string[]>([])
 const errorMessage = ref('')
 
 // Will implement handleRegister later (API + password confirmation)
@@ -35,6 +37,11 @@ const handleRegister = async () => {
                     <p class="text-brand-black">Create your account to meet your AI.</p>
                 </div>
 
+                <!-- Profile Photo -->
+                <div class="flex flex-col items-center space-y-2">
+                    <ImageUpload v-model="profilePhotos" :max="1" label="Profile Photo" />
+                </div>
+
                 <!-- will implement later -->
                 <form @submit.prevent="handleRegister" class="space-y-4">
                     <!-- first name and last name -->
@@ -48,14 +55,14 @@ const handleRegister = async () => {
 
                     <!-- Password -->
                     <PasswordInput v-model="password" id="password" label="Password" required />
-          
+
 
                     <!-- confirm password -->
                     <PasswordInput v-model="confirmPassword" id="confirmPassword" label="Confirm Password" required />
 
                     <!-- Province -->
                     <FormInput v-model="province" id="province" label="Province" placeholder="e.g. Chiang Mai" :icon="MapPin" required />
-                    
+
                     <!-- Error banner -->
                     <div v-if="errorMessage"
                     class="px-4 py-2 text-sm text-brand-red bg-red-100 border border-red-300 rounded-md">
