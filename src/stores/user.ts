@@ -1,66 +1,52 @@
-import { type User, type UserState } from "@/types";
+import { computed, ref, watch } from "vue";
 import { defineStore } from "pinia";
+import type { User } from "@/types";
 
-const userKey = 'USER_STATE'
+const USER_KEY = "USER_STATE";
 
-export const useUserStore = defineStore('user', ({
-    state: (): UserState => ({
-        user: null
-    }),
-    getters: {
-        object(): User {
-            return JSON.parse(localStorage.getItem(userKey) || '')
-        },
-        id(): number {
-            return localStorage.getItem(userKey) ? JSON.parse(localStorage.getItem(userKey) || '').id : 1
-        },
-        role(): string {
-            return localStorage.getItem(userKey) ? JSON.parse(localStorage.getItem(userKey) || '').role.toUpperCase() : ''
-        },
-        imageUrl(): string {
-            return localStorage.getItem(userKey) ? JSON.parse(localStorage.getItem(userKey) || '').imageUrl : ''
-        },
-        fullName(): string {
-            return JSON.parse(localStorage.getItem(userKey) || '').firstName + ' ' +  JSON.parse(localStorage.getItem(userKey) || '').lastName
-        },
-        province(): string {
-            return localStorage.getItem(userKey) ? JSON.parse(localStorage.getItem(userKey) || '').province : ''
-        },
-        level(): string {
-            return localStorage.getItem(userKey) ? JSON.parse(localStorage.getItem(userKey) || '').level : ''
-        },
-        isStored(): boolean {
-            return localStorage.getItem(userKey) ? true : false
+// Rehydrate from localStorage on store creation
+const stored = localStorage.getItem(USER_KEY);
+const initialUser = stored ? JSON.parse(stored) : null;
+
+export const useUserStore = defineStore("user", () => {
+    // Reactive state — components reading getters below will now update automatically
+    const user = ref<User | null>(initialUser);
+
+    // Persist to localStorage on every change
+    watch(user, (val) => {
+        if (val) {
+            localStorage.setItem(USER_KEY, JSON.stringify(val));
+        } else {
+            localStorage.removeItem(USER_KEY);
         }
-    },
-    actions: {
-        saveUser(user: User) {
-            /* Save user state to localStorage */
-            const levelId = user.userLevels.levelId
-            localStorage.setItem(userKey, JSON.stringify({
-                id: user.id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                province: user.province,
-                imageUrl: user.imageUrl,
-                role: user.role,
-                level: levelId
-            }))
-        },
-        updateUserLevel(levelId: number) {
-            const user = this.object;
-            localStorage.setItem(userKey, JSON.stringify({
-                id: user.id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                province: user.province,
-                imageUrl: user.imageUrl,
-                role: user.role,
-                level: levelId
-            }))
-        },
-        clearUser() {
-            localStorage.removeItem(userKey)
+    }, { deep: true });
+
+    // Getters derive from reactive state (not localStorage)
+    const id = computed(() => user.value?.id ?? null);
+    const role = computed(() => user.value?.role.toUpperCase() ?? "");
+    const fullName = computed(() => user.value ? `${user.value.firstName} ${user.value.lastName}` : "");
+    const level = computed(() => user.value?.userLevels?.levelId ?? null);
+    const imageUrl = computed(() => user.value?.imageUrl ?? "");
+    const isStored = computed(() => user.value !== null);
+
+    // Actions
+    function saveUser(u: User) {
+        user.value = u;
+    }
+
+    // TODO(backend): called after exam level-up — exam response includes new levelId
+    function updateUserLevel(levelId: number) {
+        if (user.value) {
+            user.value = {
+                ...user.value,
+                userLevels: { ...user.value.userLevels, levelId },
+            };
         }
     }
-}))
+
+    function clearUser() {
+        user.value = null;
+    }
+
+    return { user, role, level, fullName, id, imageUrl, isStored, saveUser, updateUserLevel, clearUser };
+});
