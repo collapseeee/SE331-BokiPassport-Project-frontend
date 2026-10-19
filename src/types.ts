@@ -12,6 +12,7 @@ export interface User {
   isActive: boolean
   levelId: string
   userLevels: UserLevel
+  images: string
 }
 
 export interface UserResponse {
