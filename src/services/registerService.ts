@@ -1,15 +1,15 @@
 import { apiClient } from './apiClient'
 
-export interface RegisterPayload {
+export interface RegisterRequest {
   firstname: string
   lastname: string
   username: string
   password: string
   province: string
-  profileImage?: string
+  image?: string
 }
 
-export interface AuthenticatePayload {
+export interface AuthenticateRequest {
   username: string
   password: string
 }
@@ -18,11 +18,11 @@ export interface AuthenticateResponse {
   token: string
 }
 
-const register = async (payload: RegisterPayload) => {
+const register = async (payload: RegisterRequest) => {
   return apiClient.post('/api/v1/auth/register', payload)
 }
 
-const authenticate = async (payload: AuthenticatePayload) => {
+const authenticate = async (payload: AuthenticateRequest) => {
   return apiClient.post<AuthenticateResponse>('/api/v1/auth/authenticate', payload)
 }
 
