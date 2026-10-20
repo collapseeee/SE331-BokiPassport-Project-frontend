@@ -23,3 +23,27 @@ npm install
 # start JSON server at port 3000
 npx json-server ./db.json
 ```
+
+## BACKEND USAGE
+The Spring Boot backend runs on port 8080 (`VITE_BACKEND_URL`) and seeds its own
+test accounts on startup, so **login always goes to the backend** — the json-server
+mock only serves the levels, exams, courses and badges lists.
+
+| username | password | roles | levels | note |
+|---|---|---|---|---|
+| `admin` | `123` | ROLE_ADMIN, ROLE_USER | 1-4 | the admin account |
+| `boki` | `boki123` | ROLE_USER | 1 | 3 badges, exam history |
+| `pimchanok` | `123` | ROLE_USER | 1-4 | every badge and level |
+| `krittin` | `123` | ROLE_USER | 1-3 | |
+| `tanapat` | `123` | ROLE_USER | 1-3 | |
+| `nicha` | `123` | ROLE_USER | 1-3 | |
+| `collapsee` | `123` | ROLE_USER | 1-2 | |
+| `somchai` | `123` | ROLE_USER | 1-2 | |
+| `mali` | `123` | ROLE_USER | 1 | |
+| `thianlnwza007` | `123` | ROLE_USER | 1 | |
+| `gerry` | `123` | ROLE_USER | 1-3 | disabled — cannot log in |
+| `arthit` | `123` | ROLE_USER | 1-3 | disabled — cannot log in |
+| `supansa` | `123` | ROLE_USER | 1 | disabled — cannot log in |
+
+A new account can also be created from the register page — it starts with
+ROLE_USER, no badges and level 1.
