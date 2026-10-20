@@ -1,12 +1,12 @@
 import type { Exam } from "@/types"
-import { apiClient } from "./apiClient"
+import { apiMockClient } from "./ApiClient"
 
 export default {
   getExams() {
-    return apiClient.get('/exams?_embed=questions')
+    return apiMockClient.get('/exams?_embed=questions')
   },
   getExamById(id: number) {
-    return apiClient.get(`/exams?_embed=questions`)
+    return apiMockClient.get(`/exams?_embed=questions`)
     .then((res) => {
       return res.data.find((exam: Exam) => String(exam.id) === String(id))
     })

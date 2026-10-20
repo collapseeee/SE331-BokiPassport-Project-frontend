@@ -1,7 +1,7 @@
-import { apiClient } from "./apiClient"
+import { apiMockClient } from "./ApiClient"
 
 export default {
   getServices() {
-    return apiClient.get('/services')
+    return apiMockClient.get('/services')
   },
 }
