@@ -31,6 +31,8 @@ const assignExams = (id: number) => {
         .then(res => {
             totalExams.value = res.data.userExamHistories.length
         })
+        // a real-backend user has no row in the json-server mock yet
+        .catch(() => totalExams.value = 0)
 }
 
 onMounted(() => {

@@ -59,8 +59,14 @@ export interface AuthToken {
   refreshToken: string
 }
 
+// The backend sends only the id and name of the levels a user unlocked
+export interface LevelSummary {
+  id: number
+  name: string
+}
+
 // The profile held by the merged auth store.
-// The backend sends: id, firstName, lastName, province, image, roles.
+// The backend sends: id, firstName, lastName, province, image, roles, levels.
 // The json-server mock login still sends the legacy fields below.
 // TODO(backend): delete the legacy optional fields once every screen reads
 // from the real backend and the mock login is replaced by /v1/auth/authenticate.
@@ -71,6 +77,7 @@ export interface Profile {
   province: string
   image?: string
   roles?: string[]
+  levels?: LevelSummary[]
   imageUrl?: string
   username?: string
   role?: string

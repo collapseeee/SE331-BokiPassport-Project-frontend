@@ -63,7 +63,7 @@ const router = createRouter({
       beforeEnter: () => {
         const authStore = useAuthStore()
         if (authStore.isAuthenticated) {
-          if (authStore.role === 'ADMIN') {
+          if (authStore.isAdmin) {
             return { name: 'AdminView' }
           }
           return { name: 'UserProfile' }
@@ -77,7 +77,7 @@ const router = createRouter({
       beforeEnter: () => {
         const authStore = useAuthStore()
         if (authStore.isAuthenticated) {
-          if (authStore.role === 'ADMIN') {
+          if (authStore.isAdmin) {
             return { name: 'AdminView' }
           }
           return { name: 'UserProfile' }
@@ -90,7 +90,7 @@ const router = createRouter({
       beforeEnter: () => {
         const authStore = useAuthStore()
         if (authStore.isAuthenticated) {
-          if (authStore.role === 'ADMIN') {
+          if (authStore.isAdmin) {
             return { name: 'AdminView' }
           }
           return { name: 'UserProfile' }
@@ -109,7 +109,9 @@ const router = createRouter({
           beforeEnter: async route => {
             const userId = useAuthStore().id
             if (userId === null) return
-            const badges = await BadgeService.getBadgesByUserId(userId)
+            // a real-backend user has no row in the json-server mock yet
+            const badges = await BadgeService.getBadgesByUserId(userId).catch(() => null)
+            if (!badges) return
             route.meta.userBadges = await Promise.all(
               badges.data.userBadges.map((userBadge: UserBadge) =>
                 BadgeService.getBadgeById(Number(userBadge.badgeId)).then(res => res.data)
@@ -279,11 +281,11 @@ router.beforeEach(async to => {
   if (!authStore.isAuthenticated && !isPublicRoute(to)) {
     return { name: 'Home' }
   }
-  const userRole = authStore.role.charAt(0).toUpperCase() + authStore.role.slice(1).toLowerCase();
-  if (isUserRoute(to) && userRole !== 'User') {
+  const userRole = authStore.isAdmin ? 'Admin' : 'User';
+  if (isUserRoute(to) && !authStore.isUser) {
     return { name: 'NoPermission', query: { role: userRole } }
   }
-  if (isAdminRoute(to) && userRole !== 'Admin') {
+  if (isAdminRoute(to) && !authStore.isAdmin) {
     return { name: 'NoPermission', query: { role: userRole } }
   }
   if (authStore.isAuthenticated && !isPublicRoute(to)) {
