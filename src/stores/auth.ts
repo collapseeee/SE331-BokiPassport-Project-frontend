@@ -3,6 +3,7 @@ import { useUserStore } from './user';
 import { ref, watch, computed } from 'vue';
 import type { User } from '@/types';
 import UserService from '@/services/UserService';
+import SecurityService, { type RegisterRequest } from '@/services/SecurityService';
 
 const TOKEN_KEY = "AUTH_TOKEN";
 
@@ -29,6 +30,17 @@ export const useAuthStore = defineStore('auth', () => {
 
     // Auth check based on token presence
     const isAuthenticated = computed(() => token.value !== null);
+
+    function register(firstName: string, lastName: string, username: string, password: string, province: string, image: string) {
+        return SecurityService.register({
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            password: password,
+            province: province,
+            image: image
+        } as RegisterRequest)
+    }
 
     function login(username: string, password: string) {
         // TODO(backend): replace with real auth call — POST /auth/login
@@ -57,5 +69,5 @@ export const useAuthStore = defineStore('auth', () => {
         userStore.clearUser();
     }
 
-    return { token, role, isAuthenticated, login, logout };
+    return { token, role, isAuthenticated, register, login, logout };
 });
