@@ -14,6 +14,32 @@ export interface User {
   userLevels: UserLevel
 }
 
+export interface User {
+  id: number
+  firstName: string
+  lastName: string
+  province: string
+  image: string
+  userExamHistories: UserExamHistory[]
+  badges: Badge[]
+  levels: UserLevel[]
+}
+
+export interface UserLevel {
+  id: number
+  name: string
+}
+
+export interface UserExamHistory {
+  id: number
+  createdAt: Date
+  totalScore: number
+  isPassed: boolean
+  name: string
+  description: string
+  level: string
+}
+
 export interface UserResponse {
   id: number
   firstName: string
