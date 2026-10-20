@@ -1,12 +1,12 @@
 import type { Course } from "@/types"
-import { apiClient } from "./apiClient"
+import { apiMockClient } from "./ApiClient"
 
 export default {
     getCourses() {
-        return apiClient.get('courses')
+        return apiMockClient.get('courses')
     },
     getCourse(id: number) {
-        return apiClient.get('courses/' + id)
+        return apiMockClient.get('courses/' + id)
     },
     getCoursesByLevelId(levelId: number) {
         return this.getCourses()
