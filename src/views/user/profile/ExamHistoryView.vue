@@ -38,7 +38,7 @@ onMounted(() => {
         if (route.name?.toString().startsWith('Admin')) {
             assignExams(Number(route.params.id))
         } else {
-            assignExams(userStore.id)
+            if (userStore.id !== null) assignExams(userStore.id)
         }
     })
 })
