@@ -53,6 +53,29 @@ export interface UserResponse {
   userLevels: UserLevel[]
 }
 
+// Session token pair returned by the real backend
+export interface AuthToken {
+  accessToken: string
+  refreshToken: string
+}
+
+// The profile held by the merged auth store.
+// The backend sends: id, firstName, lastName, province, image, roles.
+// The json-server mock login still sends the legacy fields below.
+export interface Profile {
+  id: number
+  firstName: string
+  lastName: string
+  province: string
+  image?: string
+  roles?: string[]
+  imageUrl?: string
+  username?: string
+  isActive?: boolean
+  levelId?: string
+  userLevels?: UserLevel
+}
+
 export interface UserState {
   user: User | null
 }

@@ -1,4 +1,4 @@
-import { apiMockClient } from "./ApiClient"
+import { apiMockClient } from "./apiClient"
 
 export default {
     getBadges() {

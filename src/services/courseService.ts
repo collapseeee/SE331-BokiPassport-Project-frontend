@@ -1,5 +1,5 @@
 import type { Course } from "@/types"
-import { apiMockClient } from "./ApiClient"
+import { apiMockClient } from "./apiClient"
 
 export default {
     getCourses() {
