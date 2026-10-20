@@ -1,12 +1,12 @@
 import type { User, UserResponse } from "@/types"
-import { apiClient } from "./apiClient"
+import { apiMockClient } from "./ApiClient"
 
 export default {
     getUsers() {
         /* This will get UserResponse interface first, then map it to User interface.
         * If calls this for further usage in here must map it to User interface.
         */
-        return apiClient.get('/users?_embed=userLevels')
+        return apiMockClient.get('/users?_embed=userLevels')
             .then((res) => {
                 return res.data.map((user: UserResponse) => ({
                     ...user,
@@ -18,10 +18,10 @@ export default {
             })
     },
     getUser(id: number) {
-        return apiClient.get(`users/${id}`)
+        return apiMockClient.get(`users/${id}`)
     },
     getUserUsers() {
-        return apiClient.get('/users?_embed=userLevels&role=user')
+        return apiMockClient.get('/users?_embed=userLevels&role=user')
             .then((res) => {
                 return res.data.map((user: UserResponse) => ({
                     ...user,
@@ -33,7 +33,7 @@ export default {
             })
     },
     getPaginatedUser(page: number) {
-        return apiClient.get(`/users?_embed=userLevels&role=user&_limit=5&_page=${page}`)
+        return apiMockClient.get(`/users?_embed=userLevels&role=user&_limit=5&_page=${page}`)
             .then(res => {
                 const users = res.data.map((user: UserResponse) => ({
                     ...user,
@@ -43,10 +43,10 @@ export default {
             })
     },
     getUserExams(id: number) {
-        return apiClient.get(`/users/${id}?_embed=userExamHistories`)
+        return apiMockClient.get(`/users/${id}?_embed=userExamHistories`)
     },
     getPaginatedUserExams(id: number, page: number) {
-        return apiClient.get(`/userExamHistories?userId=${id}&_page=${page}&_limit=5`)
+        return apiMockClient.get(`/userExamHistories?userId=${id}&_page=${page}&_limit=5`)
     },
     getUserByLevelId(levelId: number) {
         return this.getUsers()
