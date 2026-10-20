@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, watch, computed } from 'vue';
 import axios from 'axios';
-import type { AuthToken, Profile, User } from '@/types';
-import UserService from '@/services/UserService';
+import type { AuthToken, Profile } from '@/types';
 import SecurityService, { type AuthenticateRequest, type RegisterRequest, type RegisterResponse } from '@/services/SecurityService';
 
 const TOKEN_KEY = "AUTH_TOKEN";

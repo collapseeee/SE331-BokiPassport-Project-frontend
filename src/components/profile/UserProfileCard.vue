@@ -43,7 +43,16 @@ onMounted(() => {
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
             .then(res => {
-                user.value = res.data
+                user.value = {
+                    id: res.data.id,
+                    firstName: res.data.firstName,
+                    lastName: res.data.lastName,
+                    province: res.data.province,
+                    image: res.data.imageUrl,
+                    username: res.data.username,
+                }
+                isActive.value = res.data.isActive
+                userLevel.value = Number(res.data.levelId)
                 assignLevelBenefits(res.data.levelId)
                 assignUserBadges(res.data.id)
             })
@@ -59,7 +68,7 @@ onMounted(() => {
 <template>
     <CardContainer class="md:w-2/3 lg:w-1/2 relative">
         <div v-if="isAdmin" class="absolute left-0 top-0 p-5">
-            <Button v-if="user?.isActive" bgColor="brand-red" label="Deactivate"/>
+            <Button v-if="isActive" bgColor="brand-red" label="Deactivate"/>
             <Button v-else bgColor="brand-green" label="Re-activate"/>
         </div>
         <div class="flex flex-row gap-x-10 w-full relative">
@@ -73,7 +82,7 @@ onMounted(() => {
                         <p class="text-start">Province:</p>
                         <p class="font-bold text-end truncate"> {{ user?.province }}</p>
                         <p v-if="isAdmin" class="text-start">Status:</p>
-                        <p v-if="isAdmin" :class="{'text-brand-green': user?.isActive, 'text-brand-red': !user?.isActive}" class="text-center font-semibold">{{ user?.isActive ? 'Active' : 'Inactive' }}</p>
+                        <p v-if="isAdmin" :class="{'text-brand-green': isActive, 'text-brand-red': !isActive}" class="text-center font-semibold">{{ isActive ? 'Active' : 'Inactive' }}</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 w-full border items-center rounded-xl px-5 py-2 bg-sky-950">
