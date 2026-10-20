@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import ServiceCard from '@/components/cards/ServiceCard.vue';
 import { useServicesStore } from '@/stores/services';
-import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
-const userStore = useUserStore();
-const userLevel = userStore.level;
+const authStore = useAuthStore();
+const userLevel = authStore.level;
 
 const servicesStore = useServicesStore();
 const { services } = storeToRefs(servicesStore);

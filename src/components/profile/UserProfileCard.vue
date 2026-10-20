@@ -2,20 +2,20 @@
 import { computed, onMounted, ref } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
-import type { Badge, Benefit, User } from '@/types.ts';
+import type { Badge, Benefit, Profile } from '@/types.ts';
 import BadgeService from '@/services/BadgeService.ts';
 import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
-import { useUserStore } from '@/stores/user.ts';
+import { useAuthStore } from '@/stores/auth.ts';
 import LevelService from '@/services/LevelService.ts';
 import Button from '../Button.vue';
 const route = useRoute()
-const userStore = useUserStore()
+const authStore = useAuthStore()
 
 const benefits = ref<Benefit[] | null>(null)
 const badges = ref<Badge[] | null>(null)
 const userBadges = ref<Badge[] | null>(null)
-const user = ref<User | null>(null)
+const user = ref<Profile | null>(null)
 
 const isAdmin = computed(() => route.name?.toString().startsWith('Admin'))
 
@@ -46,8 +46,8 @@ onMounted(() => {
                 assignUserBadges(res.data.id)
             })
     } else {
-        user.value = userStore.object
-        assignLevelBenefits(Number(userStore.level))
+        user.value = authStore.user
+        assignLevelBenefits(Number(authStore.level))
         if (user.value) assignUserBadges(user.value.id)
     }
 })
@@ -64,7 +64,7 @@ onMounted(() => {
             <!-- Left side of card -->
             <div class="w-1/2 flex flex-col gap-y-2">
                 <div class="flex flex-col items-center">
-                    <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.imageUrl" alt="">
+                    <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image ?? user?.imageUrl" alt="">
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
                     <p class="text-md text-mist-800">{{ user?.username }}</p>
                     <div class="grid grid-cols-2 text-lg gap-x-3">
@@ -76,7 +76,7 @@ onMounted(() => {
                 </div>
                 <div class="grid grid-cols-2 w-full border items-center rounded-xl px-5 py-2 bg-sky-950">
                     <p class="text-mist-50">Level:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ userStore.level ?? user?.levelId }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ authStore.level ?? user?.levelId }}</p>
                     <p class="text-mist-50">Badges:</p>
                     <p class="text-sky-400 font-bold text-2xl text-right">{{ userBadges?.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>
