@@ -20,9 +20,8 @@ export interface User {
   lastName: string
   province: string
   image: string
-  userExamHistories: UserExamHistory[]
-  badges: Badge[]
   levels: UserLevel[]
+  roles: string[]
 }
 
 export interface UserLevel {
@@ -60,7 +59,7 @@ export interface AuthToken {
 }
 
 // The backend sends only the id and name of the levels a user unlocked
-export interface LevelSummary {
+export interface UserLevel {
   id: number
   name: string
 }
@@ -74,16 +73,12 @@ export interface Profile {
   id: number
   firstName: string
   lastName: string
+  username: string
   province: string
-  image?: string
-  roles?: string[]
-  levels?: LevelSummary[]
-  imageUrl?: string
-  username?: string
-  role?: string
-  isActive?: boolean
-  levelId?: string
-  userLevels?: UserLevel
+  image: string
+  roles: string[]
+  levels: UserLevel[]
+  role: string
 }
 
 export interface Level {
@@ -91,13 +86,6 @@ export interface Level {
   name: string
   description: string
   passCriteria: number
-}
-
-export interface UserLevel {
-  id: number
-  createdAt: Date
-  userId: number
-  levelId: number
 }
 
 export interface LevelsState {
