@@ -58,11 +58,12 @@ export const useAuthStore = defineStore('auth', () => {
     const fullName = computed(() => user.value ? `${user.value.firstName} ${user.value.lastName}` : "");
     const image = computed(() => user.value?.image ?? "");
     const role = computed(() => {
-        const roles = user.value?.roles;
+        if (!user.value) return "";
+        const roles = user.value.roles;
         if (roles?.length) {
             return roles.some(r => r.toUpperCase().includes("ADMIN")) ? "ADMIN" : "USER";
         }
-        // fallback for a response without roles
+        // the backend always sends roles — a profile without them is a regular user
         return "USER";
     });
     const isAdmin = computed(() => role.value === "ADMIN");
