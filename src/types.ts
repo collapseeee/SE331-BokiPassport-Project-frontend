@@ -69,20 +69,18 @@ export interface AuthToken {
   refreshToken: string
 }
 
-// The profile the backend sends with the register and authenticate responses.
-// register     → { id, firstName, lastName, province, image, roles }
-// authenticate → { id, firstName, lastName, province, username, image, roles }
-// GET /v1/users → the same plus levels, badges and userExamHistories
-// TODO(backend): the authenticate response sends no `levels`, so a returning
-// user's level is unknown to the frontend — ask the backend to add them.
+// The backend's UserAuthDTO — the profile in the register and the authenticate
+// response: { id, firstName, lastName, province, username, image, roles }
+// TODO(backend): UserAuthDTO has no `levels`, so a returning user's level is
+// unknown to the frontend — ask the backend to add them (UserOwnLevelDTO).
 export interface Profile {
   id: number
   firstName: string
   lastName: string
   province: string
   image: string
-  username?: string
-  roles?: string[]
+  username: string
+  roles: string[]
   levels?: LevelSummary[]
 }
 

@@ -53,6 +53,7 @@ onMounted(() => {
                     province: res.data.province,
                     image: res.data.imageUrl,
                     username: res.data.username,
+                    roles: [res.data.role === 'admin' ? 'ROLE_ADMIN' : 'ROLE_USER'],
                 }
                 isActive.value = res.data.isActive
                 userLevel.value = Number(res.data.levelId)
