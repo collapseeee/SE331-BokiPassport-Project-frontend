@@ -4,7 +4,7 @@ import NotFoundText from '@/components/NotFoundText.vue';
 import TableContainer from '@/components/table/TableContainer.vue';
 import UserService from '@/services/UserService';
 import Pagination from '@/components/Pagination.vue';
-import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
 import type { ExamHistory } from '@/types';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
@@ -12,7 +12,7 @@ const props = defineProps<{
     page: number
 }>()
 
-const userStore = useUserStore()
+const authStore = useAuthStore()
 const route = useRoute()
 
 const headers = ref<string[]>(['DATE', 'Exam Name', 'Score', 'Status'])
@@ -38,7 +38,7 @@ onMounted(() => {
         if (route.name?.toString().startsWith('Admin')) {
             assignExams(Number(route.params.id))
         } else {
-            if (userStore.id !== null) assignExams(userStore.id)
+            if (authStore.id !== null) assignExams(authStore.id)
         }
     })
 })

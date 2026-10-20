@@ -7,9 +7,9 @@ import { storeToRefs } from 'pinia';
 import { ref, computed, onBeforeUnmount } from 'vue';
 import { Brain } from '@lucide/vue';
 import Button from '@/components/Button.vue';
-import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
 
-const userStore = useUserStore();
+const authStore = useAuthStore();
 const timeLimitInSecond = 600; // Unit = Second.
 const isModalOpen = ref<boolean>(false);
 
@@ -61,7 +61,7 @@ const isPassed = computed(() => {
 });
 const updateUserLevel = () => {
     if (isPassed.value) {
-        userStore.updateUserLevel(Number(exam.value!.levelId) + 1);
+        authStore.updateUserLevel(Number(exam.value!.levelId) + 1);
     }
 };
 

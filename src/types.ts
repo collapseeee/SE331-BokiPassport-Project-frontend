@@ -62,6 +62,8 @@ export interface AuthToken {
 // The profile held by the merged auth store.
 // The backend sends: id, firstName, lastName, province, image, roles.
 // The json-server mock login still sends the legacy fields below.
+// TODO(backend): delete the legacy optional fields once every screen reads
+// from the real backend and the mock login is replaced by /v1/auth/authenticate.
 export interface Profile {
   id: number
   firstName: string
@@ -71,13 +73,10 @@ export interface Profile {
   roles?: string[]
   imageUrl?: string
   username?: string
+  role?: string
   isActive?: boolean
   levelId?: string
   userLevels?: UserLevel
-}
-
-export interface UserState {
-  user: User | null
 }
 
 export interface Level {
