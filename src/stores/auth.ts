@@ -3,7 +3,7 @@ import { ref, watch, computed } from 'vue';
 import axios from 'axios';
 import type { AuthToken, Profile, User } from '@/types';
 import UserService from '@/services/UserService';
-import SecurityService, { type RegisterRequest, type RegisterResponse } from '@/services/SecurityService';
+import SecurityService, { type AuthenticateRequest, type RegisterRequest, type RegisterResponse } from '@/services/SecurityService';
 
 const TOKEN_KEY = "AUTH_TOKEN";
 const USER_KEY = "USER_STATE";
@@ -89,30 +89,13 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    async function login(username: string, password: string): Promise<LoginResult> {
+    async function authenticate(request: AuthenticateRequest): Promise<LoginResult> {
         try {
-            const users = await UserService.getUsers();
-            const matchedUser = users.find((u: User) => u.username === username && u.password === password);
-            if (!matchedUser) {
-                return { success: false, error: "Invalid username or password" };
-            }
-            // keep the mock user without its plaintext password
-            const safeUser: Profile = {
-                id: matchedUser.id,
-                firstName: matchedUser.firstName,
-                lastName: matchedUser.lastName,
-                province: matchedUser.province,
-                imageUrl: matchedUser.imageUrl,
-                username: matchedUser.username,
-                role: matchedUser.role,
-                isActive: matchedUser.isActive,
-                levelId: matchedUser.levelId,
-                userLevels: matchedUser.userLevels,
-            };
-            // TODO(backend): replace with the real POST /v1/auth/authenticate
-            token.value = { accessToken: `mock-token-${matchedUser.id}`, refreshToken: "" };
-            user.value = safeUser;
-            return { success: true, user: safeUser };
+            const { data } = await SecurityService.authenticate(request)
+            token.value = { accessToken: data.accessToken, refreshToken: data.refreshToken }
+            user.value = data.profile
+            console.log(data)
+            return { success: true, user: data.profile };
         } catch (err) {
             console.error("API error during login: ", err);
             return { success: false, error: "An error occurred while logging in" };
@@ -132,5 +115,5 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    return { token, user, isAuthenticated, id, fullName, image, role, isAdmin, isUser, level, register, login, logout, updateUserLevel };
+    return { token, user, isAuthenticated, id, fullName, image, role, isAdmin, isUser, level, register, authenticate, logout, updateUserLevel };
 });
