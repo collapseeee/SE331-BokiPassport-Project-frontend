@@ -48,7 +48,7 @@ onMounted(() => {
     } else {
         user.value = userStore.object
         assignLevelBenefits(Number(userStore.level))
-        assignUserBadges(user.value.id)
+        if (user.value) assignUserBadges(user.value.id)
     }
 })
 

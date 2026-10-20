@@ -22,6 +22,7 @@ export const useUserStore = defineStore("user", () => {
     }, { deep: true });
 
     // Getters derive from reactive state (not localStorage)
+    const object = computed(() => user.value);
     const id = computed(() => user.value?.id ?? null);
     const role = computed(() => user.value?.role.toUpperCase() ?? "");
     const fullName = computed(() => user.value ? `${user.value.firstName} ${user.value.lastName}` : "");
@@ -48,5 +49,5 @@ export const useUserStore = defineStore("user", () => {
         user.value = null;
     }
 
-    return { user, role, level, fullName, id, imageUrl, isStored, saveUser, updateUserLevel, clearUser };
+    return { user, object, role, level, fullName, id, imageUrl, isStored, saveUser, updateUserLevel, clearUser };
 });
