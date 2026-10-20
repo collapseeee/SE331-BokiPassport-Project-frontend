@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, watch, computed } from 'vue';
 import axios from 'axios';
-import type { AuthToken, Profile, User } from '@/types';
-import UserService from '@/services/UserService';
+import type { AuthToken, Profile } from '@/types';
 import SecurityService, { type AuthenticateRequest, type RegisterRequest, type RegisterResponse } from '@/services/SecurityService';
 
 const TOKEN_KEY = "AUTH_TOKEN";
@@ -57,24 +56,21 @@ export const useAuthStore = defineStore('auth', () => {
     const isAuthenticated = computed(() => !!token.value?.accessToken);
     const id = computed(() => user.value?.id ?? null);
     const fullName = computed(() => user.value ? `${user.value.firstName} ${user.value.lastName}` : "");
-    const image = computed(() => user.value?.image ?? user.value?.imageUrl ?? "");
+    const image = computed(() => user.value?.image ?? "");
     const role = computed(() => {
         const roles = user.value?.roles;
         if (roles?.length) {
             return roles.some(r => r.toUpperCase().includes("ADMIN")) ? "ADMIN" : "USER";
         }
-        return user.value?.role?.toUpperCase() ?? "";
+        // fallback for a response without roles
+        return "USER";
     });
     const isAdmin = computed(() => role.value === "ADMIN");
     const isUser = computed(() => role.value === "USER");
     const level = computed(() => {
         // the backend sends the levels the user unlocked
         const levels = user.value?.levels ?? [];
-        if (levels.length) return Math.max(...levels.map(l => l.id));
-        // mock login path: the json-server user carries a single level record
-        const mockLevel = user.value?.userLevels?.levelId;
-        if (mockLevel != null) return Number(mockLevel);
-        return 1;
+        return levels.length ? Math.max(...levels.map(l => l.id)) : 1;
     });
 
     async function register(request: RegisterRequest): Promise<RegisterResponse> {
@@ -94,11 +90,15 @@ export const useAuthStore = defineStore('auth', () => {
             const { data } = await SecurityService.authenticate(request)
             token.value = { accessToken: data.accessToken, refreshToken: data.refreshToken }
             user.value = data.profile
-            console.log(data)
             return { success: true, user: data.profile };
         } catch (err) {
             console.error("API error during login: ", err);
-            return { success: false, error: "An error occurred while logging in" };
+            // the backend answers a bad login with 403 "Forbidden" and a stack trace
+            if (axios.isAxiosError(err) && err.response?.status === 403) {
+                return { success: false, error: "Invalid username or password" };
+            }
+            const body = axios.isAxiosError(err) ? err.response?.data : null;
+            return { success: false, error: body?.message ?? body?.error ?? "An error occurred while logging in" };
         }
     }
 
@@ -107,12 +107,13 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null;
     }
 
-    // TODO(backend): for a real session the level comes from the profile's
-    // `levels`, so a level-up only applies after the profile is refetched.
+    // The level comes from the profile, so a level-up only shows up once the
+    // backend sends a profile that includes the new level.
     function updateUserLevel(levelId: number) {
-        if (user.value?.userLevels) {
-            user.value = { ...user.value, userLevels: { ...user.value.userLevels, levelId } };
-        }
+        if (!user.value) return;
+        const levels = user.value.levels ?? [];
+        if (levels.some(l => l.id === levelId)) return;
+        user.value = { ...user.value, levels: [...levels, { id: levelId, name: `Level ${levelId}` }] };
     }
 
     return { token, user, isAuthenticated, id, fullName, image, role, isAdmin, isUser, level, register, authenticate, logout, updateUserLevel };

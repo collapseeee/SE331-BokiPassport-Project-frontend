@@ -20,11 +20,22 @@ export interface User {
   lastName: string
   province: string
   image: string
-  levels: UserLevel[]
+  userExamHistories: UserExamHistory[]
+  badges: Badge[]
+  levels: LevelSummary[]
   roles: string[]
 }
 
+// A row of the json-server `userLevels` collection
 export interface UserLevel {
+  id: number
+  createdAt: Date
+  userId: number
+  levelId: number
+}
+
+// A level the backend sends inside a profile: { id, name }
+export interface LevelSummary {
   id: number
   name: string
 }
@@ -58,27 +69,21 @@ export interface AuthToken {
   refreshToken: string
 }
 
-// The backend sends only the id and name of the levels a user unlocked
-export interface UserLevel {
-  id: number
-  name: string
-}
-
-// The profile held by the merged auth store.
-// The backend sends: id, firstName, lastName, province, image, roles, levels.
-// The json-server mock login still sends the legacy fields below.
-// TODO(backend): delete the legacy optional fields once every screen reads
-// from the real backend and the mock login is replaced by /v1/auth/authenticate.
+// The profile the backend sends with the register and authenticate responses.
+// register     → { id, firstName, lastName, province, image, roles }
+// authenticate → { id, firstName, lastName, province, username, image, roles }
+// GET /v1/users → the same plus levels, badges and userExamHistories
+// TODO(backend): the authenticate response sends no `levels`, so a returning
+// user's level is unknown to the frontend — ask the backend to add them.
 export interface Profile {
   id: number
   firstName: string
   lastName: string
-  username: string
   province: string
   image: string
-  roles: string[]
-  levels: UserLevel[]
-  role: string
+  username?: string
+  roles?: string[]
+  levels?: LevelSummary[]
 }
 
 export interface Level {
