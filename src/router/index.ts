@@ -111,7 +111,9 @@ const router = createRouter({
           name: 'UserProfileBadgesView', 
           component: UserProfileBadgesView,
           beforeEnter: async route => {
-            const badges = await BadgeService.getBadgesByUserId(useUserStore().id)
+            const userId = useUserStore().id
+            if (userId === null) return
+            const badges = await BadgeService.getBadgesByUserId(userId)
             route.meta.userBadges = await Promise.all(
               badges.data.userBadges.map((userBadge: UserBadge) =>
                 BadgeService.getBadgeById(Number(userBadge.badgeId)).then(res => res.data)
