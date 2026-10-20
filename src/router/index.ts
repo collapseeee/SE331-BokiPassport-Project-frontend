@@ -22,7 +22,6 @@ import AdminUserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminLevelManagementView from '@/views/admin/LevelManagementView.vue'
 import AdminCourseManagementView from '@/views/admin/CourseManagementView.vue'
 import { useAuthStore } from '@/stores/auth'
-import { useUserStore } from '@/stores/user'
 import { useLevelsStore } from '@/stores/levels'
 import { useBenefitsStore } from '@/stores/benefits'
 import { useServicesStore } from '@/stores/services'
@@ -63,9 +62,8 @@ const router = createRouter({
       component: HomeView,
       beforeEnter: () => {
         const authStore = useAuthStore()
-        const userStore = useUserStore()
         if (authStore.isAuthenticated) {
-          if (userStore.role === 'ADMIN') {
+          if (authStore.isAdmin) {
             return { name: 'AdminView' }
           }
           return { name: 'UserProfile' }
@@ -78,9 +76,8 @@ const router = createRouter({
       component: LoginView,
       beforeEnter: () => {
         const authStore = useAuthStore()
-        const userStore = useUserStore()
         if (authStore.isAuthenticated) {
-          if (userStore.role === 'ADMIN') {
+          if (authStore.isAdmin) {
             return { name: 'AdminView' }
           }
           return { name: 'UserProfile' }
@@ -92,9 +89,8 @@ const router = createRouter({
       component: RegisterView,
       beforeEnter: () => {
         const authStore = useAuthStore()
-        const userStore = useUserStore()
         if (authStore.isAuthenticated) {
-          if (userStore.role === 'ADMIN') {
+          if (authStore.isAdmin) {
             return { name: 'AdminView' }
           }
           return { name: 'UserProfile' }
@@ -111,9 +107,11 @@ const router = createRouter({
           name: 'UserProfileBadgesView', 
           component: UserProfileBadgesView,
           beforeEnter: async route => {
-            const userId = useUserStore().id
+            const userId = useAuthStore().id
             if (userId === null) return
-            const badges = await BadgeService.getBadgesByUserId(userId)
+            // a real-backend user has no row in the json-server mock yet
+            const badges = await BadgeService.getBadgesByUserId(userId).catch(() => null)
+            if (!badges) return
             route.meta.userBadges = await Promise.all(
               badges.data.userBadges.map((userBadge: UserBadge) =>
                 BadgeService.getBadgeById(Number(userBadge.badgeId)).then(res => res.data)
@@ -173,8 +171,8 @@ const router = createRouter({
         if (!examRes) {
           return { name: 'NotFound', params: { catchAll: '404' }, query: { resource: 'exam' } }
         }
-        const userStore = useUserStore();
-        const userLevel = userStore.level;
+        const authStore = useAuthStore();
+        const userLevel = authStore.level;
         if (examRes.levelId > Number(userLevel)){
           return { name: 'NoPermission', query: { role: 'User with lower level' } }
         }
@@ -283,12 +281,11 @@ router.beforeEach(async to => {
   if (!authStore.isAuthenticated && !isPublicRoute(to)) {
     return { name: 'Home' }
   }
-  const userStore = useUserStore();
-  const userRole = userStore.role.charAt(0).toUpperCase() + userStore.role.slice(1).toLowerCase();
-  if (isUserRoute(to) && userRole !== 'User') {
+  const userRole = authStore.isAdmin ? 'Admin' : 'User';
+  if (isUserRoute(to) && !authStore.isUser) {
     return { name: 'NoPermission', query: { role: userRole } }
   }
-  if (isAdminRoute(to) && userRole !== 'Admin') {
+  if (isAdminRoute(to) && !authStore.isAdmin) {
     return { name: 'NoPermission', query: { role: userRole } }
   }
   if (authStore.isAuthenticated && !isPublicRoute(to)) {

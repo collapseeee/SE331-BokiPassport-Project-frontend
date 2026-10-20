@@ -2,20 +2,20 @@
 import { computed, onMounted, ref } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
-import type { Badge, Benefit, User } from '@/types.ts';
+import type { Badge, Benefit, Profile } from '@/types.ts';
 import BadgeService from '@/services/BadgeService.ts';
 import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
-import { useUserStore } from '@/stores/user.ts';
+import { useAuthStore } from '@/stores/auth.ts';
 import LevelService from '@/services/LevelService.ts';
 import Button from '../Button.vue';
 const route = useRoute()
-const userStore = useUserStore()
+const authStore = useAuthStore()
 
 const benefits = ref<Benefit[] | null>(null)
 const badges = ref<Badge[] | null>(null)
 const userBadges = ref<Badge[] | null>(null)
-const user = ref<User | null>(null)
+const user = ref<Profile | null>(null)
 
 const isAdmin = computed(() => route.name?.toString().startsWith('Admin'))
 
@@ -30,6 +30,8 @@ const assignUserBadges = (userId: number) => {
     if (user.value) {
         BadgeService.getBadgesByUserId(userId)
             .then(res => userBadges.value = res.data.userBadges)
+            // a real-backend user has no row in the json-server mock yet
+            .catch(() => userBadges.value = [])
     }
 }
 
@@ -41,13 +43,22 @@ onMounted(() => {
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
             .then(res => {
-                user.value = res.data
+                user.value = {
+                    id: res.data.id,
+                    firstName: res.data.firstName,
+                    lastName: res.data.lastName,
+                    province: res.data.province,
+                    image: res.data.imageUrl,
+                    username: res.data.username,
+                }
+                isActive.value = res.data.isActive
+                userLevel.value = Number(res.data.levelId)
                 assignLevelBenefits(res.data.levelId)
                 assignUserBadges(res.data.id)
             })
     } else {
-        user.value = userStore.object
-        assignLevelBenefits(Number(userStore.level))
+        user.value = authStore.user
+        assignLevelBenefits(Number(authStore.level))
         if (user.value) assignUserBadges(user.value.id)
     }
 })
@@ -57,26 +68,26 @@ onMounted(() => {
 <template>
     <CardContainer class="md:w-2/3 lg:w-1/2 relative">
         <div v-if="isAdmin" class="absolute left-0 top-0 p-5">
-            <Button v-if="user?.isActive" bgColor="brand-red" label="Deactivate"/>
+            <Button v-if="isActive" bgColor="brand-red" label="Deactivate"/>
             <Button v-else bgColor="brand-green" label="Re-activate"/>
         </div>
         <div class="flex flex-row gap-x-10 w-full relative">
             <!-- Left side of card -->
             <div class="w-1/2 flex flex-col gap-y-2">
                 <div class="flex flex-col items-center">
-                    <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.imageUrl" alt="">
+                    <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image ?? user?.imageUrl" alt="">
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
                     <p class="text-md text-mist-800">{{ user?.username }}</p>
                     <div class="grid grid-cols-2 text-lg gap-x-3">
                         <p class="text-start">Province:</p>
                         <p class="font-bold text-end truncate"> {{ user?.province }}</p>
                         <p v-if="isAdmin" class="text-start">Status:</p>
-                        <p v-if="isAdmin" :class="{'text-brand-green': user?.isActive, 'text-brand-red': !user?.isActive}" class="text-center font-semibold">{{ user?.isActive ? 'Active' : 'Inactive' }}</p>
+                        <p v-if="isAdmin" :class="{'text-brand-green': isActive, 'text-brand-red': !isActive}" class="text-center font-semibold">{{ isActive ? 'Active' : 'Inactive' }}</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 w-full border items-center rounded-xl px-5 py-2 bg-sky-950">
                     <p class="text-mist-50">Level:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ userStore.level ?? user?.levelId }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ authStore.level ?? user?.levelId }}</p>
                     <p class="text-mist-50">Badges:</p>
                     <p class="text-sky-400 font-bold text-2xl text-right">{{ userBadges?.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>

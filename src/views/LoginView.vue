@@ -6,6 +6,7 @@ import SubmitButton from '@/components/Button.vue';
 import FormInput from '@/components/form/FormInput.vue'
 import PasswordInput from '@/components/form/FormPasswordInput.vue'
 import { useRouter } from 'vue-router';
+import type { AuthenticateRequest } from '@/services/SecurityService';
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -22,11 +23,14 @@ function handleLogin(){
         return
     }
 
-    authStore.login(username.value, password.value)
+    authStore.authenticate({
+        username: username.value,
+        password: password.value
+    } as AuthenticateRequest)
         .then((res) => {
             if (res.success && res.user) {
                 router.go(0)
-                router.push( res.user.role === 'ADMIN' ? { name: 'AdminView' } : { name: 'UserProfile' } )
+                router.push( authStore.isAdmin ? { name: 'AdminView' } : { name: 'UserProfile' } )
             }
             return errorMessage.value = res.error ?? 'Login failed. Please try again.'
         })

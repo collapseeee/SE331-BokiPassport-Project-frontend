@@ -55,18 +55,19 @@ const { value: province } = useField<string>('province')
 
 // Form submit — only fires if validation passes
 const onSubmit = handleSubmit((values) => {
-    authStore.register(values.firstName
-        , values.lastName
-        , values.username
-        , values.password
-        , values.province
-        , profilePhotos.value[0] ?? ''
-    )
+    authStore.register({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        username: values.username,
+        password: values.password,
+        province: values.province,
+        image: profilePhotos.value[0] ?? '',
+    })
       .then(() => {
         router.push({ name: 'UserProfile' })
       })
-      .catch(() => {
-        errorMessage.value = 'An error occurred.'
+      .catch((err) => {
+        errorMessage.value = err instanceof Error ? err.message : 'An error occurred.'
       })
 })
 </script>

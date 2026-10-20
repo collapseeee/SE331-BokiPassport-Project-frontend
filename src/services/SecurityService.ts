@@ -1,5 +1,5 @@
-import type { User } from "@/types"
-import { apiClient } from "./ApiClient"
+import type { Profile } from "@/types"
+import { apiClient } from "./apiClient"
 
 export interface RegisterRequest {
     firstName: string
@@ -16,14 +16,6 @@ export interface RegisterResponse {
     profile: Profile
 }
 
-interface Profile {
-    id: number
-    firstName: string
-    lastName: string
-    province: string
-    image: string
-}
-
 export interface AuthenticateRequest {
     username: string
     password: string
@@ -32,7 +24,7 @@ export interface AuthenticateRequest {
 export interface AuthenticateResponse {
     accessToken: string
     refreshToken: string
-    profile: User
+    profile: Profile
 }
 
 export default {

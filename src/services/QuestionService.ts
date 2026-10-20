@@ -1,5 +1,5 @@
 import type { Question } from "@/types"
-import { apiMockClient } from "./ApiClient"
+import { apiMockClient } from "./apiClient"
 
 export default {
     getQuestions() {

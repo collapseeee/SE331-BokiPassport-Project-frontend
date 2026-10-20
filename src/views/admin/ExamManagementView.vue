@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import ExamCard from '@/components/cards/ExamCard.vue';
-import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
 import { ref, onMounted } from 'vue';
 import type { Exam } from '@/types';
 import ExamService from '@/services/ExamService';
 import AdminHeader from '@/components/AdminHeader.vue';
 
-const userStore = useUserStore();
-const userLevel = userStore.level;
+const authStore = useAuthStore();
+const userLevel = authStore.level;
 
 const exams = ref<Exam[]>([]);
 onMounted(() => {

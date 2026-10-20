@@ -7,7 +7,7 @@ import { ref, computed } from 'vue';
 import { useBenefitsStore } from '@/stores/benefits.ts';
 import { Brain } from '@lucide/vue';
 import SubCardContainer from './SubCardContainer.vue';
-import { useUserStore } from '@/stores/user.ts';
+import { useAuthStore } from '@/stores/auth.ts';
 
 const props = defineProps<{
     exam: Exam
@@ -23,8 +23,8 @@ const isDisable = ref(false);
 const benefitStore = useBenefitsStore();
 const benefits = ref<Benefit[]>([]);
 
-const userStore = useUserStore();
-const isAdmin = userStore.role === 'ADMIN';
+const authStore = useAuthStore();
+const isAdmin = authStore.isAdmin;
 const level = levelStore.getLevelById(Number(props.exam.levelId) + 1)!;
 levelName.value = level.name;
 benefits.value = benefitStore.getBenefitsByLevelId(Number(props.exam.levelId) + 1)!;

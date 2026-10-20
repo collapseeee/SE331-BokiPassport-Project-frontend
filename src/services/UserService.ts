@@ -1,5 +1,5 @@
 import type { User, UserResponse } from "@/types"
-import { apiMockClient } from "./ApiClient"
+import { apiMockClient } from "./apiClient"
 
 export default {
     getUsers() {
