@@ -26,7 +26,7 @@ function handleLogin(){
         .then((res) => {
             if (res.success && res.user) {
                 router.go(0)
-                router.push( authStore.role === 'ADMIN' ? { name: 'AdminView' } : { name: 'UserProfile' } )
+                router.push( authStore.isAdmin ? { name: 'AdminView' } : { name: 'UserProfile' } )
             }
             return errorMessage.value = res.error ?? 'Login failed. Please try again.'
         })

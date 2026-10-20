@@ -24,7 +24,7 @@ const benefitStore = useBenefitsStore();
 const benefits = ref<Benefit[]>([]);
 
 const authStore = useAuthStore();
-const isAdmin = authStore.role === 'ADMIN';
+const isAdmin = authStore.isAdmin;
 const level = levelStore.getLevelById(Number(props.exam.levelId) + 1)!;
 levelName.value = level.name;
 benefits.value = benefitStore.getBenefitsByLevelId(Number(props.exam.levelId) + 1)!;

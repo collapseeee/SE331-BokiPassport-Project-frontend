@@ -11,7 +11,7 @@ const authStore = useAuthStore()
 
 <template>
   <!-- User Pages -->
-  <div v-if="authStore.role === 'USER' && $route.name !== 'Login' && $route.name != 'Register' && $route.name !== 'Home'" 
+  <div v-if="authStore.isUser && $route.name !== 'Login' && $route.name != 'Register' && $route.name !== 'Home'" 
   class="min-h-screen bg-gray-100 grid grid-cols-5 bg-linear-to-b from-brand-sky-blue to-brand-white">
       <UserSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
@@ -21,7 +21,7 @@ const authStore = useAuthStore()
       </div>
   </div>
   <!-- Admin Pages -->
-  <div v-else-if="authStore.role === 'ADMIN' && $route.name !== 'Login' && $route.name != 'Register' && $route.name !== 'Home'" 
+  <div v-else-if="authStore.isAdmin && $route.name !== 'Login' && $route.name != 'Register' && $route.name !== 'Home'" 
   class="min-h-screen bg-gray-100 grid grid-cols-5">
       <AdminSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">

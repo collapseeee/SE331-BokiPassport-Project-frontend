@@ -26,25 +26,13 @@ function readStored<T>(key: string): T | null {
     }
 }
 
-// The access token is a JWT — the level claim lives inside it.
-function decodeToken(accessToken: string): Record<string, unknown> | null {
-    const payload = accessToken.split('.')[1];
-    if (!payload) return null;
-    try {
-        const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
-        return JSON.parse(atob(base64));
-    } catch {
-        return null;
-    }
-}
-
 export const useAuthStore = defineStore('auth', () => {
     // Token state — persisted so refresh doesn't log out
     const token = ref<AuthToken | null>(readStored<AuthToken>(TOKEN_KEY));
 
-    // TODO(backend): the real backend sends `image` + `roles`, the json-server
-    // mock sends `imageUrl` + `role`. Collapse to one shape when the mock login
-    // is replaced by the real /v1/auth/authenticate.
+    // TODO(backend): the real backend sends `image` + `roles` + `levels`, the
+    // json-server mock sends `imageUrl` + `role` + `userLevels`. Collapse to one
+    // shape when the mock login is replaced by the real /v1/auth/authenticate.
     const user = ref<Profile | null>(readStored<Profile>(USER_KEY));
 
     // Persist token to localStorage
@@ -77,13 +65,16 @@ export const useAuthStore = defineStore('auth', () => {
         }
         return user.value?.role?.toUpperCase() ?? "";
     });
+    const isAdmin = computed(() => role.value === "ADMIN");
+    const isUser = computed(() => role.value === "USER");
     const level = computed(() => {
-        const claims = token.value?.accessToken ? decodeToken(token.value.accessToken) : null;
-        const claim = claims?.levelId ?? claims?.level;
-        if (claim != null) return Number(claim);
-        // mock login path: the json-server user carries its level
+        // the backend sends the levels the user unlocked
+        const levels = user.value?.levels ?? [];
+        if (levels.length) return Math.max(...levels.map(l => l.id));
+        // mock login path: the json-server user carries a single level record
         const mockLevel = user.value?.userLevels?.levelId;
-        return mockLevel != null ? Number(mockLevel) : null;
+        if (mockLevel != null) return Number(mockLevel);
+        return 1;
     });
 
     async function register(request: RegisterRequest): Promise<RegisterResponse> {
@@ -133,13 +124,13 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null;
     }
 
-    // TODO(backend): for a real session the level comes from the access token,
-    // so a level-up only applies after the backend issues a new token.
+    // TODO(backend): for a real session the level comes from the profile's
+    // `levels`, so a level-up only applies after the profile is refetched.
     function updateUserLevel(levelId: number) {
         if (user.value?.userLevels) {
             user.value = { ...user.value, userLevels: { ...user.value.userLevels, levelId } };
         }
     }
 
-    return { token, user, isAuthenticated, id, fullName, image, role, level, register, login, logout, updateUserLevel };
+    return { token, user, isAuthenticated, id, fullName, image, role, isAdmin, isUser, level, register, login, logout, updateUserLevel };
 });

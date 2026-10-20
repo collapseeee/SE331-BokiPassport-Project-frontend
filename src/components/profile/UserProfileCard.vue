@@ -30,6 +30,8 @@ const assignUserBadges = (userId: number) => {
     if (user.value) {
         BadgeService.getBadgesByUserId(userId)
             .then(res => userBadges.value = res.data.userBadges)
+            // a real-backend user has no row in the json-server mock yet
+            .catch(() => userBadges.value = [])
     }
 }
 

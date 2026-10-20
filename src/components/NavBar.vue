@@ -11,8 +11,8 @@ const authStore = useAuthStore();
 const levelStore = useLevelsStore();
 const router = useRouter();
 
-const nameText = computed(() => authStore.role === 'USER' ? authStore.fullName : 'Admin')
-const levelText = computed(() => authStore.role === 'USER' ? levelStore.getLevelById(Number(authStore.level))?.name : 'Super User')
+const nameText = computed(() => authStore.isUser ? authStore.fullName : 'Admin')
+const levelText = computed(() => authStore.isUser ? levelStore.getLevelById(Number(authStore.level))?.name : 'Super User')
 const logout = (() => {
     authStore.logout()
     router.go(0)
@@ -22,7 +22,7 @@ const logout = (() => {
 <template>
     <div class="bg-brand-black w-full h-fit py-2 px-12 sticky top-0 z-40 border-b border-brand-gray">
         <div class="flex justify-end items-center">
-            <div v-if="authStore.role === 'ADMIN' || authStore.role === 'USER'">
+            <div v-if="authStore.isAdmin || authStore.isUser">
                 <Dropdown>
                     <template #trigger>
                         <div class="flex">
@@ -34,8 +34,8 @@ const logout = (() => {
                     </div>
                     </template>
                     <template #content>
-                        <DropdownItem v-if="authStore.role !== 'ADMIN'" label="Badges" toName="UserProfileBadgesView"></DropdownItem>
-                        <DropdownItem v-if="authStore.role !== 'ADMIN'" label="Exam History" toName="UserProfileExamHistoryView"></DropdownItem>
+                        <DropdownItem v-if="!authStore.isAdmin" label="Badges" toName="UserProfileBadgesView"></DropdownItem>
+                        <DropdownItem v-if="!authStore.isAdmin" label="Exam History" toName="UserProfileExamHistoryView"></DropdownItem>
                         <DropdownItem label="Log Out" class="text-brand-red" @click="logout"></DropdownItem>
                     </template>
                 </Dropdown>
