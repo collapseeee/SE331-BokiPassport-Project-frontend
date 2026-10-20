@@ -43,6 +43,8 @@ const { errors, handleSubmit } = useForm({
   },
 })
 
+const errorMessage = ref<string>('')
+
 // Individual field bindings (value + vee-validate attrs)
 const { value: firstName } = useField<string>('firstName')
 const { value: lastName } = useField<string>('lastName')
@@ -60,12 +62,11 @@ const onSubmit = handleSubmit((values) => {
         , values.province
         , profilePhotos.value[0] ?? ''
     )
-      .then(res => {
-        console.log(res.data)
-        router.push({ name: 'Login' })
+      .then(() => {
+        router.push({ name: 'UserProfile' })
       })
-      .catch(err => {
-        console.error("HELLO WORLD", err)
+      .catch(() => {
+        errorMessage.value = 'An error occurred.'
       })
 })
 </script>
@@ -130,6 +131,8 @@ const onSubmit = handleSubmit((values) => {
           <!-- Sign Up -->
           <SubmitButton type="submit" class="w-full px-4 py-3 mt-2" label="Sign Up" />
         </form>
+
+        <FormError class="w-full text-center" :errors="errorMessage"/>
 
         <!-- Login link -->
         <p class="text-center text-brand-black">

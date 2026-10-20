@@ -40,6 +40,9 @@ export const useAuthStore = defineStore('auth', () => {
             province: province,
             image: image
         } as RegisterRequest)
+            .then(res => {
+                userStore.saveUser(res.data)
+            })
     }
 
     function login(username: string, password: string) {
