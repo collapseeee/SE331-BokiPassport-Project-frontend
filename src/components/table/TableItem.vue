@@ -25,11 +25,11 @@ const isUser = (row: User | ExamHistory): row is User => {
 
 const mappedRow = computed(() => {
     if (isUser(props.row)) {
-        const { firstName, lastName, userLevels, province } = props.row as User
+        const { firstName, lastName, levels, province } = props.row as User
         return {
             name: firstName,
             surname: lastName,
-            levelId: userLevels.levelId,
+            levelId: levels[levels.length - 1]?.name,
             province: province,
             menu: ''
         }
@@ -54,16 +54,6 @@ const handleClick = () => {
     }
     console.log('exam history clicked')
 }
-/* Filter out the object with 'id' to not let it consume a column */
-/* const visibleRow = computed(() => {
-    return Object.fromEntries(
-        Object.entries(props.row)
-                .filter(([key,value]) => {
-                    if (key !== 'id') return value
-                })
-    )
-}) */
-
 </script>
 
 <template>

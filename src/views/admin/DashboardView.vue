@@ -26,7 +26,7 @@ const activeUserCount = ref<number>(0);
 const inactiveUserCount = ref<number>(0);
 
 onMounted(async () => {
-    const allUsers: UserType[] = await userService.getUsers() || [];
+    const allUsers: UserType[] = await userService.getMockUsers() || [];
     const regularUsers = allUsers.filter((user: UserType) => user.role === 'user');
 
     userCount.value = regularUsers.length;

@@ -1,4 +1,4 @@
-import type { User, UserResponse, UserSearchOption } from "@/types"
+import type { MockUser, UserResponse, UserSearchOption } from "@/types"
 import { apiClient, apiMockClient } from "./apiClient"
 
 export default {
@@ -54,7 +54,7 @@ export default {
     getUserByLevelId(levelId: number) {
         return this.getMockUsers()
             .then((res) => {
-                return res.filter((user: User) => {
+                return res.filter((user: MockUser) => {
                     return Number(user.userLevels.levelId) === levelId && user.role === 'user'
                 })
             })
@@ -62,7 +62,7 @@ export default {
     getAdmins() {
         return this.getMockUsers()
             .then((res) => {
-                return res.filter((user: User) => {
+                return res.filter((user: MockUser) => {
                     return user.role === 'admin'
                 })
             })
@@ -70,7 +70,7 @@ export default {
     getActiveUsers() {
         return this.getMockUsers()
             .then((res) => {
-                return res.filter((user: User) => {
+                return res.filter((user: MockUser) => {
                     return user.isActive === true && user.role === 'user'
                 })
             })

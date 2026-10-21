@@ -3,10 +3,12 @@ import AdminHeader from '@/components/AdminHeader.vue';
 import Container from '@/components/Container.vue';
 import TableContainer from '@/components/table/TableContainer.vue';
 import Pagination from '@/components/Pagination.vue';
-import type { User } from '@/types';
+import type { User, UserSearchOption } from '@/types';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import UserService from '@/services/UserService';
 import NotFoundText from '@/components/NotFoundText.vue';
+import { useRoute } from 'vue-router';
+const route = useRoute()
 const props = defineProps<{
     page: number
 }>()
@@ -16,17 +18,28 @@ const tableHeaders = ['Name', 'Surname', 'Level', 'Province', 'Action']
 const paginatedUsers = ref<User[] | null>(null)
 const totalUsers = ref<number>(0)
 const currentItems =ref<number>(0)
+
+const searchQuery = computed(() => route.query.search ? route.query.search : '')
+const provinceQuery = computed(() => route.query.province ? route.query.province : '')
+const levelQuery = computed(() => {
+    if (route.query.level) {
+        if (route.query.level === 'all') return ''
+        return route.query.level
+    }
+    return ''
+})
 onMounted(() => {
     watchEffect(() => {
-        UserService.getPaginatedUser(props.page)
-            .then(res => {
-                paginatedUsers.value = res.users
-                currentItems.value = res.users.length
-            })
-        UserService.getUserUsers()
-            .then(res => {
-                totalUsers.value = res.length
-            })
+        UserService.getUsers(5, props.page, {
+            name: searchQuery.value,
+            province: provinceQuery.value,
+            level: levelQuery.value
+        } as UserSearchOption)
+        .then(res => {
+            paginatedUsers.value = res.data 
+            currentItems.value = res.data.length
+            totalUsers.value = res.headers['x-total-count']
+        })
     })
 })
 const hasNextPage = computed(() => {
