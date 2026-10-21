@@ -18,7 +18,7 @@ export default {
             })
     },
     getUsers(pageSize: number, page: number, searchOption: UserSearchOption) {
-       return apiClient.get('/v1/users?_limit=' + pageSize + '&_page=' + page + '&name=' + searchOption.name + '&province=' + searchOption.province + '&level=' + searchOption.level)
+       return apiClient.get('/v1/users?_limit=' + pageSize + '&_page=' + page + '&search=' + searchOption.name + '&province=' + searchOption.province + '&level=' + searchOption.level)
     },
     getUser(id: number) {
         return apiMockClient.get(`users/${id}`)
