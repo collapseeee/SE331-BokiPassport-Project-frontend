@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import UserFilterTab from './UserFilterTab.vue';
 import UserService from '@/services/UserService.ts';
-import type { User } from '@/types.ts';
+import type { MockUser } from '@/types.ts';
 
 const props = defineProps({
     title: {
@@ -24,7 +24,7 @@ onMounted(() => {
         UserService.getMockUsers()
             .then(res => {
                 /* Get only the province field */
-                const mappedProvince: string[] = res.map((user: User) => user.province)
+                const mappedProvince: string[] = res.map((user: MockUser) => user.province)
                 /* Get only string attribute and eliminate the null */
                 const filteredProvince: string[] = [...new Set(mappedProvince)].filter((province: string) => province)
                 provinces.value = filteredProvince

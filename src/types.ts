@@ -1,6 +1,6 @@
 // Must match data in jsonserver
 
-export interface User {
+export interface MockUser {
   id: number
   firstName: string
   lastName: string
@@ -183,4 +183,10 @@ export interface AnswerChoice {
 export interface DashboardItem {
   key: string
   value: number
+}
+
+export interface UserSearchOption {
+  name: string
+  province: string
+  level: string
 }
