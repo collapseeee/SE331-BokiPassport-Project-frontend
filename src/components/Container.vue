@@ -21,7 +21,7 @@ const props = defineProps({
 const provinces = ref<string[] | null>([])
 onMounted(() => {
     if (props.isFilter) {
-        UserService.getUsers()
+        UserService.getMockUsers()
             .then(res => {
                 /* Get only the province field */
                 const mappedProvince: string[] = res.map((user: User) => user.province)
