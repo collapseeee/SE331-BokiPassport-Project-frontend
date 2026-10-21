@@ -54,7 +54,7 @@ const hasNextPage = computed(() => {
             <Container title="" isFilter>
                 <div v-if="paginatedUsers">
                     <TableContainer :headers="tableHeaders" :rows="paginatedUsers" />
-                    <Pagination :page="Number(page)" :currentItems :totalItems="totalUsers" :hasNextPage/>
+                    <Pagination :page="Number(page)" :currentItems :totalItems="Number(totalUsers)" :hasNextPage/>
                 </div>
                 <NotFoundText v-else text="No user yet!"/>
             </Container>
