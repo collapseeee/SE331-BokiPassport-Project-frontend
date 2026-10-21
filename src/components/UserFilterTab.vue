@@ -18,7 +18,7 @@ const tabs: Map<string, string> = new Map([
     ['4', '4']
 ])
 
-const levelClasses = 'text-brand-blue hover:bg-brand-blue/30 rounded-xl px-3 py-2 transition-all'
+const levelClasses = 'text-brand-blue h-full hover:bg-brand-blue/30 rounded-xl px-4 py-2 transition-all'
 
 /* Filter by searching name */
 const searchValue = ref<string>('');
@@ -30,10 +30,6 @@ const updateSearchFilter = () => {
         }
     })
 }
-/* Watch the changes of searchValue then update queries */
-watch(() => searchValue.value, () => {
-    updateSearchFilter()
-})
 
 /* Filter by province */
 const updateProvinceFilter = (newProvince: string) => {
@@ -51,7 +47,7 @@ const updateProvinceFilter = (newProvince: string) => {
     <div class="flex flex-row gap-x-2 items-center justify-start pb-3 w-full px-4.5">
         <!-- 0 means key, 1 means value (Map data structure) -->
         <p class="text-brand-white">Level:</p>
-        <RouterLink :to="{ query: { ...$route.query, level: tab[1] }}" :class="levelClasses" v-for="tab in tabs" :label="tab[0]" :key="tab[0]">{{ tab[0] }}</RouterLink>
+        <RouterLink :to="{ query: { ...$route.query, level: tab[1] }}" :class="[levelClasses, { 'bg-brand-black font-bold': route.query.level === tab[1] }, {'bg-brand-black font-bold': tab[1] === 'all' && route.query.level === undefined}]" v-for="tab in tabs" :key="tab[0]">{{ tab[0] }}</RouterLink>
         <input @input="updateSearchFilter" v-model="searchValue" class="rounded-full border-none bg-brand-white w-full max-w-lg px-3 py-3" placeholder="Search..."/>
         <SelectInput name="province" @update-value="updateProvinceFilter" :options="provinces"/>
         <RouterLink :to="{ name: 'AdminUserManagement' }" class="text-brand-gray underline hover">Reset</RouterLink>
