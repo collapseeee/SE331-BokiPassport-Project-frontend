@@ -1,8 +1,8 @@
-import type { User, UserResponse } from "@/types"
-import { apiMockClient } from "./apiClient"
+import type { User, UserResponse, UserSearchOption } from "@/types"
+import { apiClient, apiMockClient } from "./apiClient"
 
 export default {
-    getUsers() {
+    getMockUsers() {
         /* This will get UserResponse interface first, then map it to User interface.
         * If calls this for further usage in here must map it to User interface.
         */
@@ -16,6 +16,9 @@ export default {
             .catch((err) => {
                 console.error("Error occurs while get data: ", err)
             })
+    },
+    getUsers(pageSize: number, page: number, searchOption: UserSearchOption) {
+       return apiClient.get('/v1/users?_limit=' + pageSize + '&_page=' + page + '&name=' + searchOption.name + '&province=' + searchOption.province + '&level=' + searchOption.level)
     },
     getUser(id: number) {
         return apiMockClient.get(`users/${id}`)
@@ -49,7 +52,7 @@ export default {
         return apiMockClient.get(`/userExamHistories?userId=${id}&_page=${page}&_limit=5`)
     },
     getUserByLevelId(levelId: number) {
-        return this.getUsers()
+        return this.getMockUsers()
             .then((res) => {
                 return res.filter((user: User) => {
                     return Number(user.userLevels.levelId) === levelId && user.role === 'user'
@@ -57,7 +60,7 @@ export default {
             })
     },
     getAdmins() {
-        return this.getUsers()
+        return this.getMockUsers()
             .then((res) => {
                 return res.filter((user: User) => {
                     return user.role === 'admin'
@@ -65,7 +68,7 @@ export default {
             })
     },
     getActiveUsers() {
-        return this.getUsers()
+        return this.getMockUsers()
             .then((res) => {
                 return res.filter((user: User) => {
                     return user.isActive === true && user.role === 'user'
