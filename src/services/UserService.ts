@@ -23,31 +23,6 @@ export default {
     getUser(id: number) {
         return apiClient.get('/v1/users/' + id)
     },
-    getUserUsers() {
-        return apiMockClient.get('/users?_embed=userLevels&role=user')
-            .then((res) => {
-                return res.data.map((user: UserResponse) => ({
-                    ...user,
-                    userLevels: user.userLevels[0]
-                }))
-            })
-            .catch((err) => {
-                console.error("Error occurs while get data: ", err)
-            })
-    },
-    getPaginatedUser(page: number) {
-        return apiMockClient.get(`/users?_embed=userLevels&role=user&_limit=5&_page=${page}`)
-            .then(res => {
-                const users = res.data.map((user: UserResponse) => ({
-                    ...user,
-                    userLevels: user.userLevels[0]
-                }))
-                return { users }
-            })
-    },
-    getUserExams(id: number) {
-        return apiMockClient.get(`/users/${id}?_embed=userExamHistories`)
-    },
     getExamHistories(id: number, page: number) {
         return apiClient.get(`/v1/exams/users/${id}?_page=${page}&_limit=5`)
     },
