@@ -108,12 +108,5 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null;
     }
 
-    function updateUserLevel(levelId: number) {
-        if (!user.value) return;
-        const levels = user.value.levels ?? [];
-        if (levels.some(l => l.id === levelId)) return; // already unlocked
-        user.value = { ...user.value, levels: [...levels, { id: levelId, name: `Level ${levelId}`, description: "", passCriteria: 0 }] };
-    }
-
-    return { token, user, isAuthenticated, id, fullName, image, role, isAdmin, isUser, level, register, authenticate, logout, updateUserLevel };
+    return { token, user, isAuthenticated, id, fullName, image, role, isAdmin, isUser, level, register, authenticate, logout };
 });

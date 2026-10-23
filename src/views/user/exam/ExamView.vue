@@ -8,6 +8,8 @@ import { ref, computed, onBeforeUnmount } from 'vue';
 import { Brain } from '@lucide/vue';
 import Button from '@/components/Button.vue';
 import { useAuthStore } from '@/stores/auth';
+import ExamService from '@/services/ExamService';
+import UserService from '@/services/UserService';
 
 const authStore = useAuthStore();
 const timeLimitInSecond = 600; // Unit = Second.
@@ -54,22 +56,30 @@ const examStore = useExamStore();
 const levelStore = useLevelsStore();
 const { exam } = storeToRefs(examStore);
 const level = computed(() => levelStore.getLevelById(Number(exam.value!.level.id) + 1));
-const passCriteria = computed(() => Number(level.value!.passCriteria));
-const questionLength = computed(() => exam.value!.questionCount);
-const isPassed = computed(() => {
-    return userScore.value >= Math.round(passCriteria.value * questionLength.value);
-});
-const updateUserLevel = () => {
-    if (isPassed.value) {
-        authStore.updateUserLevel(Number(exam.value!.level.id) + 1);
-    }
-};
+const questionLength = ref<number>(exam.value?.questionCount ?? 0);
+const passCriteria = computed(() => Number(level.value?.passCriteria ?? 0));
+const isPassed = ref<boolean>(false);
 
-const handleSubmit = (score: number = 0) => {
-    userScore.value = score;
+const passMark = computed(() => Math.round(passCriteria.value * questionLength.value));
+const passPercent = computed(() => 
+    questionLength.value > 0 
+        ? Math.round((passMark.value / questionLength.value) * 100) 
+        : 0
+);
+
+
+const handleSubmit = async (answers: Record<number, number>) => {
     stopTimer();
-    updateUserLevel();
+    const { data } = await ExamService.submit(exam.value!.id, answers);
+    userScore.value = data.totalScore;
+    questionLength.value = data.maxScore;
+    isPassed.value = data.isPassed;
+    if (data.awardedLevelId && authStore.id !== null) {
+        const { data: profileRes } = await UserService.getUser(authStore.id);
+        authStore.user = profileRes;
+    }
     isModalOpen.value = true;
+
 };
 
 const colorClass: Record<number, string> = {
@@ -102,7 +112,7 @@ const colorClass: Record<number, string> = {
             <SubCardContainer class="col-span-4 lg:col-span-1">
                 <template #default>
                     <p class="font-bold">Pass Criteria:</p>
-                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`">{{ Math.round(passCriteria * 100) }}%</h1>
+                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`">{{ passMark }} / {{ questionLength }} ({{ passPercent }}%)</h1>
                     <p class="text-gray-800 pt-2">Correct Answer</p>
                 </template>
             </SubCardContainer>
@@ -126,7 +136,7 @@ const colorClass: Record<number, string> = {
                 <template #default>
                     <p class="font-bold">Questions:</p>
                     <h1 class="text-6xl! my-auto">{{ questionLength }}</h1>
-                    <p class="text-gray-800 pt-2 text-center">You need at least {{ Math.round(passCriteria * questionLength) }} correct answers to pass this examination.</p>
+                    <p class="text-gray-800 pt-2 text-center">You need at least {{ passMark }} correct answers to pass this examination.</p>
                 </template>
             </SubCardContainer>
             <div class="col-span-4 justify-self-center py-4">
