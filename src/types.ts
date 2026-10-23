@@ -100,7 +100,7 @@ export interface LevelsState {
 export interface Benefit {
   id: number
   description: string
-  levelId: number
+  level: Level
 }
 
 export interface BenefitsState {
@@ -109,7 +109,7 @@ export interface BenefitsState {
 
 export interface Service {
   id: number
-  levelId: number
+  level: Level
   name: string
 }
 

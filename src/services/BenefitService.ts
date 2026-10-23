@@ -2,7 +2,7 @@ import { apiClient, apiMockClient } from "./apiClient"
 
 export default {
   getBenefits() {
-    return apiMockClient.get('/benefits')
+    return apiClient.get('/v1/benefits')
   },
   getBenefitsByLevel(level: number) {
     return apiClient.get('/v1/benefits?level=' + level)
