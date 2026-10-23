@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed, watchEffect } from 'vue';
 import type { Course } from '@/types';
-import courseService from '@/services/courseService';
+import courseService from '@/services/CourseService';
 import Button from '@/components/Button.vue';
 import 'vidstack/player/styles/default/theme.css';
 import 'vidstack/player';
@@ -38,7 +38,7 @@ const videoId = computed(() => {
   if (!url) return null
 
   // Matches standard, share, embed, and shorts YouTube URLs
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
   const match = url.match(regExp)
   return match && match[2]?.length === 11 ? match[2] : null
 })
@@ -71,14 +71,14 @@ const thumbnailUrl = computed(() => {
               <media-poster
               :src="thumbnailUrl"
               alt="Video thumbnail"
-              class="absolute inset-0 h-full w-full object-cover data-[visible]:opacity-100 opacity-0 transition-opacity"
+              class="absolute inset-0 h-full w-full object-cover data-visible:opacity-100 opacity-0 transition-opacity"
             ></media-poster>
             </media-provider>
           
 
 
             <!-- Controls bar, positioned over the video -->
-            <media-controls class="pointer-events-none absolute position:bottom inset-0 z-10 flex h-full w-full flex-col bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity data-[visible]:opacity-100">
+            <media-controls class="pointer-events-none absolute position:bottom inset-0 z-10 flex h-full w-full flex-col bg-linear-to-t from-black/10 to-transparent opacity-0 transition-opacity data-visible:opacity-100">
 
                 <media-controls-group class="pointer-events-auto flex w-full items-center px-2">
                     <!-- Top Controls Group -->
@@ -98,11 +98,11 @@ const thumbnailUrl = computed(() => {
                 <!-- Bottom row: play, time, volume, fullscreen -->
                 <media-controls-group class="pointer-events-auto flex w-full items-center px-2">
                     <media-play-button
-                        class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-brand-blue hover:bg-white/20 data-[focus]:ring-4"
+                        class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-brand-blue hover:bg-white/20 data-focus:ring-4"
                         >
                     <!-- See "Icons" component page for setup before using the following: -->
-                        <media-icon type="play" class="text-brand-blue hidden h-8 w-8 group-data-[paused]:block"></media-icon>
-                        <media-icon type="pause" class="text-brand-blue h-8 w-8 group-data-[paused]:hidden"></media-icon>
+                        <media-icon type="play" class="text-brand-blue hidden h-8 w-8 group-data-paused:block"></media-icon>
+                        <media-icon type="pause" class="text-brand-blue h-8 w-8 group-data-paused:hidden"></media-icon>
                     </media-play-button>
 
                     <media-time class="text-sm rounded-md bg-brand-black text-brand-white p-0.5" type="current"></media-time>
@@ -114,20 +114,20 @@ const thumbnailUrl = computed(() => {
                     >
                       <!-- Track -->
                       <div
-                        class="relative z-0 h-[5px] w-full rounded-sm bg-brand-black ring-sky-400 group-data-[focus]:ring-[3px]"
+                        class="relative z-0 h-1.25 w-full rounded-sm bg-brand-black ring-sky-400 group-data-focus:ring-[3px]"
                       >
                         <!-- Track Fill -->
                         <div
-                          class="absolute h-full w-[var(--slider-fill)] rounded-sm bg-brand-blue will-change-[width]"
+                          class="absolute h-full w-(--slider-fill) rounded-sm bg-brand-blue will-change-[width]"
                         ></div>
                         <!-- Progress -->
                         <div
-                          class="absolute z-10 h-full w-[var(--slider-progress)] rounded-sm bg-white/50 will-change-[width]"
+                          class="absolute z-10 h-full w-(--slider-progress) rounded-sm bg-white/50 will-change-[width]"
                         ></div>
                       </div>
                       <!-- Thumb -->
                       <div
-                        class="absolute left-[var(--slider-fill)] top-1/2 z-20 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity will-change-[left] group-data-[active]:opacity-100 group-data-[dragging]:ring-4"
+                        class="absolute left-(--slider-fill) top-1/2 z-20 h-3.75 w-3.75 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity will-change-[left] group-data-active:opacity-100 group-data-dragging:ring-4"
                       ></div>
                     </media-time-slider>
                     
@@ -135,7 +135,7 @@ const thumbnailUrl = computed(() => {
                     <!-- <div class="flex-1"></div> -->
 
                     <media-mute-button
-                      class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 data-[focus]:ring-4"
+                      class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 data-focus:ring-4"
                     >
                       <!-- See "Icons" component page for setup before using the following: -->
                       <media-icon type="mute" class="text-brand-blue hidden h-8 w-8 group-data-[state='muted']:block"></media-icon>
@@ -147,29 +147,29 @@ const thumbnailUrl = computed(() => {
                     </media-mute-button>
 
                     <media-volume-slider
-                      class="group relative mx-[7.5px] inline-flex h-10 w-full max-w-[80px] cursor-pointer touch-none select-none items-center outline-none aria-hidden:hidden"
+                      class="group relative mx-[7.5px] inline-flex h-10 w-full max-w-20 cursor-pointer touch-none select-none items-center outline-none aria-hidden:hidden"
                     >
                       <!-- Track -->
                       <div
-                        class="relative z-0 h-[5px] w-full rounded-sm bg-brand-black ring-sky-400 group-data-[focus]:ring-[3px]"
+                        class="relative z-0 h-1.25 w-full rounded-sm bg-brand-black ring-sky-400 group-data-focus:ring-[3px]"
                       >
                         <!-- Track Fill -->
                         <div
-                          class="absolute h-full w-[var(--slider-fill)] rounded-sm bg-brand-blue will-change-[width]"
+                          class="absolute h-full w-(--slider-fill) rounded-sm bg-brand-blue will-change-[width]"
                         ></div>
                       </div>
                       <!-- Thumb -->
                       <div
-                        class="absolute left-[var(--slider-fill)] top-1/2 z-20 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity will-change-[left] group-data-[active]:opacity-100 group-data-[dragging]:ring-4"
+                        class="absolute left-(--slider-fill) top-1/2 z-20 h-3.75 w-3.75 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity will-change-[left] group-data-active:opacity-100 group-data-dragging:ring-4"
                       ></div>
                     </media-volume-slider>
 
                     <media-fullscreen-button
-                      class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 aria-hidden:hidden data-[focus]:ring-4"
+                      class="group relative inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md outline-none ring-inset ring-sky-400 hover:bg-white/20 aria-hidden:hidden data-focus:ring-4"
                     >
                       <!-- See "Icons" component page for setup before using the following: -->
-                      <media-icon type="fullscreen" class="text-brand-blue h-8 w-8 group-data-[active]:hidden"></media-icon>
-                      <media-icon type="fullscreen-exit" class="text-brand-blue hidden h-8 w-8 group-data-[active]:block"></media-icon>
+                      <media-icon type="fullscreen" class="text-brand-blue h-8 w-8 group-data-active:hidden"></media-icon>
+                      <media-icon type="fullscreen-exit" class="text-brand-blue hidden h-8 w-8 group-data-active:block"></media-icon>
                     </media-fullscreen-button>
                 </media-controls-group>
             </media-controls>
