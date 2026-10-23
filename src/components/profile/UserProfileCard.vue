@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
-import type { Badge, Benefit, Profile } from '@/types.ts';
+import type { Badge, Benefit, Level, Profile } from '@/types.ts';
 import BadgeService from '@/services/BadgeService.ts';
 import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
@@ -32,8 +32,7 @@ const assignLevelBenefits = (levelId: number) => {
 const assignUserBadges = (userId: number) => {
     if (user.value) {
         BadgeService.getBadgesByUserId(userId)
-            .then(res => userBadges.value = res.data.userBadges)
-            // a real-backend user has no row in the json-server mock yet
+            .then(res => userBadges.value = res.data)
             .catch(() => userBadges.value = [])
     }
 }
@@ -46,22 +45,23 @@ onMounted(() => {
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
             .then(res => {
+                const u = res.data
                 user.value = {
-                    id: res.data.id,
-                    firstName: res.data.firstName,
-                    lastName: res.data.lastName,
-                    province: res.data.province,
-                    image: res.data.imageUrl,
-                    username: res.data.username,
-                    isActive: res.data.isActive,
-                    roles: [res.data.role === 'admin' ? 'ROLE_ADMIN' : 'ROLE_USER'],
-                    badges: res.data.badges,
-                    levels: res.data.levels
+                    id: u.id,
+                    firstName: u.firstName,
+                    lastName: u.lastName,
+                    province: u.province,
+                    image: u.imageUrl,
+                    username: u.username,
+                    isActive: u.isActive,
+                    roles: u.roles,
+                    badges: u.badges,
+                    levels: u.levels
                 }
-                isActive.value = res.data.isActive
-                userLevel.value = Number(res.data.levelId)
-                assignLevelBenefits(res.data.levelId)
-                assignUserBadges(res.data.id)
+                isActive.value = u.isActive
+                userLevel.value = Math.max(...u.levels.map((l: Level) => l.id));
+                assignLevelBenefits(u.levelId)
+                userBadges.value = u.badges
             })
     } else {
         user.value = authStore.user

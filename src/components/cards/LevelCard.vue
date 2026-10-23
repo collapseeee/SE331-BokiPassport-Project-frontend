@@ -15,8 +15,8 @@ onMounted(() => {
     watchEffect(() => {
         BenefitService.getBenefitsByLevelId(props.level.id)
             .then(res => {
-                benefits.value = res.data.benefits
-                defaultBenefits.value = res.data.benefits
+                benefits.value = res.data
+                defaultBenefits.value = res.data
             })
     })
 })
