@@ -8,7 +8,6 @@ import { useAuthStore } from '@/stores/auth';
 import type { ExamHistory } from '@/types';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
-import { storeToRefs } from 'pinia';
 const props = defineProps<{
     page: number
 }>()
@@ -16,7 +15,6 @@ const props = defineProps<{
 const authStore = useAuthStore()
 const route = useRoute()
 
-const { isAdmin } = storeToRefs(authStore)
 const headers = ref<string[]>(['DATE', 'Exam Name', 'Score', 'Status'])
 
 const paginatedExam = ref<ExamHistory[] | null>(null)
@@ -28,21 +26,17 @@ const assignExams = (id: number) => {
         .then(res => {
             paginatedExam.value = res.data as ExamHistory[]
             currentItems.value = res.data.length
+            totalExams.value = Number.parseInt(res.headers['x-total-count'])
         })
-    UserService.getUserExams(id)
-        .then(res => {
-            totalExams.value = res.data.userExamHistories.length
-        })
-        // a real-backend user has no row in the json-server mock yet
         .catch(() => totalExams.value = 0)
 }
 
 onMounted(() => {
     watchEffect(() => {
-        if (isAdmin) {
+        if (authStore.isAdmin) {
             assignExams(Number(route.params.id))
         } else {
-            if (authStore.id !== null) assignExams(authStore.id)
+            assignExams(authStore.id ?? 0)
         }
     })
 })
