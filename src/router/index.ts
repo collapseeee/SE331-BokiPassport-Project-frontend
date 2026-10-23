@@ -109,14 +109,9 @@ const router = createRouter({
           beforeEnter: async route => {
             const userId = useAuthStore().id
             if (userId === null) return
-            // a real-backend user has no row in the json-server mock yet
             const badges = await BadgeService.getBadgesByUserId(userId).catch(() => null)
             if (!badges) return
-            route.meta.userBadges = await Promise.all(
-              badges.data.userBadges.map((userBadge: UserBadge) =>
-                BadgeService.getBadgeById(Number(userBadge.badgeId)).then(res => res.data)
-              )
-            )
+            route.meta.userBadges = badges.data as Badge[]
           },
           props: route => ({ badges: (route.meta.userBadges as Badge[]) ?? null })
         },

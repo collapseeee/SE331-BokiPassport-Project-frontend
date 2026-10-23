@@ -12,8 +12,6 @@ export const apiClient = axios.create({
 //save the token in localStorage and add it to the Authorization header for every request
 apiClient.interceptors.request.use((config) => {
   const raw = localStorage.getItem('AUTH_TOKEN')
-  // need to delete later.
-  console.log('Request Interceptor: ', config)
   if (raw) {
     try {
       const { accessToken } = JSON.parse(raw)
