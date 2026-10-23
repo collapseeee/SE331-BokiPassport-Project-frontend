@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/auth';
 import type { ExamHistory } from '@/types';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
 const props = defineProps<{
     page: number
 }>()
@@ -15,6 +16,7 @@ const props = defineProps<{
 const authStore = useAuthStore()
 const route = useRoute()
 
+const { isAdmin } = storeToRefs(authStore)
 const headers = ref<string[]>(['DATE', 'Exam Name', 'Score', 'Status'])
 
 const paginatedExam = ref<ExamHistory[] | null>(null)
@@ -22,7 +24,7 @@ const totalExams = ref<number>(0)
 const currentItems = ref<number>(0)
 
 const assignExams = (id: number) => {
-    UserService.getPaginatedUserExams(id, props.page)
+    UserService.getExamHistories(id, props.page)
         .then(res => {
             paginatedExam.value = res.data as ExamHistory[]
             currentItems.value = res.data.length
@@ -37,7 +39,7 @@ const assignExams = (id: number) => {
 
 onMounted(() => {
     watchEffect(() => {
-        if (route.name?.toString().startsWith('Admin')) {
+        if (isAdmin) {
             assignExams(Number(route.params.id))
         } else {
             if (authStore.id !== null) assignExams(authStore.id)

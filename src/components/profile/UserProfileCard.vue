@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Profile } from '@/types.ts';
@@ -9,18 +9,16 @@ import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
 import LevelService from '@/services/LevelService.ts';
 import Button from '../Button.vue';
+import { storeToRefs } from 'pinia';
 const route = useRoute()
 const authStore = useAuthStore()
 
+const { isAdmin } = storeToRefs(authStore)
 const benefits = ref<Benefit[] | null>(null)
 const badges = ref<Badge[] | null>(null)
-const userBadges = ref<Badge[] | null>(null)
 const user = ref<Profile | null>(null)
 // the json-server mock still serves the admin's user management view
 const isActive = ref(false)
-const userLevel = ref<number | null>(null)
-
-const isAdmin = computed(() => route.name?.toString().startsWith('Admin'))
 
 const assignLevelBenefits = (levelId: number) => {
     if (user.value) {
@@ -28,16 +26,6 @@ const assignLevelBenefits = (levelId: number) => {
             .then(res => benefits.value = res.data.benefits)
     }
 }
-
-const assignUserBadges = (userId: number) => {
-    if (user.value) {
-        BadgeService.getBadgesByUserId(userId)
-            .then(res => userBadges.value = res.data.userBadges)
-            // a real-backend user has no row in the json-server mock yet
-            .catch(() => userBadges.value = [])
-    }
-}
-
 onMounted(() => {
     BadgeService.getBadges()
         .then(res => badges.value = res.data)
@@ -46,24 +34,13 @@ onMounted(() => {
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
             .then(res => {
-                user.value = {
-                    id: res.data.id,
-                    firstName: res.data.firstName,
-                    lastName: res.data.lastName,
-                    province: res.data.province,
-                    image: res.data.imageUrl,
-                    username: res.data.username,
-                    roles: [res.data.role === 'admin' ? 'ROLE_ADMIN' : 'ROLE_USER'],
-                }
+                user.value = res.data
                 isActive.value = res.data.isActive
-                userLevel.value = Number(res.data.levelId)
                 assignLevelBenefits(res.data.levelId)
-                assignUserBadges(res.data.id)
             })
     } else {
         user.value = authStore.user
         assignLevelBenefits(Number(authStore.level))
-        if (user.value) assignUserBadges(user.value.id)
     }
 })
 
@@ -91,9 +68,9 @@ onMounted(() => {
                 </div>
                 <div class="grid grid-cols-2 w-full border items-center rounded-xl px-5 py-2 bg-sky-950">
                     <p class="text-mist-50">Level:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ userLevel ?? authStore.level }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ authStore.level }}</p>
                     <p class="text-mist-50">Badges:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ userBadges?.length ?? 0 }} / {{ badges?.length }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>
             </div>
 
