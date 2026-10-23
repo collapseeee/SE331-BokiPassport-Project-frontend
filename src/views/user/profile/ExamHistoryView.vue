@@ -24,15 +24,15 @@ const currentItems = ref<number>(0)
 const assignExams = (id: number) => {
     UserService.getPaginatedUserExams(id, props.page)
         .then(res => {
-            paginatedExam.value = res.data as ExamHistory[]
+            paginatedExam.value = res.data
             currentItems.value = res.data.length
+            const totalHeader = res.headers['x-total-count'] ?? res.headers['X-Total-Count']
+            totalExams.value = totalHeader ? Number(totalHeader) : res.data.length
         })
-    UserService.getUserExams(id)
-        .then(res => {
-            totalExams.value = res.data.userExamHistories.length
+    
+        .catch(() => {
+            totalExams.value = 0
         })
-        // a real-backend user has no row in the json-server mock yet
-        .catch(() => totalExams.value = 0)
 }
 
 onMounted(() => {

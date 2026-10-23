@@ -26,8 +26,9 @@ const activeUserCount = ref<number>(0);
 const inactiveUserCount = ref<number>(0);
 
 onMounted(async () => {
-    const allUsers: UserType[] = await userService.getMockUsers() || [];
-    const regularUsers = allUsers.filter((user: UserType) => user.roles.includes('ROLE_ADMIN'));
+    const res = await userService.getUsers(100, 1, { name: '', province: '', level: '' });
+    const allUsers: UserType[] = res.data;
+    const regularUsers = allUsers.filter((user: UserType) => !user.roles.includes('ROLE_ADMIN'));
 
     userCount.value = regularUsers.length;
     userLvl1Count.value = regularUsers.filter((user: UserType) => Number(Math.max(...user.levels.map((l) => l.id))) === 1).length;
