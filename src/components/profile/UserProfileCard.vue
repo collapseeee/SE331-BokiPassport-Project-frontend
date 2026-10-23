@@ -33,9 +33,6 @@ onMounted(() => {
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
             .then(res => {
-                user.value = res.data
-                isActive.value = res.data.isActive
-                assignLevelBenefits(res.data.levelId)
             })
     } else {
         user.value = authStore.user
