@@ -168,7 +168,7 @@ const router = createRouter({
         const examStore = useExamStore();
         const questionStore = useQuestionStore();
         const examRes = await ExamService.getExamById(Number(to.params.id))
-        if (!examRes) {
+        if (!examRes?.data) {
           return { name: 'NotFound', params: { catchAll: '404' }, query: { resource: 'exam' } }
         }
         const authStore = useAuthStore();
@@ -176,9 +176,16 @@ const router = createRouter({
         if (examRes.data.level.id > Number(userLevel)){
           return { name: 'NoPermission', query: { role: 'User with lower level' } }
         }
-        const questionsRes = await QuestionService.getQuestionsByExamId(Number(to.params.id))
-        examStore.updateExam(examRes.data);
-        questionStore.updateQuestions(questionsRes.data);
+        try {
+          const questionsRes = await QuestionService.getQuestionsByExamId(Number(to.params.id))
+          examStore.updateExam(examRes.data);
+          questionStore.updateQuestions(questionsRes.data);
+        } catch (err: any) {
+          if (err?.response?.status === 403) {
+            return { name: 'NoPermission', query: { role: 'User with lower level' } }
+          }
+          throw err
+        }
       }
     },
     {
