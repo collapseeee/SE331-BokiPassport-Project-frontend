@@ -8,6 +8,7 @@ import 'vidstack/player';
 import 'vidstack/player/ui';
 import 'vidstack/player/layouts/default';
 import 'vidstack/icons';
+import { ChevronLeft } from '@lucide/vue';
 
 const props = defineProps<{
   id: string;
@@ -61,6 +62,7 @@ const thumbnailUrl = computed(() => {
 <template>
   <div class="w-full bg-linear-to-b from-brand-light-blue to-brand-white">
     <div class="flex flex-col items-center px-4 py-8">
+      <RouterLink :to="{ name: 'CourseList' }" class="place-self-start py-1"><p class="flex items-center font-medium text-xl hover:*:stroke-2 hover:font-bold transition-all text-brand-dark-blue"><ChevronLeft class="size-8 stroke-1 transition-all"/>Back</p></RouterLink>
       <!-- video  -->
       <media-player class="relative aspect-video w-full max-w-4xl overflow-hidden rounded-lg bg-black" 
         crossorigin 
