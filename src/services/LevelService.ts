@@ -1,13 +1,13 @@
-import { apiMockClient } from "./apiClient"
+import { apiClient } from "./apiClient"
 
 export default {
   getLevels() {
-    return apiMockClient.get('/levels')
+    return apiClient.get('/v1/levels')
   },
   getLevelUsers(level: number) {
-    return apiMockClient.get(`/levels/${level}?_embed=users`)
+    return apiClient.get(`/v1/users?level=${level}&role=user`)
   },
   getLevelBenefitsByUserLevelId(level: number) {
-    return apiMockClient.get(`/levels/${level}?_embed=benefits`)
+    return apiClient.get(`/v1/benefits?level=${level}`)
   }
 }
