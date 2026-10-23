@@ -108,13 +108,11 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null;
     }
 
-    // The level comes from the profile, so a level-up only shows up once the
-    // backend sends a profile that includes the new level.
     function updateUserLevel(levelId: number) {
         if (!user.value) return;
         const levels = user.value.levels ?? [];
-        if (levels.some(l => l.id === levelId)) return;
-        user.value = { ...user.value, levels: [...levels, { id: levelId, name: `Level ${levelId}` }] };
+        if (levels.some(l => l.id === levelId)) return; // already unlocked
+        user.value = { ...user.value, levels: [...levels, { id: levelId, name: `Level ${levelId}`, description: "", passCriteria: 0 }] };
     }
 
     return { token, user, isAuthenticated, id, fullName, image, role, isAdmin, isUser, level, register, authenticate, logout, updateUserLevel };

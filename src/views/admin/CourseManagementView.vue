@@ -10,7 +10,7 @@ const courseStore = useCourseStore()
 const route = useRoute()
 const filteredCourses = computed(() => {
     const level = route.query.level
-    return (courseStore.courses || []).filter(course => level === 'all' || !level || String(course.levelId) === level)
+    return (courseStore.courses || []).filter(course => level === 'all' || !level || String(course.level.id) === level)
 })
 
 const router = useRouter()

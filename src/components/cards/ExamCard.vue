@@ -25,19 +25,19 @@ const benefits = ref<Benefit[]>([]);
 
 const authStore = useAuthStore();
 const isAdmin = authStore.isAdmin;
-const level = levelStore.getLevelById(Number(props.exam.levels.id) + 1)!;
+const level = levelStore.getLevelById(Number(props.exam.level.id) + 1)!;
 levelName.value = level.name;
-benefits.value = benefitStore.getBenefitsByLevelId(Number(props.exam.levels.id) + 1)!;
+benefits.value = benefitStore.getBenefitsByLevelId(Number(props.exam.level.id) + 1)!;
 
 if (isAdmin) {
     // Admin user
     buttonLabel.value = 'Edit Exam';
     isDisable.value = false;
-} else if (props.exam.levels.id < props.userLevel) {
+} else if (props.exam.level.id < props.userLevel) {
     // Level less than user's level
     isDisable.value = true;
     buttonLabel.value = 'Already Mastered This Level';
-} else if (props.exam.levels.id == props.userLevel) {
+} else if (props.exam.level.id == props.userLevel) {
     // Level equal to user's level
     buttonLabel.value = 'Master This Level';
 } else {
@@ -70,7 +70,7 @@ const colorClass: Record<number, string> = {
         </div>
         <hr class="bg-brand-black w-full">
         <div class="flex flex-col w-full">
-            <p class="font-bold">Benefits on Level {{ Number(props.exam.levels.id) + 1 }}:</p>
+            <p class="font-bold">Benefits on Level {{ Number(props.exam.level.id) + 1 }}:</p>
             <ul class="list-disc pl-6">
                 <li v-for="benefit in benefits" :key="benefit.id">{{ benefit.description }}</li>
             </ul>
@@ -79,7 +79,7 @@ const colorClass: Record<number, string> = {
             <SubCardContainer>
                 <template #default>
                     <p class="font-bold">Pass Criteria:</p>
-                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(props.exam.levels.id) + 1]}`">{{ Math.round((Number(level.passCriteria)) * 100) }}%</h1>
+                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(props.exam.level.id) + 1]}`">{{ Math.round((Number(level.passCriteria)) * 100) }}%</h1>
                     <p class="text-gray-800 pt-2">Correct Answer</p>
                 </template>
             </SubCardContainer>
@@ -87,7 +87,7 @@ const colorClass: Record<number, string> = {
                 <template #default>
                     <p class="font-bold">Earn Badge:</p>
                     <div class="mx-auto">
-                        <Brain class="size-20" :class="`text-${colorClass[Number(props.exam.levels.id) + 1]}`"/>
+                        <Brain class="size-20" :class="`text-${colorClass[Number(props.exam.level.id) + 1]}`"/>
                     </div>
                     <p>foo</p>
                 </template>

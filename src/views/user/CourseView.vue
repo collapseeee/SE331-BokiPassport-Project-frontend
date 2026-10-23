@@ -17,7 +17,7 @@ const course = ref<Course | null>(null);
 const thumbnailFailed = ref(false)
 const nextLevel = computed(() => {
   if (!course.value) return null;
-  const currentLevel = course.value.levels.id;
+  const currentLevel = course.value.level.id;
   return currentLevel < 4 ? Number(currentLevel) + 1 : null;
 });
 

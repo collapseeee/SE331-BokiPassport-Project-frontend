@@ -18,11 +18,11 @@ const levelDescription = ref('-');
 const benefitsStore = useBenefitsStore();
 const benefits = ref<Benefit[]>([]);
 
-const level = levelsStore.getLevelById(Number(props.service.levelId))!;
+const level = levelsStore.getLevelById(Number(props.service.level.id))!;
 levelName.value = level.name;
 levelDescription.value = level.description;
-benefits.value = benefitsStore.getBenefitsByLevelId(Number(props.service.levelId));
-const isLocked = computed(() => props.userLevel < props.service.levelId);
+benefits.value = benefitsStore.getBenefitsByLevelId(Number(props.service.level.id));
+const isLocked = computed(() => props.userLevel < props.service.level.id);
 </script>
 <template>
     <CardContainer class="px-6! py-10! justify-start">

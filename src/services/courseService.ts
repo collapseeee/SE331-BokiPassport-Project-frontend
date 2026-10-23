@@ -11,7 +11,7 @@ export default {
     getCoursesByLevelId(levelId: number) {
         return this.getCourses()
             .then((res) => {
-                return res.data.filter((course: Course) => Number(course.levels.id) === levelId)
+                return res.data.filter((course: Course) => Number(course.level.id) === levelId)
             })
             .catch((err) => {
                 console.error('Error occurs while get courses: ', err)

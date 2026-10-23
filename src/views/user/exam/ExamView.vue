@@ -53,15 +53,15 @@ onBeforeUnmount(() => {
 const examStore = useExamStore();
 const levelStore = useLevelsStore();
 const { exam } = storeToRefs(examStore);
-const level = computed(() => levelStore.getLevelById(Number(exam.value!.levels.id) + 1));
+const level = computed(() => levelStore.getLevelById(Number(exam.value!.level.id) + 1));
 const passCriteria = computed(() => Number(level.value!.passCriteria));
-const questionLength = computed(() => exam.value!.questions.length);
+const questionLength = computed(() => exam.value!.questionCount);
 const isPassed = computed(() => {
     return userScore.value >= Math.round(passCriteria.value * questionLength.value);
 });
 const updateUserLevel = () => {
     if (isPassed.value) {
-        authStore.updateUserLevel(Number(exam.value!.levels.id) + 1);
+        authStore.updateUserLevel(Number(exam.value!.level.id) + 1);
     }
 };
 
@@ -102,7 +102,7 @@ const colorClass: Record<number, string> = {
             <SubCardContainer class="col-span-4 lg:col-span-1">
                 <template #default>
                     <p class="font-bold">Pass Criteria:</p>
-                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(exam!.levels.id) + 1]}`">{{ Math.round(passCriteria * 100) }}%</h1>
+                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`">{{ Math.round(passCriteria * 100) }}%</h1>
                     <p class="text-gray-800 pt-2">Correct Answer</p>
                 </template>
             </SubCardContainer>
@@ -117,7 +117,7 @@ const colorClass: Record<number, string> = {
                 <template #default>
                     <p class="font-bold">Earn Badge:</p>
                     <div class="mx-auto">
-                        <Brain class="size-20" :class="`text-${colorClass[Number(exam!.levels.id) + 1]}`"/>
+                        <Brain class="size-20" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`"/>
                     </div>
                     <p>foo</p>
                 </template>

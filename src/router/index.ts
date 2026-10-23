@@ -173,12 +173,12 @@ const router = createRouter({
         }
         const authStore = useAuthStore();
         const userLevel = authStore.level;
-        if (examRes.levelId > Number(userLevel)){
+        if (examRes.data.level.id > Number(userLevel)){
           return { name: 'NoPermission', query: { role: 'User with lower level' } }
         }
         const questionsRes = await QuestionService.getQuestionsByExamId(Number(to.params.id))
-        examStore.updateExam(examRes);
-        questionStore.updateQuestions(questionsRes);
+        examStore.updateExam(examRes.data);
+        questionStore.updateQuestions(questionsRes.data);
       }
     },
     {

@@ -32,13 +32,14 @@ const currentQuestion = computed(() => questions.value[currentIndex.value]);
 const newTempId = () => -(Date.now() + Math.floor(Math.random() * 1000));
 onMounted(async () => {
     try{
-        const exam = await ExamService.getExamById(Number(examId));
+        const examRes = await ExamService.getExamById(Number(examId));
+        const exam = examRes.data;
         examMeta.name = exam.name;
         examMeta.description = exam.description;
-        examMeta.levelId = exam.levelId;
+        examMeta.levelId = exam.level.id;
 
         const fetchedQuestions = await QuestionService.getQuestionsByExamId(Number(examId));
-        questions.value = structuredClone(fetchedQuestions ?? []);
+        questions.value = structuredClone(fetchedQuestions.data ?? []);
     } catch (error) {
         console.error('Error fetching exam:', error);
     } finally {

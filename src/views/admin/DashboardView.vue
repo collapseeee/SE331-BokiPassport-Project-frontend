@@ -41,10 +41,10 @@ onMounted(async () => {
     const response = await useCourseService.getCourses();
     const allCourses: Course[] = response.data || [];
     courseCount.value = allCourses.length;
-    courseLvl1Count.value = allCourses.filter((course: Course) => Number(course.levels.id) === 1).length;
-    courseLvl2Count.value = allCourses.filter((course: Course) => Number(course.levels.id) === 2).length;
-    courseLvl3Count.value = allCourses.filter((course: Course) => Number(course.levels.id) === 3).length;
-    courseLvl4Count.value = allCourses.filter((course: Course) => Number(course.levels.id) === 4).length;
+    courseLvl1Count.value = allCourses.filter((course: Course) => Number(course.level.id) === 1).length;
+    courseLvl2Count.value = allCourses.filter((course: Course) => Number(course.level.id) === 2).length;
+    courseLvl3Count.value = allCourses.filter((course: Course) => Number(course.level.id) === 3).length;
+    courseLvl4Count.value = allCourses.filter((course: Course) => Number(course.level.id) === 4).length;
 })
 
 const usersDashboardHeader = computed<DashboardItem>(() => {
