@@ -136,7 +136,7 @@ export interface Course {
   videoUrl: string
   name: string
   description: string
-  levelId: number
+  level: Level
 }
 
 export interface CourseStates {

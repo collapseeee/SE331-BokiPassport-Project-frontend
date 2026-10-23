@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed, watchEffect } from 'vue';
 import type { Course } from '@/types';
-import courseService from '@/services/CourseService';
+import courseService from '@/services/courseService';
 import Button from '@/components/Button.vue';
 import 'vidstack/player/styles/default/theme.css';
 import 'vidstack/player';
@@ -17,7 +17,7 @@ const course = ref<Course | null>(null);
 const thumbnailFailed = ref(false)
 const nextLevel = computed(() => {
   if (!course.value) return null;
-  const currentLevel = course.value.levelId;
+  const currentLevel = course.value.level.id;
   return currentLevel < 4 ? Number(currentLevel) + 1 : null;
 });
 
@@ -176,9 +176,9 @@ const thumbnailUrl = computed(() => {
         </media-player>
       <div class="mt-4 flex w-full max-w-4xl flex-col gap-4 md:flex-row">
         <!-- video info -->
-        <div class="flex-1 rounded-lg bg-brand-black/5 p-4">
+        <div class="flex-1 rounded-lg bg-brand-black p-4">
           <h2 class="text-brand-blue text-xl font-bold">{{ course?.name }}</h2>
-          <p class="mt-1 text-sm text-brand-black/70">{{ course?.description }}</p>
+          <p class="mt-1 text-sm text-brand-white">{{ course?.description }}</p>
         </div>
 
         <!-- next step -->
