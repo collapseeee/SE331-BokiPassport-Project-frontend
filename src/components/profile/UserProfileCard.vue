@@ -7,9 +7,9 @@ import BadgeService from '@/services/BadgeService.ts';
 import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
-import LevelService from '@/services/LevelService.ts';
 import Button from '../Button.vue';
 import { storeToRefs } from 'pinia';
+import BenefitService from '@/services/BenefitService.ts';
 const route = useRoute()
 const authStore = useAuthStore()
 
@@ -20,11 +20,10 @@ const user = ref<Profile | null>(null)
 // the json-server mock still serves the admin's user management view
 const isActive = ref(false)
 
-const assignLevelBenefits = (levelId: number) => {
-    if (user.value) {
-        LevelService.getLevelBenefitsByUserLevelId(levelId)
-            .then(res => benefits.value = res.data.benefits)
-    }
+const assignLevelBenefits = (level: number) => {
+    BenefitService.getBenefitsByLevel(level)
+        .then(res => benefits.value = res.data)
+        .catch(() => benefits.value = null)
 }
 onMounted(() => {
     BadgeService.getBadges()
