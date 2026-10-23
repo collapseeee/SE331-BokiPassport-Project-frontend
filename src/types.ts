@@ -1,18 +1,3 @@
-// Must match data in jsonserver
-
-export interface MockUser {
-  id: number
-  firstName: string
-  lastName: string
-  province: string
-  imageUrl: string
-  username: string
-  password: string
-  role: string // This may changed to Role interface later.
-  isActive: boolean
-  levelId: string
-  userLevels: UserLevel
-}
 
 export interface User {
   id: number
@@ -27,41 +12,8 @@ export interface User {
   levels: Level[]
 }
 
-// A row of the json-server `userLevels` collection
-export interface UserLevel {
-  id: number
-  createdAt: Date
-  userId: number
-  levelId: number
-}
-
-// A level the backend sends inside a profile: { id, name }
 export type Profile = User
 
-export interface UserExamHistory {
-  id: number
-  createdAt: Date
-  totalScore: number
-  isPassed: boolean
-  name: string
-  description: string
-  level: string
-}
-
-export interface UserResponse {
-  id: number
-  firstName: string
-  lastName: string
-  province: string
-  imageUrl: string
-  username: string
-  password: string
-  role: string
-  isActive: boolean
-  userLevels: UserLevel[]
-}
-
-// Session token pair returned by the real backend
 export interface AuthToken {
   accessToken: string
   refreshToken: string
@@ -102,13 +54,6 @@ export interface Badge {
   id: number
   name: string
   description: string
-}
-
-export interface UserBadge {
-  id: number
-  earnedAt: Date
-  userId: string
-  badgeId: string
 }
 
 export interface Course {

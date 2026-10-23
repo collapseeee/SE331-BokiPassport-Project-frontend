@@ -33,7 +33,7 @@ import ExamService from '@/services/ExamService'
 import QuestionService from '@/services/QuestionService'
 import { useQuestionStore } from '@/stores/questions'
 import BadgeService from '@/services/BadgeService'
-import type { Badge, UserBadge } from '@/types'
+import type { Badge } from '@/types'
 import courseService from '@/services/courseService'
 import { useCourseStore } from '@/stores/course'
 import NoPermissionView from '@/views/NoPermissionView.vue'
@@ -219,13 +219,9 @@ const router = createRouter({
                   name: 'AdminUserProfileBadgesView', 
                   component: UserProfileBadgesView,
                   beforeEnter: async route => {
-                    const badges = await BadgeService.getBadgesByUserId(Number(route.params.id))
-                    route.meta.userBadges = await Promise.all(
-                      badges.data.userBadges.map((userBadge: UserBadge) =>
-                        BadgeService.getBadgeById(Number(userBadge.badgeId))
-                          .then(res => res.data)
-                      )
-                    )
+                    const badges = await BadgeService.getBadgesByUserId(Number(route.params.id)).catch(() => null)
+                    if (!badges) return
+                    route.meta.userBadges = badges.data as Badge[]
                   },
                   props: route => ({ badges: (route.meta.userBadges as Badge[]) ?? null })
                 },
