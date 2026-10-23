@@ -8,7 +8,7 @@ export default {
     getQuestionsByExamId(examId: number) {
         return apiMockClient.get(`/questions?_embed=answerChoices`)
         .then((res) => {
-          return res.data.filter((question: Question) => String(question.examId) === String(examId))
+          return res.data.filter((question: Question) => String(question.exam) === String(examId))
         })
         .catch((err) => {
           console.error("Error occurs while get data: ", err)

@@ -51,10 +51,9 @@ const addQuestion = () => {
     questions.value.push({
         id: tempQuestionId,
         questionText: '',
-        examId: Number(examId),
         answerChoices: [
-            { id: newTempId(), answerText: '', isCorrect: true, questionId: tempQuestionId },
-            { id: newTempId(), answerText: '', isCorrect: false, questionId: tempQuestionId }
+            { id: newTempId(), answerText: '', isCorrect: true },
+            { id: newTempId(), answerText: '', isCorrect: false }
         ]
     });
     currentIndex.value = questions.value.length - 1;

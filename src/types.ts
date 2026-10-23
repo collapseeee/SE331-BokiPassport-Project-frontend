@@ -20,10 +20,11 @@ export interface User {
   lastName: string
   province: string
   image: string
-  userExamHistories: UserExamHistory[]
-  badges: Badge[]
-  levels: LevelSummary[]
+  username: string
+  isActive: boolean
   roles: string[]
+  badges: Badge[]
+  levels: Level[]
 }
 
 // A row of the json-server `userLevels` collection
@@ -35,10 +36,7 @@ export interface UserLevel {
 }
 
 // A level the backend sends inside a profile: { id, name }
-export interface LevelSummary {
-  id: number
-  name: string
-}
+export type Profile = User
 
 export interface UserExamHistory {
   id: number
@@ -69,21 +67,6 @@ export interface AuthToken {
   refreshToken: string
 }
 
-// The backend's UserAuthDTO — the profile in the register and the authenticate
-// response: { id, firstName, lastName, province, username, image, roles }
-// TODO(backend): UserAuthDTO has no `levels`, so a returning user's level is
-// unknown to the frontend — ask the backend to add them (UserOwnLevelDTO).
-export interface Profile {
-  id: number
-  firstName: string
-  lastName: string
-  province: string
-  image: string
-  username: string
-  roles: string[]
-  levels?: LevelSummary[]
-}
-
 export interface Level {
   id: number
   name: string
@@ -98,7 +81,7 @@ export interface LevelsState {
 export interface Benefit {
   id: number
   description: string
-  levelId: number
+  level: Level
 }
 
 export interface BenefitsState {
@@ -107,7 +90,7 @@ export interface BenefitsState {
 
 export interface Service {
   id: number
-  levelId: number
+  level: Level
   name: string
 }
 
@@ -134,7 +117,7 @@ export interface Course {
   videoUrl: string
   name: string
   description: string
-  levelId: number
+  level: Level
 }
 
 export interface CourseStates {
@@ -142,11 +125,11 @@ export interface CourseStates {
 }
 
 export interface Exam {
-  id: string
+  id: number
   name: string
   description: string
-  levelId: number
-  questions: Question[]
+  level: Level
+  questionCount: number
 }
 
 export interface ExamState {
@@ -158,14 +141,14 @@ export interface ExamHistory {
   createdAt: Date
   totalScore: number
   isPassed: boolean
-  examId: number
-  userId: number
+  name: string
+  description: string
+  level: string
 }
 
 export interface Question {
   id: number
   questionText: string
-  examId: number
   answerChoices: AnswerChoice[]
 }
 
@@ -176,8 +159,7 @@ export interface QuestionsState {
 export interface AnswerChoice {
   id: number
   answerText: string
-  isCorrect: boolean
-  questionId: number
+  isCorrect?: boolean
 }
 
 export interface DashboardItem {
@@ -189,4 +171,12 @@ export interface UserSearchOption {
   name: string
   province: string
   level: string
+}
+
+export interface ExamSubmitResponse {
+  examId: number
+  totalScore: number
+  maxScore: number
+  isPassed: boolean
+  awardedLevelId: number | null
 }

@@ -32,7 +32,7 @@ const thumbnailUrl = computed(() => {
     <RouterLink :to="{ name: 'CourseView', params: { id: course.id } }" >
     <div class="w-80 h-full bg-brand-black text-brand-white rounded-xl cursor-pointer">
         <div class="grid relative w-full">
-            <p class="bg-brand-blue px-3 py-1 m-3 absolute rounded-xl">Level {{ course.levelId }}</p>
+            <p class="bg-brand-blue px-3 py-1 m-3 absolute rounded-xl">Level {{ course.levels.id }}</p>
             <Play class="absolute place-self-center size-16 bg-brand-white/50 border border-brand-blue p-2 rounded-xl text-brand-blue"/>
             <img class="border h-48 w-full rounded-xl" :src="thumbnailUrl == null ? '' : thumbnailUrl" @error="thumbnailFailed = true" alt="">
         </div>

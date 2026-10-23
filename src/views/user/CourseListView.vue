@@ -10,7 +10,7 @@ const courses = ref<Course[] | null>(null)
 const route = useRoute()
 const filteredCourses = computed(() => {
     const level = route.query.level
-    return (courses.value || []).filter(course => level === 'all' || !level || String(course.levelId) === level)
+    return (courses.value || []).filter(course => level === 'all' || !level || String(course.levels.id) === level)
 })
 watchEffect(() => {
     courses.value = null
