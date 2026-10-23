@@ -74,5 +74,8 @@ export default {
                     return user.isActive === true && user.role === 'user'
                 })
             })
+    },
+    getProvinces() {
+        return apiClient.get('/v1/users/provinces')
     }
 }
