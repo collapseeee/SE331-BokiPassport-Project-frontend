@@ -1,23 +1,13 @@
 <script setup lang="ts">
-import ExamService from '@/services/ExamService';
-import type { Exam, ExamHistory, User } from '@/types';
+import type { ExamHistory, User } from '@/types';
 import { Menu } from '@lucide/vue';
-import { computed, onMounted, ref } from 'vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 const props = defineProps<{
     row: User | ExamHistory
 }>()
 
 const router = useRouter()
-const exams = ref<Exam[] | null>(null)
-onMounted(() => {
-    if (isUser(props.row)) {
-        return
-    }
-    ExamService.getExams()
-        .then(res => exams.value = res.data)
-})
-
 
 const isUser = (row: User | ExamHistory): row is User => {
     return (<User>row).firstName !== undefined;
@@ -34,13 +24,12 @@ const mappedRow = computed(() => {
             menu: ''
         }
     }
-    const { createdAt, examId, totalScore, isPassed } = props.row as ExamHistory
-    const examName = exams.value?.find(e => e.id === String(examId))?.name || `Upgrade to Level ${examId + 1}`
+    const { createdAt, name, totalScore, isPassed } = props.row as ExamHistory
     const date = new Date(createdAt)
     const parsedDate = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
     return {
         date: parsedDate,
-        examName: examName,
+        examName: name,
         score: totalScore,
         status: isPassed ? 'Passed' : 'Failed'
     }

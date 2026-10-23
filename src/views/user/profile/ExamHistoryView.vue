@@ -22,25 +22,21 @@ const totalExams = ref<number>(0)
 const currentItems = ref<number>(0)
 
 const assignExams = (id: number) => {
-    UserService.getPaginatedUserExams(id, props.page)
+    UserService.getExamHistories(id, props.page)
         .then(res => {
             paginatedExam.value = res.data as ExamHistory[]
             currentItems.value = res.data.length
+            totalExams.value = Number.parseInt(res.headers['x-total-count'])
         })
-    UserService.getUserExams(id)
-        .then(res => {
-            totalExams.value = res.data.userExamHistories.length
-        })
-        // a real-backend user has no row in the json-server mock yet
         .catch(() => totalExams.value = 0)
 }
 
 onMounted(() => {
     watchEffect(() => {
-        if (route.name?.toString().startsWith('Admin')) {
+        if (authStore.isAdmin) {
             assignExams(Number(route.params.id))
         } else {
-            if (authStore.id !== null) assignExams(authStore.id)
+            assignExams(authStore.id ?? 0)
         }
     })
 })

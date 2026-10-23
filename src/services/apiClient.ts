@@ -11,7 +11,6 @@ export const apiMockClient = axios.create({
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080',
-  withCredentials: false,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',

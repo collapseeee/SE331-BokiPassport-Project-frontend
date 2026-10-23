@@ -10,7 +10,6 @@ const userLevel = authStore.level;
 
 const servicesStore = useServicesStore();
 const { services } = storeToRefs(servicesStore);
-
 const loadingMessage = ref('Loading services...');
 
 </script>

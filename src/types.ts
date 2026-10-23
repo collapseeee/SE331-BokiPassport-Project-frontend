@@ -19,6 +19,7 @@ export interface User {
   firstName: string
   lastName: string
   province: string
+  username: string
   image: string
   userExamHistories: UserExamHistory[]
   badges: Badge[]
@@ -81,7 +82,8 @@ export interface Profile {
   image: string
   username: string
   roles: string[]
-  levels?: LevelSummary[]
+  badges: Badge[]
+  levels: LevelSummary[]
 }
 
 export interface Level {
@@ -98,7 +100,7 @@ export interface LevelsState {
 export interface Benefit {
   id: number
   description: string
-  levelId: number
+  level: Level
 }
 
 export interface BenefitsState {
@@ -107,7 +109,7 @@ export interface BenefitsState {
 
 export interface Service {
   id: number
-  levelId: number
+  level: Level
   name: string
 }
 
@@ -134,7 +136,7 @@ export interface Course {
   videoUrl: string
   name: string
   description: string
-  levelId: number
+  level: Level
 }
 
 export interface CourseStates {
@@ -158,8 +160,9 @@ export interface ExamHistory {
   createdAt: Date
   totalScore: number
   isPassed: boolean
-  examId: number
-  userId: number
+  name: string
+  description: string
+  level: string
 }
 
 export interface Question {

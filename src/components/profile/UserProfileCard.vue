@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Profile } from '@/types.ts';
@@ -7,37 +7,24 @@ import BadgeService from '@/services/BadgeService.ts';
 import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
-import LevelService from '@/services/LevelService.ts';
 import Button from '../Button.vue';
+import { storeToRefs } from 'pinia';
+import BenefitService from '@/services/BenefitService.ts';
 const route = useRoute()
 const authStore = useAuthStore()
 
+const { isAdmin } = storeToRefs(authStore)
 const benefits = ref<Benefit[] | null>(null)
 const badges = ref<Badge[] | null>(null)
-const userBadges = ref<Badge[] | null>(null)
 const user = ref<Profile | null>(null)
 // the json-server mock still serves the admin's user management view
 const isActive = ref(false)
-const userLevel = ref<number | null>(null)
 
-const isAdmin = computed(() => route.name?.toString().startsWith('Admin'))
-
-const assignLevelBenefits = (levelId: number) => {
-    if (user.value) {
-        LevelService.getLevelBenefitsByUserLevelId(levelId)
-            .then(res => benefits.value = res.data.benefits)
-    }
+const assignLevelBenefits = (level: number) => {
+    BenefitService.getBenefitsByLevel(level)
+        .then(res => benefits.value = res.data)
+        .catch(() => benefits.value = null)
 }
-
-const assignUserBadges = (userId: number) => {
-    if (user.value) {
-        BadgeService.getBadgesByUserId(userId)
-            .then(res => userBadges.value = res.data.userBadges)
-            // a real-backend user has no row in the json-server mock yet
-            .catch(() => userBadges.value = [])
-    }
-}
-
 onMounted(() => {
     BadgeService.getBadges()
         .then(res => badges.value = res.data)
@@ -46,24 +33,11 @@ onMounted(() => {
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
             .then(res => {
-                user.value = {
-                    id: res.data.id,
-                    firstName: res.data.firstName,
-                    lastName: res.data.lastName,
-                    province: res.data.province,
-                    image: res.data.imageUrl,
-                    username: res.data.username,
-                    roles: [res.data.role === 'admin' ? 'ROLE_ADMIN' : 'ROLE_USER'],
-                }
-                isActive.value = res.data.isActive
-                userLevel.value = Number(res.data.levelId)
-                assignLevelBenefits(res.data.levelId)
-                assignUserBadges(res.data.id)
+                user.value = res.data
             })
     } else {
         user.value = authStore.user
         assignLevelBenefits(Number(authStore.level))
-        if (user.value) assignUserBadges(user.value.id)
     }
 })
 
@@ -77,7 +51,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-row gap-x-10 w-full relative">
             <!-- Left side of card -->
-            <div class="w-1/2 flex flex-col gap-y-2">
+            <div class="w-full flex flex-col gap-y-2">
                 <div class="flex flex-col items-center">
                     <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
@@ -91,14 +65,14 @@ onMounted(() => {
                 </div>
                 <div class="grid grid-cols-2 w-full border items-center rounded-xl px-5 py-2 bg-sky-950">
                     <p class="text-mist-50">Level:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ userLevel ?? authStore.level }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ authStore.level }}</p>
                     <p class="text-mist-50">Badges:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ userBadges?.length ?? 0 }} / {{ badges?.length }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>
             </div>
 
             <!-- Right side of card -->
-            <div class="w-1/2" v-if="benefits">
+            <div class="w-full" v-if="benefits">
                 <p class="text-xl font-bold">Services</p>
                 <BenefitItem :isEligible="true" v-for="benefit in benefits" :benefit="benefit" :key="benefit.id"/>
             </div>

@@ -1,13 +1,13 @@
-import { apiMockClient } from "./apiClient"
+import { apiClient, apiMockClient } from "./apiClient"
 
 export default {
     getBadges() {
-        return apiMockClient.get('badges')
+        return apiClient.get('/v1/badges')
     },
     getBadgeById(id: number) {
         return apiMockClient.get(`badges/${id}`)
     },
     getBadgesByUserId(id: number) {
-        return apiMockClient.get(`users/${id}?_embed=userBadges`)
+        return apiClient.get(`/v1/badges/users/${id}`)
     }
 }

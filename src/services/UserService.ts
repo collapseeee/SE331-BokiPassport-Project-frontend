@@ -21,35 +21,10 @@ export default {
        return apiClient.get('/v1/users?_limit=' + pageSize + '&_page=' + page + '&search=' + searchOption.name + '&province=' + searchOption.province + '&level=' + searchOption.level)
     },
     getUser(id: number) {
-        return apiMockClient.get(`users/${id}`)
+        return apiClient.get('/v1/users/' + id)
     },
-    getUserUsers() {
-        return apiMockClient.get('/users?_embed=userLevels&role=user')
-            .then((res) => {
-                return res.data.map((user: UserResponse) => ({
-                    ...user,
-                    userLevels: user.userLevels[0]
-                }))
-            })
-            .catch((err) => {
-                console.error("Error occurs while get data: ", err)
-            })
-    },
-    getPaginatedUser(page: number) {
-        return apiMockClient.get(`/users?_embed=userLevels&role=user&_limit=5&_page=${page}`)
-            .then(res => {
-                const users = res.data.map((user: UserResponse) => ({
-                    ...user,
-                    userLevels: user.userLevels[0]
-                }))
-                return { users }
-            })
-    },
-    getUserExams(id: number) {
-        return apiMockClient.get(`/users/${id}?_embed=userExamHistories`)
-    },
-    getPaginatedUserExams(id: number, page: number) {
-        return apiMockClient.get(`/userExamHistories?userId=${id}&_page=${page}&_limit=5`)
+    getExamHistories(id: number, page: number) {
+        return apiClient.get(`/v1/exams/users/${id}?_page=${page}&_limit=5`)
     },
     getUserByLevelId(levelId: number) {
         return this.getMockUsers()
@@ -74,5 +49,8 @@ export default {
                     return user.isActive === true && user.role === 'user'
                 })
             })
+    },
+    getProvinces() {
+        return apiClient.get('/v1/users/provinces')
     }
 }
