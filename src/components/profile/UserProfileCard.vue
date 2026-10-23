@@ -33,6 +33,7 @@ onMounted(() => {
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
             .then(res => {
+                user.value = res.data
             })
     } else {
         user.value = authStore.user
@@ -50,7 +51,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-row gap-x-10 w-full relative">
             <!-- Left side of card -->
-            <div class="w-1/2 flex flex-col gap-y-2">
+            <div class="w-full flex flex-col gap-y-2">
                 <div class="flex flex-col items-center">
                     <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
@@ -71,7 +72,7 @@ onMounted(() => {
             </div>
 
             <!-- Right side of card -->
-            <div class="w-1/2" v-if="benefits">
+            <div class="w-full" v-if="benefits">
                 <p class="text-xl font-bold">Services</p>
                 <BenefitItem :isEligible="true" v-for="benefit in benefits" :benefit="benefit" :key="benefit.id"/>
             </div>
