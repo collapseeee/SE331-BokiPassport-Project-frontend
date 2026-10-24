@@ -26,14 +26,15 @@ const activeUserCount = ref<number>(0);
 const inactiveUserCount = ref<number>(0);
 
 onMounted(async () => {
-    const allUsers: UserType[] = await userService.getMockUsers() || [];
-    const regularUsers = allUsers.filter((user: UserType) => user.role === 'user');
+    const res = await userService.getUsers(100, 1, { name: '', province: '', level: '' });
+    const allUsers: UserType[] = res.data;
+    const regularUsers = allUsers.filter((user: UserType) => !user.roles.includes('ROLE_ADMIN'));
 
     userCount.value = regularUsers.length;
-    userLvl1Count.value = regularUsers.filter((user: UserType) => Number(user.userLevels?.levelId) === 1).length;
-    userLvl2Count.value = regularUsers.filter((user: UserType) => Number(user.userLevels?.levelId) === 2).length;
-    userLvl3Count.value = regularUsers.filter((user: UserType) => Number(user.userLevels?.levelId) === 3).length;
-    userLvl4Count.value = regularUsers.filter((user: UserType) => Number(user.userLevels?.levelId) === 4).length;
+    userLvl1Count.value = regularUsers.filter((user: UserType) => Number(Math.max(...user.levels.map((l) => l.id))) === 1).length;
+    userLvl2Count.value = regularUsers.filter((user: UserType) => Number(Math.max(...user.levels.map((l) => l.id))) === 2).length;
+    userLvl3Count.value = regularUsers.filter((user: UserType) => Number(Math.max(...user.levels.map((l) => l.id))) === 3).length;
+    userLvl4Count.value = regularUsers.filter((user: UserType) => Number(Math.max(...user.levels.map((l) => l.id))) === 4).length;
 
     activeUserCount.value = regularUsers.filter((user: UserType) => user.isActive === true).length;
     inactiveUserCount.value = userCount.value - activeUserCount.value;
@@ -41,10 +42,10 @@ onMounted(async () => {
     const response = await useCourseService.getCourses();
     const allCourses: Course[] = response.data || [];
     courseCount.value = allCourses.length;
-    courseLvl1Count.value = allCourses.filter((course: Course) => Number(course.levelId) === 1).length;
-    courseLvl2Count.value = allCourses.filter((course: Course) => Number(course.levelId) === 2).length;
-    courseLvl3Count.value = allCourses.filter((course: Course) => Number(course.levelId) === 3).length;
-    courseLvl4Count.value = allCourses.filter((course: Course) => Number(course.levelId) === 4).length;
+    courseLvl1Count.value = allCourses.filter((course: Course) => Number(course.level.id) === 1).length;
+    courseLvl2Count.value = allCourses.filter((course: Course) => Number(course.level.id) === 2).length;
+    courseLvl3Count.value = allCourses.filter((course: Course) => Number(course.level.id) === 3).length;
+    courseLvl4Count.value = allCourses.filter((course: Course) => Number(course.level.id) === 4).length;
 })
 
 const usersDashboardHeader = computed<DashboardItem>(() => {

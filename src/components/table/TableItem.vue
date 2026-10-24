@@ -3,12 +3,12 @@ import type { ExamHistory, User } from '@/types';
 import { Menu } from '@lucide/vue';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+
 const props = defineProps<{
     row: User | ExamHistory
 }>()
 
 const router = useRouter()
-
 const isUser = (row: User | ExamHistory): row is User => {
     return (<User>row).firstName !== undefined;
 }
@@ -24,7 +24,8 @@ const mappedRow = computed(() => {
             menu: ''
         }
     }
-    const { createdAt, name, totalScore, isPassed } = props.row as ExamHistory
+    const { createdAt, name, description, totalScore, isPassed, level } = props.row as ExamHistory
+    const examName = name || `Upgrade to Level ${level}`
     const date = new Date(createdAt)
     const parsedDate = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
     return {

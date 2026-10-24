@@ -2,7 +2,6 @@
 import { onMounted, ref } from 'vue';
 import UserFilterTab from './UserFilterTab.vue';
 import UserService from '@/services/UserService.ts';
-import type { MockUser } from '@/types.ts';
 
 const props = defineProps({
     title: {

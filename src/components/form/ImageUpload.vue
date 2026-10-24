@@ -1,38 +1,56 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { UserRound } from '@lucide/vue'
+import { apiClient } from '@/services/apiClient'
 
 const modelValue = defineModel<string[]>({ default: () => [] })
 
 const fileInput = ref<HTMLInputElement>()
 const preview = ref<string | null>(null)
 const isDragging = ref(false)
+const isUploading = ref(false)
 
-function openFilePicker() {
-  fileInput.value?.click()
+async function uploadFile(file: File) {
+    isUploading.value = true
+    const formData = new FormData()
+    formData.append('image', file)
+    try {
+        const { data } = await apiClient.post('/uploadImage', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        modelValue.value = [data.name]
+    } catch (err) {
+        console.error('Upload failed:', err)
+        modelValue.value = []
+    } finally {
+        isUploading.value = false
+    }
 }
 
-function handleFile(event: Event) {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (!file) return
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    preview.value = e.target?.result as string
-    modelValue.value = [file.name]
-  }
-  reader.readAsDataURL(file)
+function handleFile(file: File) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+        preview.value = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
+    uploadFile(file)
+}
+
+function handleFileEvent(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0]
+    if (!file) return
+    handleFile(file)
 }
 
 function handleDrop(event: DragEvent) {
-  isDragging.value = false
-  const file = event.dataTransfer?.files?.[0]
-  if (!file) return
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    preview.value = e.target?.result as string
-    modelValue.value = [file.name]
-  }
-  reader.readAsDataURL(file)
+    isDragging.value = false
+    const file = event.dataTransfer?.files?.[0]
+    if (!file) return
+    handleFile(file)
+}
+
+function openFilePicker() {
+    fileInput.value?.click()
 }
 </script>
 
@@ -53,8 +71,11 @@ function handleDrop(event: DragEvent) {
         <UserRound class="w-10 h-10" />
         <span class="text-xs mt-1">Upload</span>
       </div>
+      <div v-if="isUploading" class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full">
+        <span class="text-white text-xs">Uploading...</span>
+      </div>
       <div class="absolute inset-0 rounded-full bg-brand-blue/0 group-hover:bg-brand-blue/10 transition-colors" />
     </button>
-    <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFile" />
+    <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileEvent" />
   </div>
 </template>

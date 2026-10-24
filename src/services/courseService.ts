@@ -6,7 +6,7 @@ export default {
         return apiClient.get('/v1/courses')
     },
     getCourse(id: number) {
-        return apiClient.get('/v1/courses/' + id)
+        return apiClient.get(`/v1/courses/${id}`)
     },
     getCoursesByLevelId(levelId: number) {
         return this.getCourses()

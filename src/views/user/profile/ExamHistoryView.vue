@@ -24,11 +24,15 @@ const currentItems = ref<number>(0)
 const assignExams = (id: number) => {
     UserService.getExamHistories(id, props.page)
         .then(res => {
-            paginatedExam.value = res.data as ExamHistory[]
+            paginatedExam.value = res.data
             currentItems.value = res.data.length
-            totalExams.value = Number.parseInt(res.headers['x-total-count'])
+            const totalHeader = res.headers['x-total-count']
+            totalExams.value = totalHeader ? Number(totalHeader) : res.data.length
         })
-        .catch(() => totalExams.value = 0)
+    
+        .catch(() => {
+            totalExams.value = 0
+        })
 }
 
 onMounted(() => {

@@ -3,11 +3,16 @@ import Dropdown from '@/components/dropdown/Dropdown.vue';
 import DropdownItem from './dropdown/DropdownItem.vue';
 import Button from './Button.vue';
 import { useAuthStore } from '@/stores/auth.ts';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLevelsStore } from '@/stores/levels.ts';
+import { getPresignedImageUrl } from '@/services/ImageService.ts';
+import { storeToRefs } from 'pinia';
+
+const profileImage = ref<string | null>(null);
 
 const authStore = useAuthStore();
+const { image: authImage } = storeToRefs(authStore);
 const levelStore = useLevelsStore();
 const router = useRouter();
 
@@ -16,6 +21,12 @@ const levelText = computed(() => authStore.isUser ? levelStore.getLevelById(Numb
 const logout = (() => {
     authStore.logout()
     router.go(0)
+})
+
+onMounted(async () => {
+    if (authImage.value) {
+        profileImage.value = await getPresignedImageUrl(authStore.image)
+    }
 })
 </script>
 
@@ -26,7 +37,7 @@ const logout = (() => {
                 <Dropdown>
                     <template #trigger>
                         <div class="flex">
-                        <img class="w-12 h-12 rounded-full border border-brand-blue" :src="authStore.image">
+                        <img class="w-12 h-12 rounded-full border border-brand-blue" :src="profileImage || authStore.image">
                         <div class="flex flex-col px-2">
                             <p class="text-brand-blue font-bold">{{ nameText }}</p>
                             <p class="text-brand-blue font-medium text-sm">{{ levelText }}</p>

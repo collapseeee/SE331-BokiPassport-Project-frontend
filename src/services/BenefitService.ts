@@ -1,4 +1,4 @@
-import { apiClient, apiMockClient } from "./apiClient"
+import { apiClient } from "./apiClient"
 
 export default {
   getBenefits() {
@@ -7,11 +7,8 @@ export default {
   getBenefitsByLevel(level: number) {
     return apiClient.get('/v1/benefits?level=' + level)
   },
-  getBenefitsByLevelId(levelId: number) {
-    return apiMockClient.get(`/levels/${levelId}?_embed=benefits`)
-  },
   addBenefit(levelId: number) {
-    return apiMockClient.post('/benefits', {
+    return apiClient.post('/v1/benefits', {
       description: '',
       levelId: levelId
     })

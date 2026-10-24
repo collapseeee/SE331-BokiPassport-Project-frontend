@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
-import type { Badge, Benefit, Profile } from '@/types.ts';
+import type { Badge, Benefit, Level, Profile } from '@/types.ts';
 import BadgeService from '@/services/BadgeService.ts';
 import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
@@ -10,20 +10,32 @@ import { useAuthStore } from '@/stores/auth.ts';
 import Button from '../Button.vue';
 import { storeToRefs } from 'pinia';
 import BenefitService from '@/services/BenefitService.ts';
+import { getPresignedImageUrl } from '@/services/ImageService.ts';
+
 const route = useRoute()
 const authStore = useAuthStore()
 
-const { isAdmin } = storeToRefs(authStore)
+
+const { isAdmin, user: authUser } = storeToRefs(authStore)
 const benefits = ref<Benefit[] | null>(null)
 const badges = ref<Badge[] | null>(null)
+const userBadges = ref<Badge[] | null>(null)
 const user = ref<Profile | null>(null)
-// the json-server mock still serves the admin's user management view
 const isActive = ref(false)
+const userLevel = ref<number | null>(null)
 
 const assignLevelBenefits = (level: number) => {
     BenefitService.getBenefitsByLevel(level)
         .then(res => benefits.value = res.data)
         .catch(() => benefits.value = null)
+}
+
+const assignUserBadges = (userId: number) => {
+    if (user.value) {
+        BadgeService.getBadgesByUserId(userId)
+            .then(res => userBadges.value = res.data)
+            .catch(() => userBadges.value = [])
+    }
 }
 onMounted(() => {
     BadgeService.getBadges()
@@ -32,15 +44,48 @@ onMounted(() => {
     /* Fetch user data based on Admin's route or User's route */
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
-            .then(res => {
-                user.value = res.data
+            .then(async (res) => {
+                const u = res.data
+                const imageSrc = await getPresignedImageUrl(u.image)
+                user.value = {
+                    id: u.id,
+                    firstName: u.firstName,
+                    lastName: u.lastName,
+                    province: u.province,
+                    image: imageSrc,
+                    username: u.username,
+                    roles: u.roles,
+                    badges: u.badges,
+                    levels: u.levels
+                }
+                isActive.value = u.isActive
+                userLevel.value = Math.max(...u.levels.map((l: Level) => l.id))
+                assignLevelBenefits(userLevel.value)
             })
     } else {
-        user.value = authStore.user
-        assignLevelBenefits(Number(authStore.level))
+        ;(async () => {
+            if (authUser.value) {
+                const imageSrc = await getPresignedImageUrl(authUser.value.image)
+                user.value = {
+                    id: authUser.value.id,
+                    firstName: authUser.value.firstName,
+                    lastName: authUser.value.lastName,
+                    province: authUser.value.province,
+                    image: imageSrc,
+                    username: authUser.value.username,
+                    roles: authUser.value.roles,
+                    badges: authUser.value.badges,
+                    levels: authUser.value.levels
+                }
+                userLevel.value = authUser.value.levels.length 
+                    ? Math.max(...authUser.value.levels.map((l: Level) => l.id)) 
+                    : 1
+                assignLevelBenefits(userLevel.value ?? 1)
+                if (user.value) assignUserBadges(user.value.id)
+            }
+        })()
     }
 })
-
 </script>
 
 <template>
@@ -67,7 +112,7 @@ onMounted(() => {
                     <p class="text-mist-50">Level:</p>
                     <p class="text-sky-400 font-bold text-2xl text-right">{{ authStore.level }}</p>
                     <p class="text-mist-50">Badges:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges.length ?? 0 }} / {{ badges?.length }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges?.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>
             </div>
 

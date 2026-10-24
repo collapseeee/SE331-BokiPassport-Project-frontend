@@ -32,6 +32,8 @@ import { useExamStore } from '@/stores/exam'
 import ExamService from '@/services/ExamService'
 import QuestionService from '@/services/QuestionService'
 import { useQuestionStore } from '@/stores/questions'
+import BadgeService from '@/services/BadgeService'
+import type { Badge } from '@/types'
 import courseService from '@/services/courseService'
 import { useCourseStore } from '@/stores/course'
 import NoPermissionView from '@/views/NoPermissionView.vue'
@@ -153,17 +155,24 @@ const router = createRouter({
         const examStore = useExamStore();
         const questionStore = useQuestionStore();
         const examRes = await ExamService.getExamById(Number(to.params.id))
-        if (!examRes) {
+        if (!examRes?.data) {
           return { name: 'NotFound', params: { catchAll: '404' }, query: { resource: 'exam' } }
         }
         const authStore = useAuthStore();
         const userLevel = authStore.level;
-        if (examRes.levelId > Number(userLevel)){
+        if (examRes.data.level.id > Number(userLevel)){
           return { name: 'NoPermission', query: { role: 'User with lower level' } }
         }
-        const questionsRes = await QuestionService.getQuestionsByExamId(Number(to.params.id))
-        examStore.updateExam(examRes);
-        questionStore.updateQuestions(questionsRes);
+        try {
+          const questionsRes = await QuestionService.getQuestionsByExamId(Number(to.params.id))
+          examStore.updateExam(examRes.data);
+          questionStore.updateQuestions(questionsRes.data);
+        } catch (err: any) {
+          if (err?.response?.status === 403) {
+            return { name: 'NoPermission', query: { role: 'User with lower level' } }
+          }
+          throw err
+        }
       }
     },
     {
