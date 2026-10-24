@@ -210,12 +210,6 @@ const router = createRouter({
                 { path: 'badges', 
                   name: 'AdminUserProfileBadgesView', 
                   component: UserProfileBadgesView,
-                  beforeEnter: async route => {
-                    const badges = await BadgeService.getBadgesByUserId(Number(route.params.id)).catch(() => null)
-                    if (!badges) return
-                    route.meta.userBadges = badges.data as Badge[]
-                  },
-                  props: route => ({ badges: (route.meta.userBadges as Badge[]) ?? null })
                 },
                 { path: 'history', 
                   name: 'AdminUserProfileExamHistoryView', 
