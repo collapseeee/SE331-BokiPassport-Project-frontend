@@ -37,10 +37,10 @@ const assignExams = (id: number) => {
 
 onMounted(() => {
     watchEffect(() => {
-        if (route.name?.toString().startsWith('Admin')) {
+        if (authStore.isAdmin) {
             assignExams(Number(route.params.id))
         } else {
-            if (authStore.id !== null) assignExams(authStore.id)
+            assignExams(authStore.id ?? 0)
         }
     })
 })

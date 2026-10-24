@@ -30,7 +30,7 @@ const mappedRow = computed(() => {
     const parsedDate = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
     return {
         date: parsedDate,
-        examName: examName,
+        examName: name,
         score: totalScore,
         status: isPassed ? 'Passed' : 'Failed'
     }

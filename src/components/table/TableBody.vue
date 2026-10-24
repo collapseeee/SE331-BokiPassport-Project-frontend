@@ -2,7 +2,7 @@
 import type { ExamHistory, User } from '@/types.ts';
 import TableItem from './TableItem.vue';
 defineProps<{
-    rows: Array<User | ExamHistory>
+    rows: User[] | ExamHistory[]
 }>()
 </script>
 
