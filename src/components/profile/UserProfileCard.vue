@@ -25,7 +25,7 @@ const isAdmin = computed(() => route.name?.toString().startsWith('Admin'))
 const assignLevelBenefits = (levelId: number) => {
     if (user.value) {
         LevelService.getLevelBenefitsByUserLevelId(levelId)
-            .then(res => benefits.value = res.data.benefits)
+            .then(res => benefits.value = res.data)
     }
 }
 
@@ -51,7 +51,7 @@ onMounted(() => {
                     firstName: u.firstName,
                     lastName: u.lastName,
                     province: u.province,
-                    image: u.imageUrl,
+                    image: u.image,
                     username: u.username,
                     isActive: u.isActive,
                     roles: u.roles,
@@ -60,7 +60,7 @@ onMounted(() => {
                 }
                 isActive.value = u.isActive
                 userLevel.value = Math.max(...u.levels.map((l: Level) => l.id));
-                assignLevelBenefits(u.levelId)
+                assignLevelBenefits(userLevel.value)
                 userBadges.value = u.badges
             })
     } else {
