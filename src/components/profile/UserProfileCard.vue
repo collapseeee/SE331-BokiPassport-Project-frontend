@@ -9,6 +9,7 @@ import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
 import LevelService from '@/services/LevelService.ts';
 import Button from '../Button.vue';
+import { getPresignedImageUrl } from '@/services/ImageService.ts';
 const route = useRoute()
 const authStore = useAuthStore()
 
@@ -44,14 +45,15 @@ onMounted(() => {
     /* Fetch user data based on Admin's route or User's route */
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
-            .then(res => {
+            .then(async (res) => {
                 const u = res.data
+                const imageSrc = await getPresignedImageUrl(u.image)
                 user.value = {
                     id: u.id,
                     firstName: u.firstName,
                     lastName: u.lastName,
                     province: u.province,
-                    image: u.image,
+                    image: imageSrc,
                     username: u.username,
                     isActive: u.isActive,
                     roles: u.roles,
@@ -64,9 +66,25 @@ onMounted(() => {
                 userBadges.value = u.badges
             })
     } else {
-        user.value = authStore.user
-        assignLevelBenefits(Number(authStore.level))
-        if (user.value) assignUserBadges(user.value.id)
+        ;(async () => {
+            if (authStore.user) {
+                const imageSrc = await getPresignedImageUrl(authStore.user.image)
+                user.value = {
+                    id: authStore.user.id,
+                    firstName: authStore.user.firstName,
+                    lastName: authStore.user.lastName,
+                    province: authStore.user.province,
+                    image: imageSrc,
+                    username: authStore.user.username,
+                    isActive: authStore.user.isActive,
+                    roles: authStore.user.roles,
+                    badges: authStore.user.badges,
+                    levels: authStore.user.levels
+                }
+                assignLevelBenefits(Number(authStore.level))
+                if (user.value) assignUserBadges(user.value.id)
+            }
+        })()
     }
 })
 
