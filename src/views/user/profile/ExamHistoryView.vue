@@ -26,7 +26,7 @@ const assignExams = (id: number) => {
         .then(res => {
             paginatedExam.value = res.data
             currentItems.value = res.data.length
-            const totalHeader = res.headers['x-total-count'] ?? res.headers['X-Total-Count']
+            const totalHeader = res.headers['x-total-count']
             totalExams.value = totalHeader ? Number(totalHeader) : res.data.length
         })
     

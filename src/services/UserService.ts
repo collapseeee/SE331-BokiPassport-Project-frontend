@@ -6,9 +6,9 @@ export default {
        return apiClient.get('/v1/users?_limit=' + pageSize + '&_page=' + page + '&search=' + searchOption.name + '&province=' + searchOption.province + '&level=' + searchOption.level)
     },
     getUser(id: number) {
-        return apiClient.get(`/v1/users/${id}`)
+        return apiClient.get('/v1/users/' + id)
     },
-    getExamHistories(id: number, page: number){
+    getExamHistories(id: number, page: number) {
         return apiClient.get(`/v1/exams/users/${id}?_page=${page}&_limit=5`)
     },
     getUserByLevelId(levelId: number) {

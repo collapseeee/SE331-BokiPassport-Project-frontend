@@ -36,7 +36,7 @@ const isAnsweredAll = () => {
     });
 };
 
-const sumitAnswers = () => {
+const submitAnswers = () => {
     if (!isAnsweredAll()) {
         alert("Please answer all questions before submit!");
         return;
@@ -80,7 +80,7 @@ const sumitAnswers = () => {
                     label="Submit" 
                     right-arrow
                     bg-color="brand-green"
-                    @click="sumitAnswers"
+                    @click="submitAnswers"
                 />
             </div>
         </div>

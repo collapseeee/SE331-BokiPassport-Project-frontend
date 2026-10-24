@@ -12,7 +12,17 @@ export interface User {
   levels: Level[]
 }
 
-export type Profile = User
+export interface Profile {
+  id: number
+  firstName: string
+  lastName: string
+  province: string
+  image: string
+  username: string
+  roles: string[]
+  badges: Badge[]
+  levels: Level[]
+}
 
 export interface AuthToken {
   accessToken: string

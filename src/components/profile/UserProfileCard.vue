@@ -54,7 +54,6 @@ onMounted(() => {
                     province: u.province,
                     image: imageSrc,
                     username: u.username,
-                    isActive: u.isActive,
                     roles: u.roles,
                     badges: u.badges,
                     levels: u.levels
@@ -62,7 +61,6 @@ onMounted(() => {
                 isActive.value = u.isActive
                 userLevel.value = Math.max(...u.levels.map((l: Level) => l.id))
                 assignLevelBenefits(userLevel.value)
-                userBadges.value = u.badges
             })
     } else {
         ;(async () => {
@@ -75,12 +73,10 @@ onMounted(() => {
                     province: authStore.user.province,
                     image: imageSrc,
                     username: authStore.user.username,
-                    isActive: authStore.user.isActive,
                     roles: authStore.user.roles,
                     badges: authStore.user.badges,
                     levels: authStore.user.levels
                 }
-                isActive.value = authStore.user.isActive
                 userLevel.value = authStore.user.levels.length 
                     ? Math.max(...authStore.user.levels.map((l: Level) => l.id)) 
                     : 1
