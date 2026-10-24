@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Level, Profile } from '@/types.ts';
@@ -13,9 +13,9 @@ import { getPresignedImageUrl } from '@/services/ImageService.ts';
 const route = useRoute()
 const authStore = useAuthStore()
 
+
 const benefits = ref<Benefit[] | null>(null)
 const badges = ref<Badge[] | null>(null)
-const userBadges = ref<Badge[] | null>(null)
 const user = ref<Profile | null>(null)
 // the json-server mock still serves the admin's user management view
 const isActive = ref(false)
@@ -37,7 +37,6 @@ const assignUserBadges = (userId: number) => {
             .catch(() => userBadges.value = [])
     }
 }
-
 onMounted(() => {
     BadgeService.getBadges()
         .then(res => badges.value = res.data)
@@ -98,7 +97,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-row gap-x-10 w-full relative">
             <!-- Left side of card -->
-            <div class="w-1/2 flex flex-col gap-y-2">
+            <div class="w-full flex flex-col gap-y-2">
                 <div class="flex flex-col items-center">
                     <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
@@ -112,14 +111,14 @@ onMounted(() => {
                 </div>
                 <div class="grid grid-cols-2 w-full border items-center rounded-xl px-5 py-2 bg-sky-950">
                     <p class="text-mist-50">Level:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ userLevel ?? authStore.level }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ authStore.level }}</p>
                     <p class="text-mist-50">Badges:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ userBadges?.length ?? 0 }} / {{ badges?.length }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>
             </div>
 
             <!-- Right side of card -->
-            <div class="w-1/2" v-if="benefits">
+            <div class="w-full" v-if="benefits">
                 <p class="text-xl font-bold">Services</p>
                 <BenefitItem :isEligible="true" v-for="benefit in benefits" :benefit="benefit" :key="benefit.id"/>
             </div>

@@ -7,6 +7,7 @@ import { inject } from '@vercel/analytics'
 import App from './App.vue'
 import router from './router'
 import 'nprogress/nprogress.css'
+import './services/AxiosInterceptorSetup.ts'
 
 const app = createApp(App)
 const pinia = createPinia()

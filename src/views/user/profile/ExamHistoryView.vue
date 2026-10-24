@@ -22,7 +22,7 @@ const totalExams = ref<number>(0)
 const currentItems = ref<number>(0)
 
 const assignExams = (id: number) => {
-    UserService.getPaginatedUserExams(id, props.page)
+    UserService.getExamHistories(id, props.page)
         .then(res => {
             paginatedExam.value = res.data
             currentItems.value = res.data.length
@@ -37,10 +37,10 @@ const assignExams = (id: number) => {
 
 onMounted(() => {
     watchEffect(() => {
-        if (route.name?.toString().startsWith('Admin')) {
+        if (authStore.isAdmin) {
             assignExams(Number(route.params.id))
         } else {
-            if (authStore.id !== null) assignExams(authStore.id)
+            assignExams(authStore.id ?? 0)
         }
     })
 })
