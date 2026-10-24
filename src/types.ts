@@ -4,7 +4,6 @@ export interface User {
   firstName: string
   lastName: string
   province: string
-  username: string
   image: string
   username: string
   isActive: boolean
