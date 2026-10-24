@@ -4,8 +4,8 @@ export default {
   getBenefits() {
     return apiClient.get('/v1/benefits')
   },
-  getBenefitsByLevelId(levelId: number) {
-    return apiClient.get(`/v1/benefits?level=${levelId}`)
+  getBenefitsByLevel(level: number) {
+    return apiClient.get('/v1/benefits?level=' + level)
   },
   addBenefit(levelId: number) {
     return apiClient.post('/v1/benefits', {

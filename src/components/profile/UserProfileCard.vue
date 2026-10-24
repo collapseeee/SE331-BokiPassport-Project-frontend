@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Level, Profile } from '@/types.ts';
@@ -7,27 +7,26 @@ import BadgeService from '@/services/BadgeService.ts';
 import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
-import LevelService from '@/services/LevelService.ts';
 import Button from '../Button.vue';
+import { storeToRefs } from 'pinia';
+import BenefitService from '@/services/BenefitService.ts';
 import { getPresignedImageUrl } from '@/services/ImageService.ts';
+
 const route = useRoute()
 const authStore = useAuthStore()
 
+const { isAdmin } = storeToRefs(authStore)
 const benefits = ref<Benefit[] | null>(null)
 const badges = ref<Badge[] | null>(null)
 const userBadges = ref<Badge[] | null>(null)
 const user = ref<Profile | null>(null)
-// the json-server mock still serves the admin's user management view
 const isActive = ref(false)
 const userLevel = ref<number | null>(null)
 
-const isAdmin = computed(() => route.name?.toString().startsWith('Admin'))
-
-const assignLevelBenefits = (levelId: number) => {
-    if (user.value) {
-        LevelService.getLevelBenefitsByUserLevelId(levelId)
-            .then(res => benefits.value = res.data)
-    }
+const assignLevelBenefits = (level: number) => {
+    BenefitService.getBenefitsByLevel(level)
+        .then(res => benefits.value = res.data)
+        .catch(() => benefits.value = null)
 }
 
 const assignUserBadges = (userId: number) => {
@@ -61,7 +60,7 @@ onMounted(() => {
                     levels: u.levels
                 }
                 isActive.value = u.isActive
-                userLevel.value = Math.max(...u.levels.map((l: Level) => l.id));
+                userLevel.value = Math.max(...u.levels.map((l: Level) => l.id))
                 assignLevelBenefits(userLevel.value)
                 userBadges.value = u.badges
             })
@@ -81,13 +80,16 @@ onMounted(() => {
                     badges: authStore.user.badges,
                     levels: authStore.user.levels
                 }
-                assignLevelBenefits(Number(authStore.level))
+                isActive.value = authStore.user.isActive
+                userLevel.value = authStore.user.levels.length 
+                    ? Math.max(...authStore.user.levels.map((l: Level) => l.id)) 
+                    : 1
+                assignLevelBenefits(userLevel.value ?? 1)
                 if (user.value) assignUserBadges(user.value.id)
             }
         })()
     }
 })
-
 </script>
 
 <template>
@@ -98,7 +100,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-row gap-x-10 w-full relative">
             <!-- Left side of card -->
-            <div class="w-1/2 flex flex-col gap-y-2">
+            <div class="w-full flex flex-col gap-y-2">
                 <div class="flex flex-col items-center">
                     <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
@@ -119,7 +121,7 @@ onMounted(() => {
             </div>
 
             <!-- Right side of card -->
-            <div class="w-1/2" v-if="benefits">
+            <div class="w-full" v-if="benefits">
                 <p class="text-xl font-bold">Services</p>
                 <BenefitItem :isEligible="true" v-for="benefit in benefits" :benefit="benefit" :key="benefit.id"/>
             </div>
