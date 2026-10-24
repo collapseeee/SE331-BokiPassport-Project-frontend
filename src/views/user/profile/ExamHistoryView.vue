@@ -22,7 +22,7 @@ const totalExams = ref<number>(0)
 const currentItems = ref<number>(0)
 
 const assignExams = (id: number) => {
-    UserService.getPaginatedUserExams(id, props.page)
+    UserService.getExamHistories(id, props.page)
         .then(res => {
             paginatedExam.value = res.data
             currentItems.value = res.data.length

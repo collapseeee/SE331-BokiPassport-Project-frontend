@@ -8,7 +8,7 @@ export default {
     getUser(id: number) {
         return apiClient.get(`/v1/users/${id}`)
     },
-    getPaginatedUserExams(id: number, page: number){
+    getExamHistories(id: number, page: number){
         return apiClient.get(`/v1/exams/users/${id}?_page=${page}&_limit=5`)
     },
     getUserByLevelId(levelId: number) {
@@ -28,5 +28,8 @@ export default {
         .then((res) => {
             return res.data.filter((user: User) => user.isActive && !user.roles.includes('ROLE_ADMIN'))
         })
+    },
+     getProvinces() {
+        return apiClient.get('/v1/users/provinces')
     }
 }

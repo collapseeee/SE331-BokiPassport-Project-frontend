@@ -2,7 +2,6 @@
 import { onMounted, ref } from 'vue';
 import UserFilterTab from './UserFilterTab.vue';
 import UserService from '@/services/UserService.ts';
-import type { User } from '@/types.ts';
 
 const props = defineProps({
     title: {
@@ -21,15 +20,8 @@ const props = defineProps({
 const provinces = ref<string[] | null>([])
 onMounted(() => {
     if (props.isFilter) {
-        UserService.getUsers(100, 1, { name: '', province: '', level: '' })
-            .then(res => {
-                const users: User[] = res.data
-                /* Get only the province field */
-                const mappedProvince: string[] = users.map((user) => user.province)
-                /* Get only string attribute and eliminate the null */
-                const filteredProvince: string[] = [...new Set(mappedProvince)].filter((province: string) => province)
-                provinces.value = filteredProvince
-            })
+        UserService.getProvinces()
+            .then(res => provinces.value = res.data)
     }
 })
 

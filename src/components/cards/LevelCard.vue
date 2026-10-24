@@ -13,7 +13,7 @@ const benefits = ref<Benefit[] | null>(null)
 const defaultBenefits = ref<Benefit[] | null>(null)
 onMounted(() => {
     watchEffect(() => {
-        BenefitService.getBenefitsByLevelId(props.level.id)
+        BenefitService.getBenefitsByLevel(props.level.id)
             .then(res => {
                 benefits.value = res.data
                 defaultBenefits.value = res.data
