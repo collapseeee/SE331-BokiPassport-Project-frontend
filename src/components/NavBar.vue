@@ -7,10 +7,12 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLevelsStore } from '@/stores/levels.ts';
 import { getPresignedImageUrl } from '@/services/ImageService.ts';
+import { storeToRefs } from 'pinia';
 
 const profileImage = ref<string | null>(null);
 
 const authStore = useAuthStore();
+const { image: authImage } = storeToRefs(authStore);
 const levelStore = useLevelsStore();
 const router = useRouter();
 
@@ -22,7 +24,7 @@ const logout = (() => {
 })
 
 onMounted(async () => {
-    if (authStore.image) {
+    if (authImage.value) {
         profileImage.value = await getPresignedImageUrl(authStore.image)
     }
 })

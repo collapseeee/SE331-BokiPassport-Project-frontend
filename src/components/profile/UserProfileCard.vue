@@ -16,7 +16,7 @@ const route = useRoute()
 const authStore = useAuthStore()
 
 
-const { isAdmin } = storeToRefs(authStore)
+const { isAdmin, user: authUser } = storeToRefs(authStore)
 const benefits = ref<Benefit[] | null>(null)
 const badges = ref<Badge[] | null>(null)
 const userBadges = ref<Badge[] | null>(null)
@@ -64,21 +64,21 @@ onMounted(() => {
             })
     } else {
         ;(async () => {
-            if (authStore.user) {
-                const imageSrc = await getPresignedImageUrl(authStore.user.image)
+            if (authUser.value) {
+                const imageSrc = await getPresignedImageUrl(authUser.value.image)
                 user.value = {
-                    id: authStore.user.id,
-                    firstName: authStore.user.firstName,
-                    lastName: authStore.user.lastName,
-                    province: authStore.user.province,
+                    id: authUser.value.id,
+                    firstName: authUser.value.firstName,
+                    lastName: authUser.value.lastName,
+                    province: authUser.value.province,
                     image: imageSrc,
-                    username: authStore.user.username,
-                    roles: authStore.user.roles,
-                    badges: authStore.user.badges,
-                    levels: authStore.user.levels
+                    username: authUser.value.username,
+                    roles: authUser.value.roles,
+                    badges: authUser.value.badges,
+                    levels: authUser.value.levels
                 }
-                userLevel.value = authStore.user.levels.length 
-                    ? Math.max(...authStore.user.levels.map((l: Level) => l.id)) 
+                userLevel.value = authUser.value.levels.length 
+                    ? Math.max(...authUser.value.levels.map((l: Level) => l.id)) 
                     : 1
                 assignLevelBenefits(userLevel.value ?? 1)
                 if (user.value) assignUserBadges(user.value.id)
@@ -112,7 +112,7 @@ onMounted(() => {
                     <p class="text-mist-50">Level:</p>
                     <p class="text-sky-400 font-bold text-2xl text-right">{{ authStore.level }}</p>
                     <p class="text-mist-50">Badges:</p>
-                    <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges.length ?? 0 }} / {{ badges?.length }}</p>
+                    <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges?.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>
             </div>
 
