@@ -2,10 +2,23 @@
 import Container from '@/components/Container.vue';
 import NotFoundText from '@/components/NotFoundText.vue';
 import UserBadge from '@/components/profile/UserBadge.vue';
+import BadgeService from '@/services/BadgeService';
+import { useAuthStore } from '@/stores/auth';
 import type { Badge } from '@/types';
-defineProps<{
-    badges?: Badge[]
-}>()
+import { onMounted, ref } from 'vue';
+const authStore = useAuthStore()
+
+const badges = ref<Badge[] | null>(null)
+onMounted(() => {
+    if (authStore.id)
+    BadgeService.getBadgesByUserId(authStore.id)
+        .then(res => {
+            badges.value = res.data
+        })
+        .catch(() => {
+            badges.value = []
+        })
+})
 </script>
 <template>
     <Container title="Badges">

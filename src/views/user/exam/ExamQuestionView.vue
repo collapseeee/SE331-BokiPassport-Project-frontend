@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia';
 import { ref, computed } from 'vue';
 
 const emit = defineEmits<{
-    (e: 'submit', score: number): void
+    (e: 'submit', answers: Record<number, number>): void
 }>();
 
 const questionStore = useQuestionStore();
@@ -30,30 +30,22 @@ const handleNextButton = () => {
     }
 };
 
-const calculateScore = () => {
-    let score = 0;
-    questions.value.forEach((question) => {
-        const userChoice = selectedAnswers.value[question.id];
-        if (userChoice && userChoice.isCorrect) {
-            score++;
-        }
-    });
-    return score;
-};
-
 const isAnsweredAll = () => {
     return questions.value.every((question) => {
         return Boolean(selectedAnswers.value[question.id]);
     });
 };
 
-const handleSubmitButton = () => {
+const submitAnswers = () => {
     if (!isAnsweredAll()) {
         alert("Please answer all questions before submit!");
         return;
     }
-    const totalScore = calculateScore();
-    emit('submit', totalScore);
+    const answers: Record<number, number> = {};
+    for (const [questionId, choice] of Object.entries(selectedAnswers.value)) {
+        answers[Number(questionId)] = choice.id;
+    }
+    emit('submit', answers);
 };
 </script>
 
@@ -88,7 +80,7 @@ const handleSubmitButton = () => {
                     label="Submit" 
                     right-arrow
                     bg-color="brand-green"
-                    @click="handleSubmitButton"
+                    @click="submitAnswers"
                 />
             </div>
         </div>

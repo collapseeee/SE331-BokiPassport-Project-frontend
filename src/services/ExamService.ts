@@ -1,17 +1,13 @@
-import type { Exam } from "@/types"
-import { apiMockClient } from "./apiClient"
+import { apiClient } from "./apiClient"
 
 export default {
   getExams() {
-    return apiMockClient.get('/exams?_embed=questions')
+    return apiClient.get('/v1/exams')
   },
   getExamById(id: number) {
-    return apiMockClient.get(`/exams?_embed=questions`)
-    .then((res) => {
-      return res.data.find((exam: Exam) => String(exam.id) === String(id))
-    })
-    .catch((err) => {
-      console.error("Error occurs while get data: ", err)
-    })
-  }
+    return apiClient.get(`/v1/exams/${id}`)
+  },
+  submit(examId: number, answers: Record<number, number>) {
+    return apiClient.post(`/v1/exams/${examId}/submit`, { answers });
+  },
 }

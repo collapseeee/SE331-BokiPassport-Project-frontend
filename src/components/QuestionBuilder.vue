@@ -21,7 +21,6 @@ const addChoice = () => {
         id: tempId,
         answerText: '',
         isCorrect: model.value.answerChoices.length === 0,
-        questionId: model.value.id
     });
 };
 

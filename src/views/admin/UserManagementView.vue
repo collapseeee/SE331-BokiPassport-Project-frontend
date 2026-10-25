@@ -15,17 +15,20 @@ const tableHeaders = ['Name', 'Surname', 'Level', 'Province', 'Action']
 
 const paginatedUsers = ref<User[] | null>(null)
 const totalUsers = ref<number>(0)
-const currentItems =ref<number>(0)
+const currentItems = ref<number>(0)
+
 onMounted(() => {
     watchEffect(() => {
-        UserService.getPaginatedUser(props.page)
+        UserService.getUsers(100, 1, { name: '', province: '', level: '' })
             .then(res => {
-                paginatedUsers.value = res.users
-                currentItems.value = res.users.length
+                const allUsers = (res.data as User[]).filter(u => !u.roles.includes('ROLE_ADMIN'))
+                totalUsers.value = allUsers.length
+                const start = (props.page -1) * 5
+                paginatedUsers.value = allUsers.slice(start, start + 5)
+                currentItems.value = paginatedUsers.value?.length ?? 0;
             })
-        UserService.getUserUsers()
-            .then(res => {
-                totalUsers.value = res.length
+            .catch(() => {
+                paginatedUsers.value = null
             })
     })
 })
@@ -41,7 +44,7 @@ const hasNextPage = computed(() => {
             <Container title="" isFilter>
                 <div v-if="paginatedUsers">
                     <TableContainer :headers="tableHeaders" :rows="paginatedUsers" />
-                    <Pagination :page="Number(page)" :currentItems :totalItems="totalUsers" :hasNextPage/>
+                    <Pagination :page="Number(page)" :currentItems :totalItems="Number(totalUsers)" :hasNextPage/>
                 </div>
                 <NotFoundText v-else text="No user yet!"/>
             </Container>
