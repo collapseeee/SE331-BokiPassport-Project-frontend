@@ -7,28 +7,37 @@ import type { User } from '@/types';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import UserService from '@/services/UserService';
 import NotFoundText from '@/components/NotFoundText.vue';
+import { useRoute } from 'vue-router';
 const props = defineProps<{
     page: number
 }>()
-
+const route = useRoute()
 const tableHeaders = ['Name', 'Surname', 'Level', 'Province', 'Action']
 
-const paginatedUsers = ref<User[] | null>(null)
+const users = ref<User[] | null>(null)
 const totalUsers = ref<number>(0)
 const currentItems = ref<number>(0)
 
+const levelFilterResult = computed(() => {
+    if (!route.query.level || route.query.level === 'all') return ''
+
+    return route.query.level
+})
+
 onMounted(() => {
     watchEffect(() => {
-        UserService.getUsers(100, 1, { name: '', province: '', level: '' })
+        UserService.getUsers(5, props.page, { 
+            name: route.query.search as string ?? '',
+            province: route.query.province as string ?? '',
+            level: levelFilterResult.value as string
+        })
             .then(res => {
-                const allUsers = (res.data as User[]).filter(u => !u.roles.includes('ROLE_ADMIN'))
-                totalUsers.value = allUsers.length
-                const start = (props.page -1) * 5
-                paginatedUsers.value = allUsers.slice(start, start + 5)
-                currentItems.value = paginatedUsers.value?.length ?? 0;
+                totalUsers.value = res.headers['x-total-count'] as number
+                users.value = res.data
+                currentItems.value = res.data.length as number;
             })
             .catch(() => {
-                paginatedUsers.value = null
+                users.value = null
             })
     })
 })
@@ -42,8 +51,8 @@ const hasNextPage = computed(() => {
         <AdminHeader title="Manage Users" description="Boki Passport user management system"/>
         <div class="p-5 flex flex-col items-center w-full">
             <Container title="" isFilter>
-                <div v-if="paginatedUsers">
-                    <TableContainer :headers="tableHeaders" :rows="paginatedUsers" />
+                <div v-if="users">
+                    <TableContainer :headers="tableHeaders" :rows="users" />
                     <Pagination :page="Number(page)" :currentItems :totalItems="Number(totalUsers)" :hasNextPage/>
                 </div>
                 <NotFoundText v-else text="No user yet!"/>

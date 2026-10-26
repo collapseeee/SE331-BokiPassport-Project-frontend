@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import SelectInput from './select/SelectInput.vue';
 
 const router = useRouter()
