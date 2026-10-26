@@ -43,6 +43,8 @@ const assignUserBadges = (userId: number) => {
 }
 
 const handleProfileImageChange = async (filename: string) => {
+    await UserService.updateUserImage(filename)
+
     authStore.updateProfileImage(filename)
 
     if (user.value) {
