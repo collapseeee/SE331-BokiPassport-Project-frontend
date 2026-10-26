@@ -154,7 +154,7 @@ onMounted(() => {
             </div>
         </div>
         <ModalContainer v-model="isChangeImageOpen">
-            <ImageUpload v-model="uploadedImages" max-size-in-mb="2" />
+            <ImageUpload v-model="uploadedImages" :max-size="2" @cancel="isChangeImageOpen = false" />
         </ModalContainer>
     </CardContainer>
 </template>
