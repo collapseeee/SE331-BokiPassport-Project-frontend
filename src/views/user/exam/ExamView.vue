@@ -4,13 +4,17 @@ import ExamResultModal from '@/components/modal/ExamResultModal.vue';
 import { useExamStore } from '@/stores/exam';
 import { useLevelsStore } from '@/stores/levels';
 import { storeToRefs } from 'pinia';
-import { ref, computed, onBeforeUnmount } from 'vue';
+import { ref, computed, onBeforeUnmount, onMounted } from 'vue';
 import { Brain } from '@lucide/vue';
 import Button from '@/components/Button.vue';
 import { useAuthStore } from '@/stores/auth';
 import ExamService from '@/services/ExamService';
 import UserService from '@/services/UserService';
+import type { Badge } from '@/types';
+import { useRoute } from 'vue-router';
+import BadgeService from '@/services/BadgeService';
 
+const route = useRoute()
 const authStore = useAuthStore();
 const timeLimitInSecond = 600; // Unit = Second.
 const isModalOpen = ref<boolean>(false);
@@ -47,6 +51,14 @@ const stopTimer = () => {
 };
 
 const userScore = ref<number>(0);
+const badge = ref<Badge | null>(null)
+
+onMounted(() => {
+    if (route.params.id) {
+        BadgeService.getBadgeById(Number(route.params.id) + 2)
+            .then(res => badge.value = res.data)
+    }
+})
 
 onBeforeUnmount(() => {
     stopTimer();
@@ -112,7 +124,7 @@ const colorClass: Record<number, string> = {
             <SubCardContainer class="col-span-4 lg:col-span-1">
                 <template #default>
                     <p class="font-bold">Pass Criteria:</p>
-                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`">{{ passMark }} / {{ questionLength }} ({{ passPercent }}%)</h1>
+                    <h1 class="text-6xl! w-full text-center" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`">{{ passMark }} / {{ questionLength }} ({{ passPercent }}%)</h1>
                     <p class="text-gray-800 pt-2">Correct Answer</p>
                 </template>
             </SubCardContainer>
@@ -129,7 +141,7 @@ const colorClass: Record<number, string> = {
                     <div class="mx-auto">
                         <Brain class="size-20" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`"/>
                     </div>
-                    <p>foo</p>
+                    <p>{{ badge?.name }}</p>
                 </template>
             </SubCardContainer>
             <SubCardContainer class="col-span-4 lg:col-span-3">

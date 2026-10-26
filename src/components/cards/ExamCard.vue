@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import type { Benefit, Exam } from '@/types';
+import type { Badge, Benefit, Exam } from '@/types';
 import { useLevelsStore } from '@/stores/levels.ts';
 import CardContainer from './CardContainer.vue';
 import Button from '../Button.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useBenefitsStore } from '@/stores/benefits.ts';
 import { Brain } from '@lucide/vue';
 import SubCardContainer from './SubCardContainer.vue';
 import { useAuthStore } from '@/stores/auth.ts';
+import BadgeService from '@/services/BadgeService.ts';
 
 const props = defineProps<{
     exam: Exam
@@ -26,6 +27,7 @@ const benefits = ref<Benefit[]>([]);
 const authStore = useAuthStore();
 const isAdmin = authStore.isAdmin;
 const level = levelStore.getLevelById(Number(props.exam.level.id) + 1)!;
+const badge = ref<Badge | null>(null)
 levelName.value = level.name;
 benefits.value = benefitStore.getBenefitsByLevelId(Number(props.exam.level.id) + 1)!;
 
@@ -58,6 +60,11 @@ const colorClass: Record<number, string> = {
     4: 'brand-red'
 }
 
+onMounted(() => {
+    BadgeService.getBadgeById(props.exam.level.id + 2)
+        .then(res => badge.value = res.data)
+})
+
 </script>
 <template>
     <CardContainer class="px-6! py-10!">
@@ -89,7 +96,7 @@ const colorClass: Record<number, string> = {
                     <div class="mx-auto">
                         <Brain class="size-20" :class="`text-${colorClass[Number(props.exam.level.id) + 1]}`"/>
                     </div>
-                    <p>foo</p>
+                    <p class="text-center">{{ badge?.name }}</p>
                 </template>
             </SubCardContainer>
         </div>

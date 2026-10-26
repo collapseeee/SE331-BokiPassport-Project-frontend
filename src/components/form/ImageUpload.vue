@@ -39,7 +39,7 @@ function handleFile(file: File) {
         return
     }
     if (file.size > MAX_SIZE) {
-        fileError.value = `Imagefile must be smaller than ${props.maxSize}MB`
+        fileError.value = `Image file must be smaller than ${props.maxSize}MB`
         preview.value = null
         selectedFile.value = null
         return
