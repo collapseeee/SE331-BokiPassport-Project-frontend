@@ -103,7 +103,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    function updatateProfileImage(imageUrl: string) {
+    function updateProfileImage(imageUrl: string) {
         if (user.value) {
             user.value = { ...user.value, image: imageUrl };
         }
@@ -114,5 +114,5 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null;
     }
 
-    return { token, user, isAuthenticated, id, fullName, image, role, isAdmin, isUser, level, register, authenticate, logout, updatateProfileImage };
+    return { token, user, isAuthenticated, id, fullName, image, role, isAdmin, isUser, level, register, authenticate, logout, updateProfileImage };
 });
