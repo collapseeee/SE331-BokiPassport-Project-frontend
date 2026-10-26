@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { UserRound } from '@lucide/vue'
 import { uploadProfileImage } from '@/services/ImageService'
+import FormError from './FormError.vue'
 
 const modelValue = defineModel<string[]>({ default: () => [] })
 const props = withDefaults(defineProps<{
