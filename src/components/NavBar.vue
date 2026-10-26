@@ -3,7 +3,7 @@ import Dropdown from '@/components/dropdown/Dropdown.vue';
 import DropdownItem from './dropdown/DropdownItem.vue';
 import Button from './Button.vue';
 import { useAuthStore } from '@/stores/auth.ts';
-import { computed, onMounted, ref } from 'vue';
+import { computed, watch, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLevelsStore } from '@/stores/levels.ts';
 import { getPresignedImageUrl } from '@/services/ImageService.ts';
@@ -23,11 +23,13 @@ const logout = (() => {
     router.go(0)
 })
 
-onMounted(async () => {
-    if (authImage.value) {
-        profileImage.value = await getPresignedImageUrl(authStore.image)
+watch(authImage, async (newImage) => {
+    if (newImage) {
+        profileImage.value = await getPresignedImageUrl(newImage)
+    } else {
+        profileImage.value = null
     }
-})
+}, { immediate: true })
 </script>
 
 <template>
