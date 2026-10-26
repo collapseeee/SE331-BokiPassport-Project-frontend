@@ -9,9 +9,11 @@ const modelValue = defineModel<string[]>({ default: () => [] })
 const props = withDefaults(defineProps<{
     maxSize?: number
     accept?: string
+    showConfirm?: boolean
 }>(), {
     maxSize: 2,
-    accept: 'image/*'
+    accept: 'image/*',
+    showConfirm: true
 })
 
 const emit = defineEmits<{
@@ -52,7 +54,11 @@ function handleFile(file: File) {
     }
     reader.readAsDataURL(file)
 
-    isConfirming.value = true
+    if (props.showConfirm) {
+        isConfirming.value = true
+    } else {
+        confirmUpload()
+    }
 }
 
 async function confirmUpload() {
@@ -143,7 +149,7 @@ function openFilePicker() {
     />
 
     <!-- Confirm / Cancel after preview -->
-    <div class="flex gap-x-2">
+    <div v-if="props.showConfirm" class="flex gap-x-2">
       <Button
         v-if="preview"
         label="Confirm"
