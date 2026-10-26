@@ -31,5 +31,9 @@ export default {
     },
      getProvinces() {
         return apiClient.get('/v1/users/provinces')
+    },
+    async updateUserImage(imageUrl: string) {
+        const { data } = await apiClient.put('/v1/users/me', { image: imageUrl })
+        return data
     }
 }
