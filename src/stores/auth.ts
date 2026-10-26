@@ -29,9 +29,6 @@ export const useAuthStore = defineStore('auth', () => {
     // Token state — persisted so refresh doesn't log out
     const token = ref<AuthToken | null>(readStored<AuthToken>(TOKEN_KEY));
 
-    // TODO(backend): the real backend sends `image` + `roles` + `levels`, the
-    // json-server mock sends `imageUrl` + `role` + `userLevels`. Collapse to one
-    // shape when the mock login is replaced by the real /v1/auth/authenticate.
     const user = ref<Profile | null>(readStored<Profile>(USER_KEY));
 
     // Persist token to localStorage
