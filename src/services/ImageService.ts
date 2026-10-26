@@ -12,7 +12,7 @@ export const getPresignedImageUrl = async (fileName: string): Promise<string> =>
 export const uploadProfileImage = async (file: File): Promise<string> => {
     const formData = new FormData()
     formData.append('image', file)
-    const { data } = await apiClient.post('/v1/users/profile-image', formData, {
+    const { data } = await apiClient.post('/uploadImage', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
     })
     return data.name

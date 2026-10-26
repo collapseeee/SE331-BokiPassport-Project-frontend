@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { UserRound } from '@lucide/vue'
 import { uploadProfileImage } from '@/services/ImageService'
 import FormError from './FormError.vue'
+import Button from '../Button.vue'
 
 const modelValue = defineModel<string[]>({ default: () => [] })
 const props = withDefaults(defineProps<{
@@ -12,6 +13,10 @@ const props = withDefaults(defineProps<{
     maxSize: 2,
     accept: 'image/*'
 })
+
+const emit = defineEmits<{
+    (e: 'cancel'): void
+}>()
 
 const MAX_SIZE = props.maxSize * 1024 * 1024
 const fileError = ref<string>('')
@@ -73,9 +78,11 @@ function cancelUpload() {
     selectedFile.value = null
     preview.value = null
     fileError.value = ''
+    emit('cancel')
 }
 
 function handleFileEvent(event: Event) {
+    if (isUploading.value) return
     const file = (event.target as HTMLInputElement).files?.[0]
     if (!file) return
     handleFile(file)
@@ -95,7 +102,7 @@ function openFilePicker() {
 
 <template>
   <div class="flex flex-col items-center space-y-3">
-    <span class="text-sm font-medium text-brand-black">Select your Profile</span>
+    <label for="profile-image" class="text-sm font-medium text-brand-black">Select your Profile</label>
 
     <!-- Drop / click zone -->
     <button
@@ -107,12 +114,12 @@ function openFilePicker() {
         'opacity-50 cursor-not-allowed': isUploading
       }"
       :disabled="isUploading"
-      @click="!isUploading ? openFilePicker : null"
+      @click="openFilePicker"
       @dragover.prevent="isDragging = true"
       @dragleave="isDragging = false"
       @drop.prevent="handleDrop"
     >
-      <img v-if="preview" :src="preview" class="w-full h-full object-cover" />
+      <img v-if="preview" :src="preview" alt="Selected profile preview" class="w-full h-full object-cover" />
       <div v-else class="flex flex-col items-center justify-center w-full h-full text-brand-dark-blue group-hover:text-brand-blue transition-colors">
         <UserRound class="w-10 h-10" />
         <span class="text-xs mt-1">Upload</span>
@@ -125,35 +132,34 @@ function openFilePicker() {
       <div class="absolute inset-0 rounded-full bg-brand-blue/0 group-hover:bg-brand-blue/10 transition-colors" />
     </button>
 
-    <!-- Confirm / Cancel after preview -->
-    <div v-if="isConfirming && !isUploading" class="flex gap-x-2">
-      <button
-        type="button"
-        class="px-4 py-1.5 bg-brand-green text-white rounded text-sm font-medium hover:bg-brand-green/90 disabled:opacity-50"
-        @click="confirmUpload"
-        :disabled="isUploading"
-      >
-        Confirm
-      </button>
-      <button
-        type="button"
-        class="px-4 py-1.5 bg-brand-black text-white rounded text-sm font-medium hover:bg-brand-black/80 disabled:opacity-50"
-        @click="cancelUpload"
-        :disabled="isUploading"
-      >
-        Cancel
-      </button>
-    </div>
-
-    <!-- Error under the field -->
-    <FormError v-if="fileError" :errors="fileError" />
-
+    <!-- File input overlay: only when no preview and not confirming/uploading -->
     <input
       ref="fileInput"
+      id="profile-image"
       type="file"
       :accept="props.accept"
       class="hidden"
       @change="handleFileEvent"
     />
+
+    <!-- Confirm / Cancel after preview -->
+    <div class="flex gap-x-2">
+      <Button
+        v-if="preview"
+        label="Confirm"
+        bg-color="brand-blue"
+        @click="confirmUpload"
+        :disabled="isUploading"
+      />
+      <Button
+        label="Cancel"
+        bg-color="brand-black"
+        @click="cancelUpload"
+        :disabled="isUploading"
+      />
+    </div>
+
+    <!-- Error under the field -->
+    <FormError v-if="fileError" :errors="fileError" />
   </div>
 </template>
