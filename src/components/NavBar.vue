@@ -39,7 +39,7 @@ watch(authImage, async (newImage) => {
                 <Dropdown>
                     <template #trigger>
                         <div class="flex">
-                        <img class="w-12 h-12 rounded-full border border-brand-blue" :src="profileImage || authStore.image">
+                        <img class="w-12 h-12 rounded-full border border-brand-blue" :src="profileImage || authStore.image" alt="Profile" />
                         <div class="flex flex-col px-2">
                             <p class="text-brand-blue font-bold">{{ nameText }}</p>
                             <p class="text-brand-blue font-medium text-sm">{{ levelText }}</p>
