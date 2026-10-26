@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Level, Profile } from '@/types.ts';
@@ -11,9 +11,13 @@ import Button from '../Button.vue';
 import { storeToRefs } from 'pinia';
 import BenefitService from '@/services/BenefitService.ts';
 import { getPresignedImageUrl } from '@/services/ImageService.ts';
+import ModalContainer from '@/components/modal/ModalContainer.vue';
+import ImageUpload from '@/components/form/ImageUpload.vue';
 
 const route = useRoute()
 const authStore = useAuthStore()
+const isChangeImageOpen = ref(false)
+const uploadedImages = ref<string[]>([])
 
 
 const { isAdmin, user: authUser } = storeToRefs(authStore)
@@ -37,6 +41,24 @@ const assignUserBadges = (userId: number) => {
             .catch(() => userBadges.value = [])
     }
 }
+
+const handleProfileImageChange = async (filename: string) => {
+    authStore.updateProfileImage(filename)
+
+    if (user.value) {
+        user.value.image = await getPresignedImageUrl(filename)
+    }
+
+    isChangeImageOpen.value = false
+    uploadedImages.value = []
+}
+
+watch(uploadedImages, (newImages: string[]) => {
+    if (newImages.length > 0) {
+        handleProfileImageChange(newImages[0]!)
+    }
+})
+
 onMounted(() => {
     BadgeService.getBadges()
         .then(res => badges.value = res.data)
@@ -98,7 +120,16 @@ onMounted(() => {
             <!-- Left side of card -->
             <div class="w-full flex flex-col gap-y-2">
                 <div class="flex flex-col items-center">
-                    <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
+                    <div class="flex flex-col items-center relative">
+                        <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
+                        <button
+                            type="button"
+                            @click="isChangeImageOpen = true"
+                            class="absolute bottom-0 bg-brand-blue text-white text-xs px-1 py-1 rounded-full hover:bg-brand-dark-blue"
+                        >
+                            Change Image
+                        </button>
+                    </div>
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
                     <p class="text-md text-mist-800">{{ user?.username }}</p>
                     <div class="grid grid-cols-2 text-lg gap-x-3">
@@ -122,5 +153,8 @@ onMounted(() => {
                 <BenefitItem :isEligible="true" v-for="benefit in benefits" :benefit="benefit" :key="benefit.id"/>
             </div>
         </div>
+        <ModalContainer v-model="isChangeImageOpen">
+            <ImageUpload v-model="uploadedImages" max-size-in-mb="2" />
+        </ModalContainer>
     </CardContainer>
 </template>
