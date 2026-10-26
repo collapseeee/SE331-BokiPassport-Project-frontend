@@ -88,7 +88,7 @@ const onSubmit = handleSubmit((values) => {
 
         <!-- Profile Photo -->
         <div class="flex flex-col items-center space-y-2">
-          <ImageUpload v-model="profilePhotos" />
+          <ImageUpload v-model="profilePhotos" :show-confirm="false" />
         </div>
 
         <!-- Registration Form -->
