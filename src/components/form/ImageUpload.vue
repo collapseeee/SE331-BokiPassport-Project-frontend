@@ -73,9 +73,11 @@ async function confirmUpload() {
         console.error('Upload failed:', err)
     } finally {
         isUploading.value = false
-        isConfirming.value = false
-        selectedFile.value = null
-        preview.value = null
+        if (props.showConfirm) {
+            isConfirming.value = false
+            selectedFile.value = null
+            preview.value = null
+        }
     }
 }
 
