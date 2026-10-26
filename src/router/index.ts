@@ -32,25 +32,23 @@ import { useExamStore } from '@/stores/exam'
 import ExamService from '@/services/ExamService'
 import QuestionService from '@/services/QuestionService'
 import { useQuestionStore } from '@/stores/questions'
-import BadgeService from '@/services/BadgeService'
-import type { Badge } from '@/types'
 import courseService from '@/services/courseService'
 import { useCourseStore } from '@/stores/course'
 import NoPermissionView from '@/views/NoPermissionView.vue'
 import nProgress from 'nprogress'
 
-const publicRoutes = ['Home', 'Login', 'Register'];
-const userRoutes = ['UserProfile', 'UserProfileBadgesView', 'UserProfileExamHistoryView', 'UserServices', 'CourseList', 'CourseView', 'ExamList', 'ExamView', 'ExamQuestionView'];
-const adminRoutes = ['AdminView', 'AdminDashboard', 'AdminExamManagement', 'AdminExamManagementEdit', 'AdminUserManagement', 'AdminLevelManagement', 'AdminCourseManagement'];
+const publicRoutes = new Set(['Home', 'Login', 'Register']);
+const userRoutes = new Set(['UserProfile', 'UserProfileBadgesView', 'UserProfileExamHistoryView', 'UserServices', 'CourseList', 'CourseView', 'ExamList', 'ExamView', 'ExamQuestionView']);
+const adminRoutes = new Set(['AdminView', 'AdminDashboard', 'AdminExamManagement', 'AdminExamManagementEdit', 'AdminUserManagement', 'AdminLevelManagement', 'AdminCourseManagement']);
 
 const isPublicRoute = (route: RouteLocation) => {
-  return publicRoutes.includes(route.name as string)
+  return publicRoutes.has(route.name as string)
 };
 const isUserRoute = (route: RouteLocation) => {
-  return userRoutes.includes(route.name as string)
+  return userRoutes.has(route.name as string)
 };
 const isAdminRoute = (route: RouteLocation) => {
-  return adminRoutes.includes(route.name as string)
+  return adminRoutes.has(route.name as string)
 };
 
 const router = createRouter({
@@ -167,8 +165,8 @@ const router = createRouter({
           const questionsRes = await QuestionService.getQuestionsByExamId(Number(to.params.id))
           examStore.updateExam(examRes.data);
           questionStore.updateQuestions(questionsRes.data);
-        } catch (err: any) {
-          if (err?.response?.status === 403) {
+        } catch (err: unknown) {
+          if ((err as { response?: { status?: number } })?.response?.status === 403) {
             return { name: 'NoPermission', query: { role: 'User with lower level' } }
           }
           throw err
@@ -231,8 +229,9 @@ const router = createRouter({
           component: AdminCourseManagementView,
           beforeEnter: () => {
             const courseStore = useCourseStore()
-            courseService.getCourses()
+            void courseService.getCourses()
               .then(res => courseStore.courses = res.data)
+              .catch(error => console.error('Failed to load courses:', error))
           }
         }
       ]
