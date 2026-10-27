@@ -15,6 +15,7 @@ import courseService from '@/services/courseService';
 import SelectInput from '@/components/select/SelectInput.vue';
 import { useLevelsStore } from '@/stores/levels';
 import VideoPlayer from '@/components/VideoPlayer.vue';
+import NotFoundText from '@/components/NotFoundText.vue';
 const courseStore = useCourseStore()
 const levelStore = useLevelsStore()
 const route = useRoute()
@@ -33,7 +34,7 @@ const validationSchema = yup.object({
     level: yup.string().oneOf(levels, 'Invalid level selected').required()
 })
 
-const { errors, handleSubmit } = useForm({
+const { errors, handleSubmit, resetForm } = useForm({
     validationSchema: validationSchema,
     initialValues: {
         name: '',
@@ -42,24 +43,66 @@ const { errors, handleSubmit } = useForm({
         level: ''
     }
 })
+const courseId = ref<number | null>()
 const { value: name } = useField<string>('name')
 const { value: description } = useField<string>('description')
 const { value: videoUrl } = useField<string>('videoUrl')
 const { value: level } = useField<string>('level')
 const isModalOn = ref<boolean>(false)
-const closeModal = () => isModalOn.value = false
+const closeModal = () => {
+    isModalOn.value = false
+    courseId.value = null
+    resetForm()
+}
 const openModal = () => isModalOn.value = true
-const handleAdd = handleSubmit(values => {
-    courseService.saveCourse({
-        name: values.name,
-        description: values.description,
-        videoUrl: values.videoUrl,
-        level: { id: Number(values.level) }
-    }).then(() => {
-        closeModal()
-        router.push({ name: 'AdminCourseManagement'})
-    })
+
+// Handle Add/Edit Course
+const handleSave = handleSubmit(values => {
+    // Handle save exist
+    if (courseId.value) {
+        courseService.updateCourse(courseId.value, {
+            name: values.name,
+            description: values.description,
+            videoUrl: values.videoUrl,
+            level: { id: Number(values.level)}
+        }).then(() => {
+            closeModal()
+            router.push({ name: 'AdminCourseManagement'})
+        })
+    } else {
+        courseService.saveCourse({
+            name: values.name,
+            description: values.description,
+            videoUrl: values.videoUrl,
+            level: { id: Number(values.level) }
+        }).then(() => {
+            closeModal()
+            router.go(0)
+        })
+    }
+    
 })
+
+// Handle open edit course overlay
+const handleEdit = (id: number) => {
+    courseService.getCourse(id)
+        .then(res => {
+            courseId.value = res.data.id
+            name.value = res.data.name
+            description.value = res.data.description
+            videoUrl.value = res.data.videoUrl
+            level.value = res.data.level.id
+            openModal()
+        })
+}
+// Handle Delete Course
+const handleDelete = (id: number) => {
+    courseService.deleteCourse(id)
+        .then(() => {
+            closeModal()
+            router.go(0)
+        })
+}
 
 /* Video extractor */
 const thumbnailFailed = ref(false)
@@ -80,23 +123,23 @@ const thumbnailUrl = computed(() => {
 </script>
 
 <template>
-    <div>
-        <AdminHeader title="Course Management" description="Boki Passport course management system"/>
-        <div class="p-5 flex flex-col gap-y-2">
-            <div class="flex flex-row justify-between">
-                <LevelFilter/>
-                <Button class="h-full!" bg-color="brand-green" @click="openModal" isBold label="ADD"/>
-            </div>
-            <div v-if="filteredCourses" class="grid grid-cols-4 w-full">
-                <VideoCard v-for="course in filteredCourses" :key="course.id" :course="course"/>
-            </div>
+    <AdminHeader title="Course Management" description="Boki Passport course management system"/>
+    <div class="p-5 flex flex-col gap-y-2">
+        <div class="flex flex-row justify-between">
+            <LevelFilter/>
+            <Button class="h-full!" bg-color="brand-green" @click="openModal" isBold label="ADD"/>
         </div>
+        <div v-if="filteredCourses" class="grid grid-cols-4 w-full">
+            <VideoCard @click.prevent="handleEdit(course.id)" v-for="course in filteredCourses" :key="course.id" :course="course"/>
+        </div>
+        <NotFoundText v-else text="Courses are currently unavailable!"/>
     </div>
 
     <!-- Add course modal -->
     <ModalContainer v-model="isModalOn">
-        <form @submit.prevent="handleAdd" class="flex flex-col gap-y-2.5">
-            <h2 class="w-full">Add new course</h2>
+        <form @submit.prevent="handleSave" class="flex flex-col gap-y-2.5">
+            <Button v-if="courseId" @click.prevent="handleDelete(courseId)" class="absolute w-20! right-0 top-2.5" bg-color="brand-red" label="Delete"/>
+            <h2 class="w-full">{{ courseId ? 'Edit Course' : 'Add new course' }}</h2>
             <FormInput required v-model="name" class="w-full" id="course-name" label="Name"/>
             <FormError :errors="errors.name"/>
             <FormInput v-model="description" class="w-full" id="course-description" label="Description"/>
