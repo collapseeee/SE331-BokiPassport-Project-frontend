@@ -89,8 +89,6 @@ const handleSubmit = async (answers: Record<number, number>) => {
     if (data.awardedLevelId && authStore.id !== null) {
         const { data: profileRes } = await UserService.getUser(authStore.id);
         authStore.user = profileRes;
-        console.log(data)
-        console.log(exam.value!.level.id)
         UserService.updateUserBadge(exam.value!.level.id + 2)
     }
     isModalOpen.value = true;
