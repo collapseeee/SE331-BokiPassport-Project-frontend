@@ -13,9 +13,11 @@ import UserService from '@/services/UserService';
 import type { Badge } from '@/types';
 import { useRoute } from 'vue-router';
 import BadgeService from '@/services/BadgeService';
+import { useBadgesStore } from '@/stores/badges';
 
 const route = useRoute()
 const authStore = useAuthStore();
+const badgesStore = useBadgesStore()
 const timeLimitInSecond = 600; // Unit = Second.
 const isModalOpen = ref<boolean>(false);
 
@@ -89,7 +91,9 @@ const handleSubmit = async (answers: Record<number, number>) => {
     if (data.awardedLevelId && authStore.id !== null) {
         const { data: profileRes } = await UserService.getUser(authStore.id);
         authStore.user = profileRes;
+        UserService.updateUserBadge(exam.value!.level.id + 2)
     }
+    if (!isPassed.value && !badgesStore.isEarned(7)) UserService.updateUserBadge(7)
     isModalOpen.value = true;
 
 };
@@ -106,6 +110,7 @@ const colorClass: Record<number, string> = {
         :total-score="userScore"
         :max-score="questionLength"
         :is-passed="isPassed"
+        :exam-level="exam?.level.id ?? 1"
         v-model="isModalOpen"
     />
     <div class="flex flex-col py-16 px-32">
@@ -155,8 +160,6 @@ const colorClass: Record<number, string> = {
                 <Button label="Take examination" right-arrow @click="startTimer" :to="{ name: 'ExamQuestionView' }"/>
             </div>
         </div>
-        <div v-else>
-            <RouterView @submit="handleSubmit" />
-        </div>
+        <RouterView v-else @submit="handleSubmit" />
     </div>
 </template>

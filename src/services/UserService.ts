@@ -35,5 +35,8 @@ export default {
     async updateUserImage(imageUrl: string) {
         const { data } = await apiClient.put('/v1/users/me', { image: imageUrl })
         return data
+    },
+    updateUserBadge(badgeId: number) {
+        return apiClient.patch('/v1/users/me/badges/' + badgeId)
     }
 }

@@ -42,7 +42,6 @@ const handleClick = () => {
         router.push({ name: 'AdminUserManagementDetail', params: { id: props.row.id }})
         return
     }
-    console.log('exam history clicked')
 }
 </script>
 
