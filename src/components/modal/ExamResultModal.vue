@@ -7,7 +7,9 @@ import Button from '../Button.vue';
 import { useRouter } from 'vue-router';
 import BadgeService from '@/services/BadgeService.ts';
 import type { Badge } from '@/types.ts';
+import { useBadgesStore } from '@/stores/badges.ts';
 
+const badgesStore = useBadgesStore()
 const router = useRouter();
 const props = defineProps<{
     totalScore: number
@@ -22,8 +24,13 @@ const isOpen = defineModel<boolean>();
 const badge = ref<Badge | null>(null)
 
 onMounted(() => {
-    BadgeService.getBadgeById(props.examLevel + 2)
-        .then(res => badge.value = res.data)
+    if (props.isPassed) {
+        BadgeService.getBadgeById(props.examLevel + 2)
+            .then(res => badge.value = res.data)
+    } else {
+        BadgeService.getBadgeById(7)
+            .then(res => badge.value = res.data)
+    }
 })
 
 const handleProceed = (close: () => void) => {
@@ -63,6 +70,13 @@ const handleProceed = (close: () => void) => {
             <template #default>
                 <p class="font-bold">New Badge Unlocked!</p>
                 <Brain class="size-24 text-brand-green"/>
+                <p class="pt-2.5">{{ badge?.name }}</p>
+            </template>
+        </SubCardContainer>
+        <SubCardContainer v-else v-if="!badgesStore.isEarned(7)" class="mb-3">
+            <template #default>
+                <p class="font-bold">New Badge Unlocked!</p>
+                <Brain class="size-24 text-brand-red"/>
                 <p class="pt-2.5">{{ badge?.name }}</p>
             </template>
         </SubCardContainer>

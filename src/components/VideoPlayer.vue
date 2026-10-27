@@ -1,12 +1,29 @@
 <script setup lang="ts">
+import UserService from '@/services/UserService';
+import { ref } from 'vue';
+import { useBadgesStore } from '@/stores/badges.ts';
+import BadgeUnlockModal from './modal/BadgeUnlockModal.vue';
 defineProps<{
     videoSrc: string
     thumbnailUrl: string | null
 }>()
+const badgesStore = useBadgesStore()
+const isModalOpen = ref<boolean>(false)
+
+const handleEarnBadge = () => {
+  if (!badgesStore.isEarned(2)) {
+    UserService.updateUserBadge(2)
+      .then(res => {
+        badgesStore.badges = res.data.badges
+        isModalOpen.value = true
+      })
+  }
+}
 </script>
 
 <template>
-    <media-player class="relative aspect-video w-full max-w-4xl overflow-hidden rounded-lg bg-black" 
+    <badge-unlock-modal v-model="isModalOpen"/>
+    <media-player @click="handleEarnBadge" class="relative aspect-video w-full max-w-4xl overflow-hidden rounded-lg bg-black" 
         crossorigin 
         playsinline 
         :src='videoSrc'>
