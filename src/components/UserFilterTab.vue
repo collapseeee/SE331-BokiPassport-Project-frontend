@@ -49,7 +49,7 @@ const updateProvinceFilter = (newProvince: string) => {
         <p class="text-brand-white">Level:</p>
         <RouterLink :to="{ query: { ...$route.query, level: tab[1] }}" :class="[levelClasses, { 'bg-brand-black font-bold': route.query.level === tab[1] }, {'bg-brand-black font-bold': tab[1] === 'all' && route.query.level === undefined}]" v-for="tab in tabs" :key="tab[0]">{{ tab[0] }}</RouterLink>
         <input @input="updateSearchFilter" v-model="searchValue" class="rounded-full border-none bg-brand-white w-full max-w-lg px-3 py-3" placeholder="Search..."/>
-        <SelectInput name="province" @update-value="updateProvinceFilter" :options="provinces"/>
+        <SelectInput chooseAll name="province" @update-value="updateProvinceFilter" :options="provinces"/>
         <RouterLink :to="{ name: 'AdminUserManagement' }" class="text-brand-gray underline hover">Reset</RouterLink>
     </div>
 </template>

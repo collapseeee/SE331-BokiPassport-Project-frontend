@@ -5,6 +5,7 @@ interface SelectInputProps {
     label?: string
     name: string
     options: Array<string>
+    chooseAll?: boolean
 }
 const id = useId()
 const props = withDefaults(defineProps<SelectInputProps>(), {
@@ -31,7 +32,7 @@ const modelValue = defineModel<string>()
                 v-model="modelValue"
                 v-bind="$attrs"
             >
-                <option value="" selected>All {{ name }}</option>
+                <option v-if="chooseAll" value="" selected>All {{ name }}</option>
                 <option v-for="option in props.options" :key="option" :value="option">
                     {{ option }}
                 </option>

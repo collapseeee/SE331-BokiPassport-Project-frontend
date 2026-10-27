@@ -1,4 +1,4 @@
-import type { Course } from "@/types"
+import type { Course, CourseRequest } from "@/types"
 import { apiClient } from "./apiClient"
 
 export default {
@@ -16,5 +16,14 @@ export default {
             .catch((err) => {
                 console.error('Error occurs while get courses: ', err)
             })
+    },
+    saveCourse(course: CourseRequest) {
+        return apiClient.post('/v1/courses', course as Course)
+    },
+    deleteCourse(id: number) {
+        return apiClient.delete('/v1/courses/' + id)
+    },
+    updateCourse(id: number, course: CourseRequest) {
+        return apiClient.put('/v1/courses/' + id, course as Course)
     }
 }
