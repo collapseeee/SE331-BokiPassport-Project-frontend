@@ -66,6 +66,10 @@ export interface Badge {
   description: string
 }
 
+export interface BadgeStates {
+  badges: Badge[] | []
+}
+
 export interface Course {
   id: number
   createdAt: Date

@@ -36,6 +36,8 @@ import courseService from '@/services/courseService'
 import { useCourseStore } from '@/stores/course'
 import NoPermissionView from '@/views/NoPermissionView.vue'
 import nProgress from 'nprogress'
+import { useBadgesStore } from '@/stores/badges'
+import BadgeService from '@/services/BadgeService'
 
 const publicRoutes = new Set(['Home', 'Login', 'Register']);
 const userRoutes = new Set(['UserProfile', 'UserProfileBadgesView', 'UserProfileExamHistoryView', 'UserServices', 'CourseList', 'CourseView', 'ExamList', 'ExamView', 'ExamQuestionView']);
@@ -275,14 +277,17 @@ router.beforeEach(async to => {
     const servicesStore = useServicesStore();
     const levelStore = useLevelsStore();
     const benefitStore = useBenefitsStore();
-    const [servicesRes, levelsRes, benefitsRes] = await Promise.all([
+    const badgesStore = useBadgesStore()
+    const [servicesRes, levelsRes, benefitsRes, badgesRes] = await Promise.all([
             ServicesService.getServices(),
             LevelService.getLevels(),
-            BenefitService.getBenefits()
+            BenefitService.getBenefits(),
+            BadgeService.getBadgesByUserId(authStore.id ?? 0)
         ]);
     servicesStore.updateServices(servicesRes.data);
     levelStore.updateLevels(levelsRes.data);
     benefitStore.updateBenefits(benefitsRes.data);
+    badgesStore.updateBadges(badgesRes.data)
   }
 })
 

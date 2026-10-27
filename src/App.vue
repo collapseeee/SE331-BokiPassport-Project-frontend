@@ -3,7 +3,6 @@ import { SpeedInsights } from '@vercel/speed-insights/vue';
 import UserSideBar from '@/components/sidebar/UserSideBar.vue';
 import AdminSideBar from '@/components/sidebar/AdminSideBar.vue';
 import NavBar from '@/components/NavBar.vue';
-
 import Footer from './components/Footer.vue';
 import { useAuthStore } from './stores/auth.ts';
 const authStore = useAuthStore()
