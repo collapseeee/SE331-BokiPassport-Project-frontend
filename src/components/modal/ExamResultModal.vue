@@ -1,21 +1,30 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { CircleCheck, CircleX } from '@lucide/vue';
+import { computed, onMounted, ref } from 'vue';
+import { Brain, CircleCheck, CircleX } from '@lucide/vue';
 import ModalContainer from './ModalContainer.vue';
 import SubCardContainer from '../cards/SubCardContainer.vue';
 import Button from '../Button.vue';
 import { useRouter } from 'vue-router';
+import BadgeService from '@/services/BadgeService.ts';
+import type { Badge } from '@/types.ts';
 
 const router = useRouter();
 const props = defineProps<{
-    totalScore: number;
-    maxScore: number;
-    isPassed: boolean;
+    totalScore: number
+    maxScore: number
+    isPassed: boolean
+    examLevel: number
 }>();
 
 const textColorClass = computed(() => props.isPassed ? 'text-brand-green' : 'text-brand-red');
 
 const isOpen = defineModel<boolean>();
+const badge = ref<Badge | null>(null)
+
+onMounted(() => {
+    BadgeService.getBadgeById(props.examLevel + 2)
+        .then(res => badge.value = res.data)
+})
 
 const handleProceed = (close: () => void) => {
     close();
@@ -50,6 +59,13 @@ const handleProceed = (close: () => void) => {
                 </template>
             </SubCardContainer>
         </div>
+        <SubCardContainer v-if="isPassed" class="mb-3">
+            <template #default>
+                <p class="font-bold">New Badge Unlocked!</p>
+                <Brain class="size-24 text-brand-green"/>
+                <p class="pt-2.5">{{ badge?.name }}</p>
+            </template>
+        </SubCardContainer>
         <div v-if="props.isPassed" class="flex justify-end">
             <Button label="Proceed" class="w-fit" bg-color="brand-green" @click="handleProceed(close)"/>
         </div>
