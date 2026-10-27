@@ -75,6 +75,13 @@ export interface Course {
   level: Level
 }
 
+export interface CourseRequest {
+  name: string
+  description: string
+  videoUrl: string
+  level: { id: number }
+}
+
 export interface CourseStates {
   courses: Course[] | null
 }

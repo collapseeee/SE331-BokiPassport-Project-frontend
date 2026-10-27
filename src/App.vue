@@ -16,7 +16,7 @@ const authStore = useAuthStore()
       <UserSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
-          <RouterView class="h-full"/>
+          <RouterView/>
           <Footer/>
       </div>
   </div>
@@ -26,7 +26,7 @@ const authStore = useAuthStore()
       <AdminSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
-          <RouterView class="h-full"/>
+          <RouterView/>
           <Footer/>
       </div>
   </div>
