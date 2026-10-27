@@ -89,6 +89,9 @@ const handleSubmit = async (answers: Record<number, number>) => {
     if (data.awardedLevelId && authStore.id !== null) {
         const { data: profileRes } = await UserService.getUser(authStore.id);
         authStore.user = profileRes;
+        console.log(data)
+        console.log(exam.value!.level.id)
+        UserService.updateUserBadge(exam.value!.level.id + 2)
     }
     isModalOpen.value = true;
 
@@ -106,6 +109,7 @@ const colorClass: Record<number, string> = {
         :total-score="userScore"
         :max-score="questionLength"
         :is-passed="isPassed"
+        :exam-level="exam?.level.id ?? 1"
         v-model="isModalOpen"
     />
     <div class="flex flex-col py-16 px-32">
