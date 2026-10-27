@@ -19,5 +19,11 @@ export default {
     },
     saveCourse(course: CourseRequest) {
         return apiClient.post('/v1/courses', course as Course)
+    },
+    deleteCourse(id: number) {
+        return apiClient.delete('/v1/courses/' + id)
+    },
+    updateCourse(id: number, course: CourseRequest) {
+        return apiClient.put('/v1/courses/' + id, course as Course)
     }
 }
