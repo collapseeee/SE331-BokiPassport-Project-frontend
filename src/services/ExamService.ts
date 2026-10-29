@@ -1,3 +1,4 @@
+import type { Exam } from "@/types";
 import { apiClient } from "./apiClient"
 
 export default {
@@ -10,4 +11,7 @@ export default {
   submit(examId: number, answers: Record<number, number>) {
     return apiClient.post(`/v1/exams/${examId}/submit`, { answers });
   },
+  saveExam(examId: number, exam: Exam) {
+    return apiClient.put(`/v1/exams/${examId}`, exam)
+  }
 }

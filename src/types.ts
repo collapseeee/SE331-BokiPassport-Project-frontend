@@ -124,6 +124,12 @@ export interface Question {
   answerChoices: AnswerChoice[]
 }
 
+export interface QuestionPayload {
+  id: number | null
+  questionText: string
+  answerChoices: AnswerChoicePayload[]
+}
+
 export interface QuestionsState {
   questions: Question[] | []
 }
@@ -132,6 +138,12 @@ export interface AnswerChoice {
   id: number
   answerText: string
   isCorrect?: boolean
+}
+
+export interface AnswerChoicePayload {
+  id: number | null
+  answerText: string
+  isCorrect: boolean
 }
 
 export interface DashboardItem {
