@@ -1,4 +1,4 @@
-import { useForm, useField } from 'vee-validate'
+import { useForm, useField, useIsFormValid } from 'vee-validate'
 
 export function useValidation<T extends Record<string, any>>(
   schema: any,
@@ -9,9 +9,11 @@ export function useValidation<T extends Record<string, any>>(
     initialValues: initialValues as any
   })
 
+  const isValid = useIsFormValid()
+
   const field = <K extends keyof T>(name: K) => {
     return useField<T[K]>(String(name))
   }
 
-  return { errors, handleSubmit, resetForm, setValues, field }
+  return { errors, handleSubmit, resetForm, setValues, field, isValid }
 }
