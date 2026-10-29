@@ -13,6 +13,10 @@ const props = defineProps<{
     level: Level
 }>()
 
+const emit = defineEmits<{
+    (emit: 'saved', success: boolean, levelName: string): void
+}>();
+
 const validationSchema = yup.object({
   description: yup
     .string()
@@ -91,8 +95,11 @@ const handleSave = handleSubmit(async (values) => {
             description: values.description,
             passCriteria: Number((values.passCriteria/100).toFixed(2))
         })
+
+        emit('saved', true, props.level.name);
     } catch (error) {
         console.error('Failed to save level information: ', error)
+        emit('saved', false, props.level.name);
     }
 })
 
