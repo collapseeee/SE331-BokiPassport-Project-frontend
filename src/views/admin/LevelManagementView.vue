@@ -18,7 +18,7 @@ onMounted(() => {
     <div>
         <AdminHeader title="Level Management" description="Boki Passport level management system"/>
         <div class="p-5 flex flex-col gap-2">
-            <div v-if="levels" class="grid grid-cols-2 gap-3">
+            <div v-if="levels" class="grid grid-cols-1 xl:grid-cols-2 gap-3">
                 <LevelCard v-for="level in levels" :key="level.id" :level="level"/>
             </div>
             <h1 class=" text-brand-navy-blue" v-else>Loading...</h1>
