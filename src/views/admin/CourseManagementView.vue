@@ -123,39 +123,41 @@ const thumbnailUrl = computed(() => {
 </script>
 
 <template>
-    <AdminHeader title="Course Management" description="Boki Passport course management system"/>
-    <div class="p-5 flex flex-col gap-y-2">
-        <div class="flex flex-row justify-between">
-            <LevelFilter/>
-            <Button class="h-full!" bg-color="brand-green" @click="openModal" isBold label="ADD"/>
+    <div>
+        <AdminHeader title="Course Management" description="Boki Passport course management system"/>
+        <div class="px-8 py-4 flex flex-col gap-y-2">
+            <div class="flex flex-row justify-between">
+                <LevelFilter/>
+                <Button class="h-full!" bg-color="brand-green" @click="openModal" isBold label="ADD"/>
+            </div>
+            <div v-if="filteredCourses" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 w-full gap-y-8 py-4">
+                <VideoCard @click.prevent="handleEdit(course.id)" v-for="course in filteredCourses" :key="course.id" :course="course"/>
+            </div>
+            <NotFoundText v-else text="Courses are currently unavailable!"/>
         </div>
-        <div v-if="filteredCourses" class="grid grid-cols-4 w-full">
-            <VideoCard @click.prevent="handleEdit(course.id)" v-for="course in filteredCourses" :key="course.id" :course="course"/>
-        </div>
-        <NotFoundText v-else text="Courses are currently unavailable!"/>
-    </div>
 
-    <!-- Add course modal -->
-    <ModalContainer v-model="isModalOn">
-        <form @submit.prevent="handleSave" class="flex flex-col gap-y-2.5">
-            <Button v-if="courseId" @click.prevent="handleDelete(courseId)" class="absolute w-20! right-0 top-2.5" bg-color="brand-red" label="Delete"/>
-            <h2 class="w-full">{{ courseId ? 'Edit Course' : 'Add new course' }}</h2>
-            <FormInput required v-model="name" class="w-full" id="course-name" label="Name"/>
-            <FormError :errors="errors.name"/>
-            <FormInput v-model="description" class="w-full" id="course-description" label="Description"/>
-            <FormError :errors="errors.description"/>
-            <FormInput v-model="videoUrl" class="w-full" id="course-url" label="URL"/>
-            <FormError :errors="errors.videoUrl"/>
-            <div class="w-full h-full">
-                <VideoPlayer v-if="videoUrl" :video-src="videoUrl" :thumbnail-url="thumbnailUrl"/>
-                <img class="w-full h-ful rounded-xl opacity-65" v-else src="https://placehold.co/300x172/white/00A1EE?text=Video+Preview&font=roboto" alt="VideoPreview">
-            </div>
-            <SelectInput class="max-w-full" label="Level" name="level" :options="levels" v-model="level"/>
-            <FormError :errors="errors.level"/>
-            <div class="w-full flex flex-row *:w-full py-2 gap-x-2">
-                <Button @click="closeModal" bg-color="brand-white" text-color="brand-black" label="Cancel"/>
-                <Button bg-color="brand-green" label="Add"/>
-            </div>
-        </form>
-    </ModalContainer>
+        <!-- Add course modal -->
+        <ModalContainer v-model="isModalOn">
+            <form @submit.prevent="handleSave" class="flex flex-col gap-y-2.5">
+                <Button v-if="courseId" @click.prevent="handleDelete(courseId)" class="absolute w-20! right-0 top-2.5" bg-color="brand-red" label="Delete"/>
+                <h2 class="w-full">{{ courseId ? 'Edit Course' : 'Add new course' }}</h2>
+                <FormInput required v-model="name" class="w-full" id="course-name" label="Name"/>
+                <FormError :errors="errors.name"/>
+                <FormInput v-model="description" class="w-full" id="course-description" label="Description"/>
+                <FormError :errors="errors.description"/>
+                <FormInput v-model="videoUrl" class="w-full" id="course-url" label="URL"/>
+                <FormError :errors="errors.videoUrl"/>
+                <div class="w-full h-full">
+                    <VideoPlayer v-if="videoUrl" :video-src="videoUrl" :thumbnail-url="thumbnailUrl"/>
+                    <img class="w-full h-ful rounded-xl opacity-65" v-else src="https://placehold.co/300x172/white/00A1EE?text=Video+Preview&font=roboto" alt="VideoPreview">
+                </div>
+                <SelectInput class="max-w-full" label="Level" name="level" :options="levels" v-model="level"/>
+                <FormError :errors="errors.level"/>
+                <div class="w-full flex flex-row *:w-full py-2 gap-x-2">
+                    <Button @click="closeModal" bg-color="brand-white" text-color="brand-black" label="Cancel"/>
+                    <Button bg-color="brand-green" label="Add"/>
+                </div>
+            </form>
+        </ModalContainer>
+    </div>
 </template>
