@@ -16,6 +16,11 @@ const router = useRouter();
 const route = useRoute();
 const AdminExamManagement = 'AdminExamManagement';
 const examId = route.params.id as string;
+const examFormRef = ref()
+const questionFormRef = ref()
+const exmaFormValid = computed(() => examFormRef.value?.isValid?.value ?? false)
+const questionFormValid = computed(() => questionFormRef.value?.isValid?.value ?? false)
+const allValid = computed(() => exmaFormValid.value && (!currentQuestion.value || questionFormValid.value))
 
 // Pull data to store temporary for editing
 const examMeta = reactive<{ name: string; description: string; levelId: number | null }>({
@@ -80,6 +85,7 @@ const handleCancel = () => {
 };
 
 const handleSave = () => {
+    if (!allValid.value) return; // Prevent saving if the form is invalid
     // Implement save logic here
     router.push({ name: AdminExamManagement });
 };
@@ -96,14 +102,14 @@ const handleSave = () => {
                 <AdminHeader title="Edit Exam" description="" class="text-brand-blue"/>
                 <div class="flex gap-3">
                     <Button label="Cancel" bg-color="brand-gray" text-color="brand-black" @click="handleCancel" />
-                    <Button label="Save" @click="handleSave" />
+                    <Button label="Save" :disabled="!allValid" @click="handleSave" />
                 </div>
             </div>
         
 
             <!-- Exam Details -->
             
-            <ExamDetailForm v-model="examMeta" />
+            <ExamDetailForm ref="examFormRef" v-model="examMeta" />
 
             <!-- Question Builder -->
             <div class="flex flex-col gap-4 border bg-brand-black border-brand-gray rounded-2xl p-8">
@@ -119,6 +125,7 @@ const handleSave = () => {
                 </div>
 
                 <QuestionBuilder
+                    ref="questionFormRef"
                     v-if="currentQuestion"
                     :key="currentQuestion.id"
                     v-model="currentQuestion"
