@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import BenefitService from '@/services/BenefitService';
-import type { Benefit, Level } from '@/types';
+import type { Benefit, BenefitPayload, Level } from '@/types';
 import { onMounted, ref, watchEffect, watch } from 'vue';
 import FormInput from '../form/FormInput.vue';
 import Button from '../Button.vue';
 import * as yup from 'yup'
 import { useField, useFieldArray, useForm } from 'vee-validate';
 import FormError from '../form/FormError.vue';
+import LevelService from '@/services/LevelService.ts';
 
 const props = defineProps<{
     level: Level
@@ -66,10 +67,34 @@ onMounted(() => {
             })
     })
 })
+const deletedBenefitIds = ref<number[]>([])
 
-const handleSave = () => {
+const handleSave = handleSubmit(async (values) => {
+    try {
+        if (deletedBenefitIds.value.length > 0) {
+            await BenefitService.deleteBenefits(deletedBenefitIds.value);
+            deletedBenefitIds.value = [];
+        }
 
-}
+        const benefitsPayload = values.benefits.map((b: BenefitPayload) => ({
+            id: b.id && b.id > 0 ? b.id : null,
+            description: b.description,
+            level: props.level
+        }))
+
+        const savedBenefitsRes = await BenefitService.saveBenefits(props.level.id, benefitsPayload)
+        setBenefits(savedBenefitsRes.data)
+        defaultBenefits.value = JSON.parse(JSON.stringify(savedBenefitsRes.data))
+
+        await LevelService.updateLevel(props.level.id, {
+            ...props.level,
+            description: values.description,
+            passCriteria: Number((values.passCriteria/100).toFixed(2))
+        })
+    } catch (error) {
+        console.error('Failed to save level information: ', error)
+    }
+})
 
 const handleReset = () => {
     resetForm({
@@ -79,9 +104,9 @@ const handleReset = () => {
             benefits: defaultBenefits.value
         }
     })
+    deletedBenefitIds.value = []
 }
 
-const deletedBenefitIds = ref<number[]>([])
 const handleDeleteBenefit = (index: number) => {
     const benefit = benefits.value[index]?.value;
     // Send to deleted id for backend only existed benefit.
