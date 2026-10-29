@@ -120,9 +120,9 @@ const handleAddBenefit = () => {
         <hr>
         <p class="font-semibold">Benefits:</p>
         <div v-for="(benefit, index) in benefits" :key="benefit.key" class="flex flex-col">
-            <div class="flex flex-row items-center justify-center gap-x-2">
+            <div class="flex flex-row items-center justify-center bg-brand-dark-blue rounded-xl">
+                <span class="cursor-pointer flex items-center justify-center w-fit h-full px-3 rounded-l-xl font-semibold shrink-0 hover:scale-110 transition-all text-brand-gray" @click="handleDeleteBenefit(index)">X</span>
                 <FormInput :id="String(benefit.key)" label="" placeholder="Level Benefit Description" v-model="benefit.value.description" class="w-full"/>
-                <p class="cursor-pointer py-0 px-0" @click="handleDeleteBenefit(index)">X</p>
             </div>
             <!-- For empty benefit description input -->
             <FormError :errors="errors[`benefits[${index}].description`]" />
