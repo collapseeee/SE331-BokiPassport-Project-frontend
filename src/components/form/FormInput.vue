@@ -12,7 +12,7 @@ const props = defineProps<{
   textcolor?: string
 }>()
 
-const model = defineModel<string>()
+const model = defineModel<string | number>()
 const inputTextColor = computed(() => props.textcolor ? props.textcolor : 'text-brand-black')
 </script>
 
