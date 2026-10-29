@@ -42,7 +42,7 @@ const handleCancel = () => {
         <div>
             <FormInput v-for="benefit in benefits" :id="String(benefit.id)" label="" v-model="benefit.description" :key="String(benefit.id)"/>
         </div>
-        <Button @click.prevent="handleAdd" label="Add +" textColor="brand-black" bgColor="brand-gray" class="place-self-center underline"/>
+        <Button @click.prevent="handleAdd" label="Add +" textColor="brand-black" bgColor="transparent" class="place-self-center underline"/>
         <div class="flex flex-row gap-x-2 justify-between w-full mt-auto">
             <Button @click="handleCancel" textColor="brand-black" bgColor="brand-white" label="Cancel" class="w-full"/>
             <Button @click="handleSave" label="Save" class="w-full"/>
