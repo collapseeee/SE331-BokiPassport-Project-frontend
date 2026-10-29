@@ -47,7 +47,7 @@ const { errors, handleSubmit, resetForm, validate } = useForm({
 
 const { value: levelDescription } = useField<string>('description')
 const { value: levelPassCriteria } = useField<string>('passCriteria')
-const { fields: benefits, push: addBenefit, replace: setBenefits } = useFieldArray<Benefit>('benefits')
+const { fields: benefits, push: addBenefit, replace: setBenefits, remove: removeBenefit } = useFieldArray<Benefit>('benefits')
 watch(
     benefits,
     () => {
@@ -75,6 +75,16 @@ const handleCancel = () => {
 
 }
 
+const deletedBenefitIds = ref<number[]>([])
+const handleDeleteBenefit = (index: number) => {
+    const benefit = benefits.value[index]?.value;
+    // Send to deleted id for backend only existed benefit.
+    if (benefit && benefit.id > 0) {
+        deletedBenefitIds.value.push(benefit.id);
+    }
+    removeBenefit(index);
+}
+
 const handleAddBenefit = () => {
     // Temporary assign id for benefit id, must be removed before send to backend.
     const tempId = -(Date.now() + Math.floor(Math.random() * 1000))
@@ -84,6 +94,7 @@ const handleAddBenefit = () => {
         level: props.level
     } as Benefit)
 }
+
 </script>
 
 <template>
@@ -111,7 +122,7 @@ const handleAddBenefit = () => {
         <div v-for="(benefit, index) in benefits" :key="benefit.key" class="flex flex-col">
             <div class="flex flex-row items-center justify-center gap-x-2">
                 <FormInput :id="String(benefit.key)" label="" placeholder="Level Benefit Description" v-model="benefit.value.description" class="w-full"/>
-                <p class="cursor-pointer py-0 px-0">X</p>
+                <p class="cursor-pointer py-0 px-0" @click="handleDeleteBenefit(index)">X</p>
             </div>
             <!-- For empty benefit description input -->
             <FormError :errors="errors[`benefits[${index}].description`]" />
