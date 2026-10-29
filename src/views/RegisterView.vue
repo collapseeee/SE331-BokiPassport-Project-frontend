@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { CircleUserRound, UserRound, MapPin } from '@lucide/vue'
 import * as yup from 'yup'
-import { useForm, useField } from 'vee-validate'
+import { useValidation } from '@/validation/useValidation'
+import { requiredString, password as passwordSchema, confirmPassword as confirmPasswordSchema } from '@/validation/schemas'
 import SubmitButton from '@/components/Button.vue'
 import FormInput from '@/components/form/FormInput.vue'
 import PasswordInput from '@/components/form/FormPasswordInput.vue'
@@ -19,39 +20,33 @@ const profilePhotos = ref<string[]>([])
 
 // Yup validation schema — custom error messages per field
 const validationSchema = yup.object({
-  firstName: yup.string().required('First name is required'),
-  lastName: yup.string().required('Last name is required'),
-  username: yup.string().required('Username is required').min(3, 'At least 3 characters'),
-  password: yup.string().required('Password is required').min(6, 'At least 6 characters'),
-  confirmPassword: yup
-    .string()
-    .required('Please confirm your password')
-    .oneOf([yup.ref('password')], 'Passwords must match'),
-  province: yup.string().required('Province is required'),
+  firstName: requiredString('First name is required.'),
+  lastName: requiredString('Last name is required.'),
+  username: requiredString('Username is required.').min(3, 'At least 3 characters long.'),
+  password: passwordSchema(),
+  confirmPassword: confirmPasswordSchema('password'),
+  province: requiredString('Province is required.'),
 })
 
 // VeeValidate form handling
-const { errors, handleSubmit } = useForm({
-  validationSchema,
-  initialValues: {
-    firstName: '',
-    lastName: '',
-    username: '',
-    password: '',
-    confirmPassword: '',
-    province: '',
-  },
+const { errors, handleSubmit, field } = useValidation(validationSchema, {
+  firstName: '',
+  lastName: '',
+  username: '',
+  password: '',
+  confirmPassword: '',
+  province: '',
 })
 
 const errorMessage = ref<string>('')
 
 // Individual field bindings (value + vee-validate attrs)
-const { value: firstName } = useField<string>('firstName')
-const { value: lastName } = useField<string>('lastName')
-const { value: username } = useField<string>('username')
-const { value: password } = useField<string>('password')
-const { value: confirmPassword } = useField<string>('confirmPassword')
-const { value: province } = useField<string>('province')
+const { value: firstName } = field ('firstName')
+const { value: lastName } = field('lastName')
+const { value: username } = field('username')
+const { value: passwordValue } = field('password')
+const { value: confirmPasswordValue } = field('confirmPassword')
+const { value: province } = field('province')
 
 // Form submit — only fires if validation passes
 const onSubmit = handleSubmit((values) => {
@@ -113,13 +108,13 @@ const onSubmit = handleSubmit((values) => {
 
           <!-- Password -->
           <div>
-            <PasswordInput v-model="password" id="password" label="Password" required />
+            <PasswordInput v-model="passwordValue" id="password" label="Password" required />
             <FormError :errors="errors.password" />
           </div>
 
           <!-- Confirm Password -->
           <div>
-            <PasswordInput v-model="confirmPassword" id="confirmPassword" label="Confirm Password" required />
+            <PasswordInput v-model="confirmPasswordValue" id="confirmPassword" label="Confirm Password" required />
             <FormError :errors="errors.confirmPassword" />
           </div>
 
