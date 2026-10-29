@@ -8,6 +8,7 @@ import * as yup from 'yup'
 import { useField, useFieldArray, useForm } from 'vee-validate';
 import FormError from '../form/FormError.vue';
 import LevelService from '@/services/LevelService.ts';
+import { Trash2 } from '@lucide/vue';
 
 const props = defineProps<{
     level: Level
@@ -159,7 +160,14 @@ const handleAddBenefit = () => {
         <p class="font-semibold">Benefits:</p>
         <div v-for="(benefit, index) in benefits" :key="benefit.key" class="flex flex-col">
             <div class="flex flex-row items-center justify-center bg-brand-dark-blue rounded-xl">
-                <span class="cursor-pointer flex items-center justify-center w-fit h-full px-3 rounded-l-xl font-semibold shrink-0 hover:scale-110 transition-all text-brand-gray" @click="handleDeleteBenefit(index)">X</span>
+                <button 
+                    class="cursor-pointer flex items-center justify-center w-fit h-full px-3 rounded-l-xl font-semibold shrink-0 hover:scale-110 transition-all text-brand-gray hover:text-brand-red" 
+                    @click="handleDeleteBenefit(index)" 
+                    title="Delete this benefit."
+                    type="button"
+                >
+                    <Trash2 class="size-6" />
+                </button>
                 <FormInput :id="String(benefit.value.id)" label="" placeholder="Level Benefit Description" v-model="benefit.value.description" class="w-full"/>
             </div>
             <!-- For empty benefit description input -->
