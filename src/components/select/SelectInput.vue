@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { ChevronDown } from '@lucide/vue';
-import { useId } from 'vue';
+import { computed, useId } from 'vue';
 interface SelectInputProps {
+    id?: string
     label?: string
     name: string
     options: Array<string>
     chooseAll?: boolean
 }
-const id = useId()
+const autoId = useId()
 const props = withDefaults(defineProps<SelectInputProps>(), {
     label: ''
 })
+const inputId = computed(() => props.id || autoId)
 const emit = defineEmits(['update-value'])
 
 const updateModelValue = () => {
@@ -24,7 +26,7 @@ const modelValue = defineModel<string>()
         {{ props.label }}
         <div class="relative w-full">
             <select @change="updateModelValue"
-                :id
+                :id="inputId"
                 class="bg-brand-white h-12 w-full pl-3 text-md
                     appearance-none rounded-xl border border-gray-300 
                     focus:border-brand-blue focus:outline-none transition-colors 

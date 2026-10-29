@@ -39,6 +39,7 @@ const handleLevelChange = (levelName: string) => {
             <div>
                 <label for="exam-target-level" class="block text-sm font-medium text-brand-white mb-1">Target Level</label>
                 <SelectInput
+                    id="exam-target-level"     
                     name="Target Level"
                     :options="levelOptions"
                     @change="handleLevelChange"
