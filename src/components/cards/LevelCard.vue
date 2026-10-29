@@ -90,7 +90,7 @@ const handleSave = handleSubmit(async (values) => {
         setBenefits(savedBenefitsRes.data)
         defaultBenefits.value = JSON.parse(JSON.stringify(savedBenefitsRes.data))
 
-        await LevelService.updateLevel(props.level.id, {
+        await LevelService.saveLevel(props.level.id, {
             ...props.level,
             description: values.description,
             passCriteria: Number((values.passCriteria/100).toFixed(2))

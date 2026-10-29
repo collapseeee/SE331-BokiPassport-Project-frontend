@@ -1,3 +1,4 @@
+import type { Level } from "@/types"
 import { apiClient } from "./apiClient"
 
 export default {
@@ -9,5 +10,8 @@ export default {
   },
   getLevelBenefitsByUserLevelId(level: number) {
     return apiClient.get(`/v1/benefits?level=${level}`)
+  },
+  saveLevel(levelId: number, level: Level) {
+    return apiClient.put(`/v1/levels/${levelId}`, level)
   }
 }
