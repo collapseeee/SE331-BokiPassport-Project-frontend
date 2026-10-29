@@ -3,7 +3,10 @@ import { useLevelsStore } from '@/stores/levels';
 import { storeToRefs } from 'pinia';
 import FormInput from '@/components/form/FormInput.vue';
 import SelectInput from '@/components/select/SelectInput.vue';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
+import { useForm, useIsFormValid } from 'vee-validate';
+import * as yup from 'yup';
+import FormError from '@/components/form/FormError.vue';
 
 const levelStore = useLevelsStore();
 const { levels } = storeToRefs(levelStore);
@@ -13,6 +16,32 @@ const model = defineModel<{
     description: string
     levelId: number | null
 }>({ required: true });
+
+const validationSchema = yup.object({
+    name: yup.string().required('Exam name is required.'),
+    description: yup.string().required('Description is required.'),
+    levelId: yup.number().required('Level is required.')
+});
+
+const { errors, setValues } = useForm({
+    validationSchema,
+    initialValues: {
+        name: model.value.name,
+        description: model.value.description,
+        levelId: model.value.levelId
+    }
+});
+
+const isValid = useIsFormValid();
+
+// Keep form in sync with external model (defineModel)
+watch(() => model.value, (val) => {
+    setValues(val);
+}, { deep: true });
+
+defineExpose({
+    isValid
+});
 
 const levelOptions = computed(() => levels.value.map((level) => level.name));
 
@@ -35,6 +64,7 @@ const handleLevelChange = (levelName: string) => {
                 textcolor="text-brand-white"
 
             />
+            <FormError :errors="errors.name"/>
 
             <div>
                 <label for="exam-target-level" class="block text-sm font-medium text-brand-white mb-1">Target Level</label>
@@ -43,6 +73,7 @@ const handleLevelChange = (levelName: string) => {
                     :options="levelOptions"
                     @change="handleLevelChange"
                 />
+                <FormError :errors="errors.levelId"/>
             </div>
         </div>
 
@@ -55,6 +86,7 @@ const handleLevelChange = (levelName: string) => {
                 placeholder="This exam test your...."
                 class="w-full py-2.5 px-3 border border-brand-gray rounded-md bg-white resize-none focus:outline-none focus:ring focus:ring-blue-400 focus:border-blue-400"
             />
+            <FormError :errors="errors.description"/>
         </div>
     </div>
 </template>
