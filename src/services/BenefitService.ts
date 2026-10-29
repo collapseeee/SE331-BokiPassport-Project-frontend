@@ -1,4 +1,4 @@
-import type { Benefit } from "@/types"
+import type { BenefitPayload } from "@/types"
 import { apiClient } from "./apiClient"
 
 export default {
@@ -8,7 +8,7 @@ export default {
   getBenefitsByLevel(level: number) {
     return apiClient.get('/v1/benefits?level=' + level)
   },
-  saveBenefits(levelId: number, benefits: Benefit[]) {
+  saveBenefits(levelId: number, benefits: BenefitPayload[]) {
     return apiClient.put(`/v1/levels/${levelId}/benefits`, benefits)
   },
   deleteBenefits(benefitIds: number[]) {

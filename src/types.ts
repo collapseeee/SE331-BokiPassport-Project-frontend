@@ -46,6 +46,12 @@ export interface Benefit {
   level: Level
 }
 
+export interface BenefitPayload {
+  id: number | null
+  description: string
+  level: Level
+}
+
 export interface BenefitsState {
   benefits: Benefit[] | []
 }
