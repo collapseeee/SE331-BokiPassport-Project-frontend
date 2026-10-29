@@ -110,14 +110,14 @@ const handleAddBenefit = () => {
                 <h3>{{ level.name }}</h3>
                 <div class="flex flex-row items-center gap-x-2">
                     <h5>Level Description: </h5>
-                    <FormInput :id="String(level.id)" label="" placeholder="Level Description" v-model="levelDescription" class="h-fit w-40 text-md py-0"/>
+                    <FormInput :id="'description-' + String(level.id)" label="" placeholder="Level Description" v-model="levelDescription" class="h-fit w-40 text-md py-0"/>
                 </div>
                 <FormError :errors="errors.description"></FormError>
             </div>
             <div class="flex flex-col gap-y-0">
                 <h3 class="text-end">Pass Criteria </h3>
                 <div class="flex flex-row items-center gap-x-2 justify-end">
-                    <FormInput :id="String(level.id)" type="number" label="" placeholder="Level Pass Criteria" v-model="levelPassCriteria" class="h-fit w-24 text-md py-0"/>
+                    <FormInput :id="'passCriteria-' + String(level.id)" type="number" label="" placeholder="Level Pass Criteria" v-model="levelPassCriteria" class="h-fit w-24 text-md py-0"/>
                     <h5 class="text-end">%</h5>
                 </div>
                 <FormError :errors="errors.passCriteria" />
@@ -128,7 +128,7 @@ const handleAddBenefit = () => {
         <div v-for="(benefit, index) in benefits" :key="benefit.key" class="flex flex-col">
             <div class="flex flex-row items-center justify-center bg-brand-dark-blue rounded-xl">
                 <span class="cursor-pointer flex items-center justify-center w-fit h-full px-3 rounded-l-xl font-semibold shrink-0 hover:scale-110 transition-all text-brand-gray" @click="handleDeleteBenefit(index)">X</span>
-                <FormInput :id="String(benefit.key)" label="" placeholder="Level Benefit Description" v-model="benefit.value.description" class="w-full"/>
+                <FormInput :id="String(benefit.value.id)" label="" placeholder="Level Benefit Description" v-model="benefit.value.description" class="w-full"/>
             </div>
             <!-- For empty benefit description input -->
             <FormError :errors="errors[`benefits[${index}].description`]" />
