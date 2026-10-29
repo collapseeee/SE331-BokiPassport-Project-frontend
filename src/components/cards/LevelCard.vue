@@ -62,7 +62,7 @@ onMounted(() => {
         BenefitService.getBenefitsByLevel(props.level.id)
             .then(res => {
                 setBenefits(res.data)
-                defaultBenefits.value = res.data
+                defaultBenefits.value = JSON.parse(JSON.stringify(res.data))
             })
     })
 })
@@ -71,8 +71,14 @@ const handleSave = () => {
 
 }
 
-const handleCancel = () => {
-
+const handleReset = () => {
+    resetForm({
+        values: {
+            description: props.level.description,
+            passCriteria: Number((props.level.passCriteria * 100).toFixed(0)),
+            benefits: defaultBenefits.value
+        }
+    })
 }
 
 const deletedBenefitIds = ref<number[]>([])
@@ -131,7 +137,7 @@ const handleAddBenefit = () => {
         <!-- For benefit description that is less than 1 -->
         <FormError :errors="benefits?.length === 0 ? errors.benefits : undefined" />
         <div class="flex flex-row gap-x-2 justify-between w-full mt-auto">
-            <Button @click="handleCancel" textColor="brand-black" bgColor="brand-white" label="Cancel" class="w-full"/>
+            <Button @click="handleReset" textColor="brand-black" bgColor="brand-white" label="Reset" class="w-full"/>
             <Button @click="handleSave" label="Save" class="w-full"/>
         </div>
     </div>
