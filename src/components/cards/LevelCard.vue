@@ -35,10 +35,18 @@ const handleCancel = () => {
 
 <template>
     <div class="flex flex-col gap-1.5 bg-brand-gray rounded-2xl p-5">
-        <h3>{{ level.name }}</h3>
-        <h5>{{ level.description }}</h5>
+        <div class="flex flex-row justify-between">
+            <div class="flex flex-col gap-y-0">
+                <h3>{{ level.name }}</h3>
+                <h5>{{ level.description }}</h5>
+            </div>
+            <div class="flex flex-col gap-y-0">
+                <h3>Pass Criteria: </h3>
+                <h5 class="text-end">{{ level.passCriteria }}</h5>
+            </div>
+        </div>
         <hr>
-        <p>Benefits</p>
+        <p class="font-semibold">Benefits:</p>
         <div>
             <FormInput v-for="benefit in benefits" :id="String(benefit.id)" label="" v-model="benefit.description" :key="String(benefit.id)"/>
         </div>
