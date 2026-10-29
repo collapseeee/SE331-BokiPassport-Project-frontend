@@ -56,7 +56,7 @@ const handleCancel = () => {
             <div class="flex flex-col gap-y-0">
                 <h3>Pass Criteria </h3>
                 <div class="flex flex-row items-center gap-x-2 justify-end">
-                    <FormInput :id="String(level.id)" label="" placeholder="Level Pass Criteria" v-model="levelPassCriteria" class="h-fit w-20 text-md py-0"/>
+                    <FormInput :id="String(level.id)" type="number" label="" placeholder="Level Pass Criteria" v-model="levelPassCriteria" class="h-fit w-24 text-md py-0"/>
                     <h5 class="text-end">%</h5>
                 </div>
             </div>
