@@ -7,7 +7,7 @@ import FormInput from '@/components/form/FormInput.vue'
 import PasswordInput from '@/components/form/FormPasswordInput.vue'
 import { useRouter } from 'vue-router';
 import * as yup from 'yup'
-import { useValidation } from '@/validation/useValidation'
+import { useForm, useField, useIsFormValid } from 'vee-validate'
 import { requiredString } from '@/validation/schemas'
 
 const authStore = useAuthStore()
@@ -19,13 +19,18 @@ const validationSchema = yup.object({
     password: requiredString('Password is required.'),
 })
 
-const { errors, handleSubmit, field, isValid } = useValidation(validationSchema, {
-    username: '',
-    password: '',
+const { errors, handleSubmit } = useForm({
+  validationSchema,
+  initialValues: { 
+      username: '', 
+      password: '' 
+    },
 })
 
-const { value: username } = field('username')
-const { value: password } = field('password')
+const isValid = useIsFormValid()
+
+const { value: username } = useField<string>('username')
+const { value: password } = useField<string>('password')
 
 const onSubmit = handleSubmit(async (values) => {
     try {
