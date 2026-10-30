@@ -9,7 +9,7 @@ import { useCourseStore } from '@/stores/course';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import * as yup from 'yup';
-import { useValidation } from '@/validation/useValidation';
+import { useField, useForm } from 'vee-validate';
 import { requiredString, oneOf, url } from '@/validation/schemas';
 import FormError from '@/components/form/FormError.vue';
 import courseService from '@/services/courseService';
@@ -35,17 +35,18 @@ const validationSchema = yup.object({
     level: oneOf(levels, 'Invalid level selected')
 })
 
-const { errors, handleSubmit, resetForm, field } = useValidation(validationSchema, {
-    name: '',
-    description: '',
-    videoUrl: '',
-    level: ''
+const { errors, handleSubmit, resetForm } = useForm({
+    validationSchema,
+    initialValues: {
+        name: '', description: '', videoUrl: '', level: ''
+    }
 })
+
 const courseId = ref<number | null>()
-const { value: name } = field('name')
-const { value: description } = field('description')
-const { value: videoUrl } = field('videoUrl')
-const { value: level } = field('level')
+const { value: name } = useField<string>('name')
+const { value: description } = useField<string>('description')
+const { value: videoUrl } = useField<string>('videoUrl')
+const { value: level } = useField<string>('level')
 const isModalOn = ref<boolean>(false)
 const closeModal = () => {
     isModalOn.value = false
