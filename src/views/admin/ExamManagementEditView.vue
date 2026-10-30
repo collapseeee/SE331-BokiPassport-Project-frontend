@@ -12,15 +12,16 @@ import ExamService from '@/services/ExamService';
 
 const loading = ref<boolean>(false);
 
+const currentQuestion = computed(() => questions.value[currentIndex.value]);
 const router = useRouter();
 const route = useRoute();
 const AdminExamManagement = 'AdminExamManagement';
 const examId = route.params.id as string;
 const examFormRef = ref()
 const questionFormRef = ref()
-const exmaFormValid = computed(() => examFormRef.value?.isValid?.value ?? false)
+const examFormValid = computed(() => examFormRef.value?.isValid?.value ?? false)
 const questionFormValid = computed(() => questionFormRef.value?.isValid?.value ?? false)
-const allValid = computed(() => exmaFormValid.value && (!currentQuestion.value || questionFormValid.value))
+const allValid = computed(() => examFormValid.value && (!currentQuestion.value || questionFormValid.value))
 
 // Pull data to store temporary for editing
 const examMeta = reactive<{ name: string; description: string; levelId: number | null }>({
@@ -32,7 +33,6 @@ const examMeta = reactive<{ name: string; description: string; levelId: number |
 const questions = ref<Question[]>([]);
 const currentIndex = ref<number>(0);
 
-const currentQuestion = computed(() => questions.value[currentIndex.value]);
 
 const newTempId = () => -(Date.now() + Math.floor(Math.random() * 1000));
 onMounted(async () => {

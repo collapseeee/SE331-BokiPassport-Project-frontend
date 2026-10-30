@@ -44,7 +44,7 @@ const hasCorrectChoice = computed(() =>
     model.value.answerChoices.some((c) => c.isCorrect));
 
 defineExpose({
-    isValid,
+    isValid: computed(() => isValid.value && hasCorrectChoice.value),
     hasCorrectChoice
 });
 
