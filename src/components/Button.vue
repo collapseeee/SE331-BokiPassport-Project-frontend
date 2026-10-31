@@ -41,7 +41,7 @@ const bgColorClass = computed(() => {
 })
 const textColorClass = props.textColor? `text-${props.textColor}` : 'text-white';
 const boldClass = props.isBold ? 'font-bold' : 'font-medium';
-const disableStyle = props.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer';
+const disableStyle = computed(() => props.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer');
 let paddingClass = 'px-4 py-2'
 if (props.leftArrow) paddingClass = 'py-2 pl-10 pr-4'
 if (props.rightArrow) paddingClass = 'py-2 pl-4 pr-10'

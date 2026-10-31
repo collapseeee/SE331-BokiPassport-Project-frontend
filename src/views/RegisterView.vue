@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { CircleUserRound, UserRound, MapPin } from '@lucide/vue'
 import * as yup from 'yup'
 import { useForm, useField } from 'vee-validate'
+import { personName, username as usernameSchema, password as passwordSchema, confirmPassword as confirmPasswordSchema } from '@/validation/schemas'
 import SubmitButton from '@/components/Button.vue'
 import FormInput from '@/components/form/FormInput.vue'
 import PasswordInput from '@/components/form/FormPasswordInput.vue'
@@ -19,27 +20,20 @@ const profilePhotos = ref<string[]>([])
 
 // Yup validation schema — custom error messages per field
 const validationSchema = yup.object({
-  firstName: yup.string().required('First name is required'),
-  lastName: yup.string().required('Last name is required'),
-  username: yup.string().required('Username is required').min(3, 'At least 3 characters'),
-  password: yup.string().required('Password is required').min(6, 'At least 6 characters'),
-  confirmPassword: yup
-    .string()
-    .required('Please confirm your password')
-    .oneOf([yup.ref('password')], 'Passwords must match'),
-  province: yup.string().required('Province is required'),
+  firstName: personName('First name'),
+  lastName: personName('Last name'),
+  province: personName('Province'),
+  username: usernameSchema(),
+  password: passwordSchema(),
+  confirmPassword: confirmPasswordSchema('password'),
 })
 
 // VeeValidate form handling
 const { errors, handleSubmit } = useForm({
   validationSchema,
   initialValues: {
-    firstName: '',
-    lastName: '',
-    username: '',
-    password: '',
-    confirmPassword: '',
-    province: '',
+    firstName: '', lastName: '', username: '',
+    password: '', confirmPassword: '', province: '',
   },
 })
 

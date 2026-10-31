@@ -3,7 +3,10 @@ import type { Question } from '@/types';
 import FormInput from '@/components/form/FormInput.vue';
 import FormRadio from '@/components/form/FormRadio.vue';
 import { Plus, Trash2 } from '@lucide/vue';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
+import * as yup from 'yup';
+import { useForm, useIsFormValid } from 'vee-validate';
+import FormError from '@/components/form/FormError.vue';
 
 const props = defineProps<{
     questionNumber: number
@@ -14,6 +17,38 @@ const emit = defineEmits<{
 }>();
 
 const model = defineModel<Question>({ required: true });
+
+const validationSchema = yup.object({
+    questionText: yup.string().required('Question text is required.'),
+    answerChoices: yup.array()
+        .min(2, 'At least 2 answer choices are required.')
+        .of(yup.object({
+            answerText: yup.string().required('Answer choice text is required.')
+        })).required()
+});
+
+const { errors, setValues } = useForm({
+    validationSchema,
+    initialValues: {
+        questionText: model.value.questionText,
+        answerChoices: model.value.answerChoices
+    },
+    validateOnMount: true
+})
+
+const isValid = useIsFormValid();
+
+watch(() => model.value, (val) => {
+    setValues(val);
+}, { deep: true });
+
+const hasCorrectChoice = computed(() => 
+    model.value.answerChoices.some((c) => c.isCorrect));
+
+defineExpose({
+    isValid: computed(() => isValid.value && hasCorrectChoice.value),
+    hasCorrectChoice
+});
 
 const addChoice = () => {
     const tempId = -(Date.now() + Math.floor(Math.random() * 1000));
@@ -63,6 +98,7 @@ const correctChoice = computed({
             v-model="model.questionText"
             textcolor="text-brand-white"
         />
+        <FormError :errors="errors.questionText"/>
 
         <!-- Answer Choices -->
         <div class="flex flex-col gap-3">
@@ -79,6 +115,7 @@ const correctChoice = computed({
                         v-model="choice.answerText"
                         textcolor="text-brand-white"
                     />
+                    <FormError :errors="errors[`answerChoices[${index}].answerText`]" />
                 </div>
                 <button
                     v-if="model.answerChoices.length > 2"
@@ -105,5 +142,8 @@ const correctChoice = computed({
             :choices="model.answerChoices"
             v-model="correctChoice"
         />
+        <div v-if="!hasCorrectChoice && model.answerChoices.length > 0">
+            <span class="text-brand-red text-xs">Select a correct answer</span>
+        </div>
     </div>
 </template>
