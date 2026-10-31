@@ -16,6 +16,7 @@ import {
   benefitSchema,
   serviceSchema,
 } from '@/validation/schemas';
+import { useLevelsStore } from '@/stores/levels.ts';
 
 const props = defineProps<{
     level: Level
@@ -24,6 +25,8 @@ const props = defineProps<{
 const emit = defineEmits<{
     (emit: 'saved', success: boolean, levelName: string): void
 }>();
+
+const levelStore = useLevelsStore();
 
 const validationSchema = yup.object({
   description: levelDescriptionSchema(),
@@ -116,11 +119,25 @@ const handleSave = handleSubmit(async (values) => {
         setServices(savedServicesRes.data)
         defaultServices.value = JSON.parse(JSON.stringify(savedServicesRes.data))
 
+        const passCriteriaDecimal = Number((values.passCriteria / 100).toFixed(2));
+
+        // Save current level
         await LevelService.saveLevel(props.level.id, {
             ...props.level,
             description: values.description,
-            passCriteria: Number((values.passCriteria/100).toFixed(2))
-        })
+            passCriteria: passCriteriaDecimal
+        });
+
+        // Sync to prerequisite level (level.id - 1) which the backend exam checks
+        if (props.level.id > 1) {
+            const prevLevel = levelStore.getLevelById(props.level.id - 1);
+            if (prevLevel) {
+                await LevelService.saveLevel(prevLevel.id, {
+                    ...prevLevel,
+                    passCriteria: passCriteriaDecimal
+                });
+            }
+        }
 
         emit('saved', true, props.level.name);
     } catch (error) {
@@ -200,6 +217,10 @@ const handleAddService = () => {
                     <h5 class="text-end">%</h5>
                 </div>
                 <FormError :errors="errors.passCriteria" />
+            </div>
+            <div v-else class="flex flex-col gap-y-3">
+                <h3 class="text-end">Pass Criteria </h3>
+                <p class="text-brand-dark-blue text-end whitespace-nowrap space-y-0">Default starting level (no exam criteria)</p>
             </div>
         </div>
         <hr>
