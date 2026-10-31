@@ -4,7 +4,7 @@ import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Level, Profile } from '@/types.ts';
 import BadgeService from '@/services/BadgeService.ts';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
 import Button from '../Button.vue';
@@ -18,6 +18,7 @@ import PostOperationModal from '@/components/modal/PostOperationModal.vue';
 
 
 const route = useRoute()
+const router = useRouter()
 const authStore = useAuthStore()
 const isChangeImageOpen = ref(false)
 const uploadedImages = ref<string[]>([])
@@ -236,6 +237,11 @@ onMounted(() => {
                     <p class="text-mist-50">Badges:</p>
                     <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges?.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>
+                <Button 
+                    label="Edit Profile" 
+                    :to="{ name: isAdmin ? 'AdminUserProfileEditView' : 'UserProfileEditView', params: { id: route.params.id } }" 
+                    :disabled="route.path.includes('edit')" 
+                />
             </div>
 
             <!-- Right side of card -->
