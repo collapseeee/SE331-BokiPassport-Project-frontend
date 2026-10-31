@@ -38,5 +38,12 @@ export default {
     },
     updateUserBadge(badgeId: number) {
         return apiClient.patch('/v1/users/me/badges/' + badgeId)
-    }
+    },
+    reactivateUser(id: number) {
+        return apiClient.patch(`/v1/users/${id}/reactivate`)
+    },
+    deactivateUser(id: number) {
+        return apiClient.patch(`/v1/users/${id}/deactivate`)
+    },
+
 }
