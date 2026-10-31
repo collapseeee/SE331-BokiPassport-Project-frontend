@@ -39,7 +39,7 @@ import nProgress from 'nprogress'
 import { useBadgesStore } from '@/stores/badges'
 import BadgeService from '@/services/BadgeService'
 
-const publicRoutes = new Set(['Home', 'Login', 'Register']);
+const publicRoutes = new Set(['Home', 'Login', 'Register', 'NotFound', 'NoPermission']);
 const userRoutes = new Set(['UserProfile', 'UserProfileBadgesView', 'UserProfileExamHistoryView', 'UserServices', 'CourseList', 'CourseView', 'ExamList', 'ExamView', 'ExamQuestionView']);
 const adminRoutes = new Set(['AdminView', 'AdminDashboard', 'AdminExamManagement', 'AdminExamManagementEdit', 'AdminUserManagement', 'AdminLevelManagement', 'AdminCourseManagement']);
 
