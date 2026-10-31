@@ -36,7 +36,7 @@ const isValid = useIsFormValid();
 
 // Keep form in sync with external model (defineModel)
 watch(() => model.value, (val) => {
-    setValues(val);
+    setValues(val, true);
 }, { deep: true });
 
 defineExpose({

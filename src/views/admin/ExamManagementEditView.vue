@@ -25,10 +25,18 @@ const route = useRoute();
 const AdminExamManagement = 'AdminExamManagement';
 const examId = route.params.id as string;
 const examFormRef = ref()
-const questionFormRef = ref()
 const examFormValid = computed(() => examFormRef.value?.isValid ?? false)
-const questionFormValid = computed(() => questionFormRef.value?.isValid ?? false)
-const allValid = computed(() => examFormValid.value && (!currentQuestion.value || questionFormValid.value))
+const areAllQuestionsValid = computed(() => {
+    if (questions.value.length === 0) return false;
+    return questions.value.every((q) => {
+        const hasText = Boolean(q.questionText?.trim());
+        const hasAtLeastTwoChoices = q.answerChoices && q.answerChoices.length >= 2;
+        const choicesFilled = q.answerChoices.every((c) => Boolean(c.answerText?.trim()));
+        const hasOneCorrect = q.answerChoices.some((c) => Boolean(c.isCorrect));
+        return hasText && hasAtLeastTwoChoices && choicesFilled && hasOneCorrect;
+    });
+});
+const allValid = computed(() => examFormValid.value && areAllQuestionsValid.value);
 
 // Pull data to store temporary for editing
 const examMeta = reactive<{ name: string; description: string; levelId: number | null }>({
@@ -100,6 +108,11 @@ const handleSave = async () => {
     if (!allValid.value) return;
 
     try {
+        if (deletedQuestionIds.value.length > 0) {
+            await QuestionService.deleteQuestions(deletedQuestionIds.value);
+            deletedQuestionIds.value = [];
+        }
+
         const questionsPayload: QuestionPayload[] = questions.value.map((q) => ({
             id: q.id && q.id > 0 ? q.id : null,
             questionText: q.questionText,
