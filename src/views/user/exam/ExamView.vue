@@ -75,11 +75,6 @@ const passCriteria = computed(() => Number(level.value?.passCriteria ?? 0));
 const isPassed = ref<boolean>(false);
 
 const passMark = computed(() => Math.round(passCriteria.value * questionLength.value));
-const passPercent = computed(() => 
-    questionLength.value > 0 
-        ? Math.round((passMark.value / questionLength.value) * 100) 
-        : 0
-);
 
 
 const handleSubmit = async (answers: Record<number, number>) => {
@@ -129,7 +124,7 @@ const colorClass: Record<number, string> = {
             <SubCardContainer class="col-span-4 lg:col-span-1">
                 <template #default>
                     <p class="font-bold">Pass Criteria:</p>
-                    <h1 class="text-6xl! w-full text-center" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`">{{ passMark }} / {{ questionLength }} ({{ passPercent }}%)</h1>
+                    <h1 class="text-6xl! w-full text-center" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`">{{ passMark }} / {{ questionLength }} (>{{ passCriteria * 100 }}%)</h1>
                     <p class="text-gray-800 pt-2">Correct Answer</p>
                 </template>
             </SubCardContainer>

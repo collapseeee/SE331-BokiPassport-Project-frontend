@@ -33,6 +33,7 @@ const colorMap: Record<string, string> = {
     'brand-black': 'bg-brand-black',
     'brand-green': 'bg-brand-green',
     'brand-orange': 'bg-brand-orange',
+    'transparent': ''
 }
 
 const bgColorClass = computed(() => {

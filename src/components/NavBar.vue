@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router';
 import { useLevelsStore } from '@/stores/levels.ts';
 import { getPresignedImageUrl } from '@/services/ImageService.ts';
 import { storeToRefs } from 'pinia';
+import { UserRound } from '@lucide/vue';
 
 const profileImage = ref<string | null>(null);
 
@@ -39,12 +40,15 @@ watch(authImage, async (newImage) => {
                 <Dropdown>
                     <template #trigger>
                         <div class="flex">
-                        <img class="w-12 h-12 rounded-full border border-brand-blue" :src="profileImage || authStore.image" alt="Profile" />
-                        <div class="flex flex-col px-2">
-                            <p class="text-brand-blue font-bold">{{ nameText }}</p>
-                            <p class="text-brand-blue font-medium text-sm">{{ levelText }}</p>
+                            <img v-if="profileImage" class="w-12 h-12 rounded-full border border-brand-blue" :src="profileImage || authStore.image" alt="Profile" />
+                            <div v-else class="flex justify-center items-center w-12 h-12 rounded-full border border-brand-blue bg-gray-300">
+                                <UserRound class="w-8 h-8 text-brand-dark-blue"/>
+                            </div>
+                            <div class="flex flex-col px-2">
+                                <p class="text-brand-blue font-bold">{{ nameText }}</p>
+                                <p class="text-brand-blue font-medium text-sm">{{ levelText }}</p>
+                            </div>
                         </div>
-                    </div>
                     </template>
                     <template #content>
                         <DropdownItem v-if="!authStore.isAdmin" label="Badges" toName="UserProfileBadgesView"></DropdownItem>

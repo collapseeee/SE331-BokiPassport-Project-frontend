@@ -36,19 +36,24 @@ const isValid = useIsFormValid();
 
 // Keep form in sync with external model (defineModel)
 watch(() => model.value, (val) => {
-    setValues(val);
+    setValues(val, true);
 }, { deep: true });
 
 defineExpose({
     isValid
 });
 
-const levelOptions = computed(() => levels.value.map((level) => level.name));
+const levelOptions = computed(() => 
+    levels.value.map((level) => `${level.name} and below`)
+);
 
 const selectedLevelName = computed({
-    get: () => levels.value.find((level) => level.id === model.value.levelId)?.name ?? '',
-    set: (name: string) => {
-        const matched = levels.value.find((level) => level.name === name);
+    get: () => {
+        const matched = levels.value.find((level) => level.id === model.value.levelId);
+        return matched ? `${matched.name} and below` : '';
+    },
+    set: (optionName: string) => {
+        const matched = levels.value.find((level) => `${level.name} and below` === optionName);
         model.value.levelId = matched ? matched.id : null;
         setValues({ levelId: model.value.levelId }, true);
     },
@@ -73,6 +78,7 @@ const selectedLevelName = computed({
             <div>
                 <label for="exam-target-level" class="block text-sm font-medium text-brand-white mb-1">Target Level</label>
                 <SelectInput
+                    id="exam-target-level"     
                     name="Target Level"
                     :options="levelOptions"
                     v-model="selectedLevelName"

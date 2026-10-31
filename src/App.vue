@@ -15,7 +15,7 @@ const authStore = useAuthStore()
       <UserSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
-          <RouterView/>
+          <RouterView class="min-h-screen" />
           <Footer/>
       </div>
   </div>
@@ -25,14 +25,14 @@ const authStore = useAuthStore()
       <AdminSideBar class="col-span-1"/>
       <div class="col-span-4 w-full flex flex-col">
           <NavBar/>
-          <RouterView/>
+          <RouterView class="min-h-screen" />
           <Footer/>
       </div>
   </div>
   <!-- The Home Page -->
   <div v-else-if="$route.name != 'Login' && $route.name != 'Register'">
     <NavBar/>
-    <RouterView/>
+    <RouterView class="min-h-screen" />
     <Footer/>
   </div>
   <!-- Login and Register Page -->
