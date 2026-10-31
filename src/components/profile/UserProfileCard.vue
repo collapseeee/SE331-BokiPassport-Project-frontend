@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Level, Profile } from '@/types.ts';
@@ -97,10 +97,7 @@ const isSuccess = ref(true)
 const operationMsg = ref('')
 const successMsg = ref('')
 
-onMounted(() => {
-    BadgeService.getBadges()
-        .then(res => badges.value = res.data)
-    
+const loadUserData = async () => {
     /* Fetch user data based on Admin's route or User's route */
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
@@ -123,7 +120,7 @@ onMounted(() => {
                 assignLevelBenefits(userLevel.value)
             })
     } else {
-        ;(async () => {
+        (async () => {
             if (authUser.value) {
                 const imageSrc = await getPresignedImageUrl(authUser.value.image)
                 user.value = {
@@ -145,7 +142,31 @@ onMounted(() => {
             }
         })()
     }
-})
+};
+
+onMounted(() => {
+    BadgeService.getBadges().then(res => badges.value = res.data);
+    loadUserData();
+});
+// Watch route changes: When navigating back to badges or history from edit, refresh user info immediately
+watch(
+    () => route.path,
+    (newPath) => {
+        if (!newPath.includes('edit')) {
+            loadUserData();
+        }
+    }
+);
+// Watch authUser changes for normal user profile updates
+watch(
+    () => authUser.value,
+    () => {
+        if (!route.params.id) {
+            loadUserData();
+        }
+    },
+    { deep: true }
+);
 </script>
 
 <template>
@@ -205,11 +226,14 @@ onMounted(() => {
                     <p class="text-mist-50">Badges:</p>
                     <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges?.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>
-                <Button 
-                    label="Edit Profile" 
-                    :to="{ name: isAdmin ? 'AdminUserProfileEditView' : 'UserProfileEditView', params: { id: route.params.id } }" 
-                    :disabled="route.path.includes('edit')" 
-                />
+                <div class="flex flex-row justify-center mt-2">
+                    <Button 
+                        label="Edit Profile" 
+                        :to="{ name: isAdmin ? 'AdminUserProfileEditView' : 'UserProfileEditView', params: { id: route.params.id } }" 
+                        :disabled="route.path.includes('edit')" 
+                        class="w-fit! px-8!"
+                    />
+                </div>
             </div>
 
             <!-- Right side of card -->
