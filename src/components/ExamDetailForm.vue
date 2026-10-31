@@ -43,12 +43,17 @@ defineExpose({
     isValid
 });
 
-const levelOptions = computed(() => levels.value.map((level) => level.name));
+const levelOptions = computed(() => 
+    levels.value.map((level) => `${level.name} and below`)
+);
 
 const selectedLevelName = computed({
-    get: () => levels.value.find((level) => level.id === model.value.levelId)?.name ?? '',
-    set: (name: string) => {
-        const matched = levels.value.find((level) => level.name === name);
+    get: () => {
+        const matched = levels.value.find((level) => level.id === model.value.levelId);
+        return matched ? `${matched.name} and below` : '';
+    },
+    set: (optionName: string) => {
+        const matched = levels.value.find((level) => `${level.name} and below` === optionName);
         model.value.levelId = matched ? matched.id : null;
         setValues({ levelId: model.value.levelId }, true);
     },
