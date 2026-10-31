@@ -77,13 +77,13 @@ const correctChoice = computed({
 <template>
     <div class=" rounded-2xl  flex flex-col gap-y-2">
         <div class="flex items-center justify-between">
-            <h5 class="flex items-center justify-center size-12 rounded-md bg-brand-blue text-brand-white text-sm font-bold">
+            <h5 class="flex items-center justify-center size-12 rounded-md bg-brand-blue text-brand-white text-sm font-bold px-4 w-fit">
                No. {{ props.questionNumber }}
             </h5>
             <!-- this is for delete unwanted question -->
             <button
                 type="button"
-                class="text-gray-500 hover:text-brand-red transition shrink-0 mb-2.5"
+                class="text-gray-500 hover:text-brand-red transition shrink-0 mb-2.5 hover:scale-105 cursor-pointer"
                 title="Delete question"
                 @click="emit('delete-question')"
             >
@@ -120,7 +120,7 @@ const correctChoice = computed({
                 <button
                     v-if="model.answerChoices.length > 2"
                     type="button"
-                    class="text-gray-500 hover:text-brand-red transition shrink-0 mb-2.5 bottom-0 right-2.5"
+                    class="text-gray-500 hover:text-brand-red transition shrink-0 mb-2.5 bottom-0 right-2.5 cursor-pointer hover:scale-105"
                     title="Remove choice"
                     @click="removeChoice(choice.id)"
                 >

@@ -85,7 +85,10 @@ const handleCancel = () => {
 };
 
 const handleSave = () => {
-    if (!allValid.value) return; // Prevent saving if the form is invalid
+    if (!allValid.value) {
+        // This is already blocked by disabled save btn
+        alert("Please make sure that your inputs are correct!")
+    }
     // Implement save logic here
     router.push({ name: AdminExamManagement });
 };
@@ -99,7 +102,7 @@ const handleSave = () => {
         
         <div v-else class="flex flex-col gap-y-2 p-12">
             <div class="flex items-center justify-between">
-                <AdminHeader title="Edit Exam" description=""/>
+                <AdminHeader class="pl-0!" title="Edit Exam" description=""/>
                 <div class="flex gap-3">
                     <Button label="Cancel" bg-color="brand-gray" text-color="brand-black" @click="handleCancel" />
                     <Button label="Save" :disabled="!allValid" @click="handleSave" />
@@ -115,13 +118,11 @@ const handleSave = () => {
             <div class="flex flex-col gap-y-2.5 border bg-brand-black border-brand-gray rounded-xl p-8">
                 <div class="flex items-center justify-between">
                     <h3 class="text-brand-white">Question Builder</h3>
-                    <button
+                    <Button
                         type="button"
-                        class="text-brand-blue font-semibold text-sm hover:opacity-75 transition"
                         @click="addQuestion"
-                    >
-                        + Add question
-                    </button>
+                        label="+ Add question"
+                    />
                 </div>
 
                 <QuestionBuilder
