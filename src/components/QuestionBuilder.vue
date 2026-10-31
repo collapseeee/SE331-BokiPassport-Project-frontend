@@ -75,11 +75,11 @@ const correctChoice = computed({
 </script>
 
 <template>
-    <div class=" rounded-2xl p-8 flex flex-col gap-6">
+    <div class=" rounded-2xl  flex flex-col gap-y-2">
         <div class="flex items-center justify-between">
-            <span class="flex items-center justify-center size-6 rounded-md bg-brand-blue text-brand-white text-sm font-bold">
-                {{ props.questionNumber }}
-            </span>
+            <h5 class="flex items-center justify-center size-12 rounded-md bg-brand-blue text-brand-white text-sm font-bold">
+               No. {{ props.questionNumber }}
+            </h5>
             <!-- this is for delete unwanted question -->
             <button
                 type="button"
@@ -105,7 +105,7 @@ const correctChoice = computed({
             <div
                 v-for="(choice, index) in model.answerChoices"
                 :key="choice.id"
-                class="flex items-end gap-2"
+                class="flex items-end gap-2 h-22"
             >
                 <div class="flex-1">
                     <FormInput
@@ -115,12 +115,12 @@ const correctChoice = computed({
                         v-model="choice.answerText"
                         textcolor="text-brand-white"
                     />
-                    <FormError :errors="errors[`answerChoices[${index}].answerText`]" />
+                    <FormError class="absolute" :errors="errors[`answerChoices[${index}].answerText`]" />
                 </div>
                 <button
                     v-if="model.answerChoices.length > 2"
                     type="button"
-                    class="text-gray-500 hover:text-brand-red transition shrink-0 mb-2.5"
+                    class="text-gray-500 hover:text-brand-red transition shrink-0 mb-2.5 bottom-0 right-2.5"
                     title="Remove choice"
                     @click="removeChoice(choice.id)"
                 >
@@ -129,7 +129,7 @@ const correctChoice = computed({
             </div>
             <button
                 type="button"
-                class="flex items-center gap-1 self-start text-brand-blue font-semibold text-sm hover:opacity-75 transition"
+                class="flex items-center gap-1 self-end text-brand-blue font-semibold text-sm hover:opacity-75 transition"
                 @click="addChoice"
             >
                 <Plus class="size-4" /> Add choice

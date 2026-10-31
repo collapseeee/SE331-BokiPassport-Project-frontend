@@ -4,7 +4,7 @@ import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Level, Profile } from '@/types.ts';
 import BadgeService from '@/services/BadgeService.ts';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
 import Button from '../Button.vue';
@@ -16,6 +16,7 @@ import ImageUpload from '@/components/form/ImageUpload.vue';
 import { UserRound } from '@lucide/vue';
 
 const route = useRoute()
+const router = useRouter()
 const authStore = useAuthStore()
 const isChangeImageOpen = ref(false)
 const uploadedImages = ref<string[]>([])
@@ -55,6 +56,36 @@ const handleProfileImageChange = async (filename: string) => {
     isChangeImageOpen.value = false
     uploadedImages.value = []
 }
+
+/* Handle reactivate/deactivate user */
+const isReactivateModalOpen = ref(false)
+const isDeactivateModalOpen = ref(false)
+const handleReactivateUser = async () => {
+    if (!user.value?.id) return
+    try {
+        await UserService.reactivateUser(user.value.id)
+        isReactivateModalOpen.value = false
+        isActive.value = true
+    } catch (err) {
+        console.error('Failed to reactivate the user', err)
+    }
+}
+
+const handleDeactivateUser = async () => {
+    if (!user.value?.id) return
+    try {
+        await UserService.deactivateUser(user.value.id)
+        isDeactivateModalOpen.value = false
+        isActive.value = false
+    } catch (err) {
+        console.error('Failed to reactivate the user', err)
+    }
+}
+
+const handleOpenReactivateModal = () => isReactivateModalOpen.value = true
+const handleOpenDeactivateModal = () => isDeactivateModalOpen.value = true
+const handleCloseReactivateModal = () => isReactivateModalOpen.value = false
+const handleCloseDeactivateModal = () => isDeactivateModalOpen.value = false
 
 watch(uploadedImages, (newImages: string[]) => {
     if (newImages.length > 0) {
@@ -114,10 +145,24 @@ onMounted(() => {
 </script>
 
 <template>
+    <ModalContainer v-model="isDeactivateModalOpen">
+        <h2>Deactivate User?</h2>
+        <div class="w-full flex flex-row gap-x-2 justify-between">
+            <Button @click="handleCloseDeactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
+            <Button @click="handleDeactivateUser" bg-color="brand-red" class="w-full!" label="Deactivate"/>
+        </div>
+    </ModalContainer>
+    <ModalContainer v-model="isReactivateModalOpen">
+        <h2>Re-activate User?</h2>
+        <div class="w-full flex flex-row gap-x-2 justify-between">
+            <Button @click="handleCloseReactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
+            <Button @click="handleReactivateUser" bg-color="brand-green" class="w-full!" label="Reactivate"/>
+        </div>
+    </ModalContainer>
     <CardContainer class="md:w-2/3 lg:w-1/2 relative">
         <div v-if="isAdmin" class="absolute left-0 top-0 p-5">
-            <Button v-if="isActive" bgColor="brand-red" label="Deactivate"/>
-            <Button v-else bgColor="brand-green" label="Re-activate"/>
+            <Button v-if="isActive" @click="handleOpenDeactivateModal" bgColor="brand-red" label="Deactivate"/>
+            <Button v-else @click="handleOpenReactivateModal" bgColor="brand-green" label="Re-activate"/>
         </div>
         <div class="flex flex-row gap-x-10 w-full relative">
             <!-- Left side of card -->
@@ -129,6 +174,7 @@ onMounted(() => {
                             <UserRound class="w-16 h-16 text-brand-dark-blue"/>
                         </div>
                         <button
+                            v-if="!isAdmin"
                             type="button"
                             @click="isChangeImageOpen = true"
                             class="absolute bottom-0 bg-brand-blue text-white text-xs px-1 py-1 rounded-full hover:bg-brand-dark-blue"

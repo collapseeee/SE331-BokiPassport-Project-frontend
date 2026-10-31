@@ -33,7 +33,8 @@ watch(() => currentPage.value, () => {
             <RouterLink :class="[{'pointer-events-none bg cursor-default text-brand-gray/20': currentPage <= 1}, buttonClass]" :to="{ query: { ...$route.query, page: currentPage - 1 } }">
                 <ChevronLeft class="size-8"/>
             </RouterLink>
-            <input maxlength="3" v-model="inputPage" @change="() => $router.push({ query: { ...$route.query, page: Number(inputPage) }})" class="p-2 size-10 items-center text-center truncate bg-white text-brand-black rounded-xl"/>
+            <label hidden for="page-input">{{  }}</label>
+            <input id="page-input" maxlength="3" v-model="inputPage" @change="() => $router.push({ query: { ...$route.query, page: Number(inputPage) }})" class="p-2 size-10 items-center text-center truncate bg-white text-brand-black rounded-xl"/>
             <RouterLink :class="[{'pointer-events-none bg cursor-default text-brand-gray/20': !hasNextPage}, buttonClass]" :to="{ query: { ...$route.query, page: Number(currentPage) + 1 } }">
                 <ChevronRight class="size-8"/>
             </RouterLink>
