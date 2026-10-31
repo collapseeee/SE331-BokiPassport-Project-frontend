@@ -2,9 +2,10 @@
 import { X, Check } from '@lucide/vue';
 import Button from '../Button.vue';
 import ModalContainer from './ModalContainer.vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 
 const props = defineProps<{
     operationMsg: string,
@@ -15,7 +16,8 @@ const props = defineProps<{
 const isModalOpen = defineModel<boolean>()
 const closeModal = () => {
     isModalOpen.value = false
-    router.go(0);
+    if (route.path.includes('question-management')) router.push( { name: 'AdminExamManagement' })
+    else router.go(0);
 }
 </script>
 
