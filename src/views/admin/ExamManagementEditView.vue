@@ -97,9 +97,9 @@ const handleSave = () => {
             <p class="text-brand-white">Loading exam...</p>
         </div>
         
-        <div v-else class="flex flex-col gap-16 py-16 px-16">
+        <div v-else class="flex flex-col gap-y-2 p-12">
             <div class="flex items-center justify-between">
-                <AdminHeader title="Edit Exam" description="" class="text-brand-blue"/>
+                <AdminHeader title="Edit Exam" description=""/>
                 <div class="flex gap-3">
                     <Button label="Cancel" bg-color="brand-gray" text-color="brand-black" @click="handleCancel" />
                     <Button label="Save" :disabled="!allValid" @click="handleSave" />
@@ -112,7 +112,7 @@ const handleSave = () => {
             <ExamDetailForm ref="examFormRef" v-model="examMeta" />
 
             <!-- Question Builder -->
-            <div class="flex flex-col gap-4 border bg-brand-black border-brand-gray rounded-2xl p-8">
+            <div class="flex flex-col gap-y-2.5 border bg-brand-black border-brand-gray rounded-xl p-8">
                 <div class="flex items-center justify-between">
                     <h3 class="text-brand-white">Question Builder</h3>
                     <button

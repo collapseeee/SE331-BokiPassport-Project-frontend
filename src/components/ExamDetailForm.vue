@@ -57,7 +57,7 @@ const selectedLevelName = computed({
 </script>
 
 <template>
-    <div class="bg-brand-black rounded-2xl p-8 flex flex-col gap-6">
+    <div class="bg-brand-black rounded-2xl p-8 flex flex-col gap-y-1">
         <h3 class="text-brand-white">Exam Details</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
