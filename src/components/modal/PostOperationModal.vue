@@ -5,6 +5,7 @@ import ModalContainer from './ModalContainer.vue';
 import { useRouter, type RouteLocationRaw } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 
 const props = defineProps<{
     operationMsg: string,
