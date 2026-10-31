@@ -8,8 +8,9 @@ import FormInput from '@/components/form/FormInput.vue';
 import { useCourseStore } from '@/stores/course';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
+import { useField, useForm } from 'vee-validate';
+import { requiredString, oneOf, url } from '@/validation/schemas';
 import FormError from '@/components/form/FormError.vue';
 import courseService from '@/services/courseService';
 import SelectInput from '@/components/select/SelectInput.vue';
@@ -28,21 +29,19 @@ const levels = levelStore.levels.map(level => level.id.toString())
 
 /* Add new course scripts */
 const validationSchema = yup.object({
-    name: yup.string().required(),
-    description: yup.string().required(),
-    videoUrl: yup.string().matches(/yout/, 'Must be a video link').url(),
-    level: yup.string().oneOf(levels, 'Invalid level selected').required()
+    name: requiredString(),
+    description: requiredString(),
+    videoUrl: url('Must be a valid video link'),
+    level: oneOf(levels, 'Invalid level selected')
 })
 
 const { errors, handleSubmit, resetForm } = useForm({
-    validationSchema: validationSchema,
+    validationSchema,
     initialValues: {
-        name: '',
-        description: '',
-        videoUrl: '',
-        level: ''
+        name: '', description: '', videoUrl: '', level: ''
     }
 })
+
 const courseId = ref<number | null>()
 const { value: name } = useField<string>('name')
 const { value: description } = useField<string>('description')

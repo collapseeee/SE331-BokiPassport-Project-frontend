@@ -12,10 +12,16 @@ import ExamService from '@/services/ExamService';
 
 const loading = ref<boolean>(false);
 
+const currentQuestion = computed(() => questions.value[currentIndex.value]);
 const router = useRouter();
 const route = useRoute();
 const AdminExamManagement = 'AdminExamManagement';
 const examId = route.params.id as string;
+const examFormRef = ref()
+const questionFormRef = ref()
+const examFormValid = computed(() => examFormRef.value?.isValid ?? false)
+const questionFormValid = computed(() => questionFormRef.value?.isValid ?? false)
+const allValid = computed(() => examFormValid.value && (!currentQuestion.value || questionFormValid.value))
 
 // Pull data to store temporary for editing
 const examMeta = reactive<{ name: string; description: string; levelId: number | null }>({
@@ -27,7 +33,6 @@ const examMeta = reactive<{ name: string; description: string; levelId: number |
 const questions = ref<Question[]>([]);
 const currentIndex = ref<number>(0);
 
-const currentQuestion = computed(() => questions.value[currentIndex.value]);
 
 const newTempId = () => -(Date.now() + Math.floor(Math.random() * 1000));
 onMounted(async () => {
@@ -38,7 +43,7 @@ onMounted(async () => {
         examMeta.description = exam.description;
         examMeta.levelId = exam.level.id;
 
-        const fetchedQuestions = await QuestionService.getQuestionsByExamId(Number(examId));
+        const fetchedQuestions = await QuestionService.getQuestionWithAnswerKey(Number(examId));
         questions.value = structuredClone(fetchedQuestions.data ?? []);
     } catch (error) {
         console.error('Error fetching exam:', error);
@@ -80,6 +85,7 @@ const handleCancel = () => {
 };
 
 const handleSave = () => {
+    if (!allValid.value) return; // Prevent saving if the form is invalid
     // Implement save logic here
     router.push({ name: AdminExamManagement });
 };
@@ -96,14 +102,14 @@ const handleSave = () => {
                 <AdminHeader title="Edit Exam" description="" class="text-brand-blue"/>
                 <div class="flex gap-3">
                     <Button label="Cancel" bg-color="brand-gray" text-color="brand-black" @click="handleCancel" />
-                    <Button label="Save" @click="handleSave" />
+                    <Button label="Save" :disabled="!allValid" @click="handleSave" />
                 </div>
             </div>
         
 
             <!-- Exam Details -->
             
-            <ExamDetailForm v-model="examMeta" />
+            <ExamDetailForm ref="examFormRef" v-model="examMeta" />
 
             <!-- Question Builder -->
             <div class="flex flex-col gap-4 border bg-brand-black border-brand-gray rounded-2xl p-8">
@@ -119,6 +125,7 @@ const handleSave = () => {
                 </div>
 
                 <QuestionBuilder
+                    ref="questionFormRef"
                     v-if="currentQuestion"
                     :key="currentQuestion.id"
                     v-model="currentQuestion"
