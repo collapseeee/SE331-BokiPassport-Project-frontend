@@ -43,7 +43,7 @@ onMounted(async () => {
         examMeta.description = exam.description;
         examMeta.levelId = exam.level.id;
 
-        const fetchedQuestions = await QuestionService.getQuestionsByExamId(Number(examId));
+        const fetchedQuestions = await QuestionService.getQuestionWithAnswerKey(Number(examId));
         questions.value = structuredClone(fetchedQuestions.data ?? []);
     } catch (error) {
         console.error('Error fetching exam:', error);

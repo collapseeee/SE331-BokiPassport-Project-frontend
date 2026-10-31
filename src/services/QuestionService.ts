@@ -5,6 +5,6 @@ export default {
       return apiClient.get(`/v1/exams/${examId}/questions`)
     },
     getQuestionWithAnswerKey(examId: number) {
-      return apiClient.get(`/v1/admin/exams/${examId}/questions`)
-    }
+      return apiClient.get(`/v1/exams/${examId}/questionsWithKey`)
+    },
 }
