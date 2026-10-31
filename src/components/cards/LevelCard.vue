@@ -10,6 +10,12 @@ import FormError from '../form/FormError.vue';
 import LevelService from '@/services/LevelService.ts';
 import { Trash2 } from '@lucide/vue';
 import ServiceService from '@/services/ServiceService.ts';
+import {
+  levelDescription as levelDescriptionSchema,
+  passCriteria as passCriteriaSchema,
+  benefitSchema,
+  serviceSchema,
+} from '@/validation/schemas';
 
 const props = defineProps<{
     level: Level
@@ -20,27 +26,16 @@ const emit = defineEmits<{
 }>();
 
 const validationSchema = yup.object({
-  description: yup
-    .string()
-    .max(20, 'Maximum 20 characters.')
-    .required('Level Description is required.'),
-  passCriteria: yup
-    .number()
-    .typeError("Level Pass Criteria is required.")
-    .required("Level Pass Criteria is required.")
-    .min(1, 'Minimum 1%')
-    .max(100, 'Maximum 100%'),
+  description: levelDescriptionSchema(),
+  passCriteria: passCriteriaSchema(),
   benefits: yup
     .array()
-    .of(
-        yup.object({
-            description: yup
-                .string()
-                .max(128, 'Maximum 128 characters.')
-                .required("Benefit Description is required.")
-        })
-    )
-    .min(1, "At least 1 benefit is required.")
+    .of(benefitSchema())
+    .min(1, 'At least 1 benefit is required.'),
+  services: yup
+    .array()
+    .of(serviceSchema())
+    .min(1, 'At least 1 service is required.'),
 });
 
 const { errors, handleSubmit, resetForm, validate } = useForm({
@@ -56,9 +51,9 @@ const { errors, handleSubmit, resetForm, validate } = useForm({
 const { value: levelDescription } = useField<string>('description');
 const { value: levelPassCriteria } = useField<string>('passCriteria');
 const { fields: benefits, push: addBenefit, replace: setBenefits, remove: removeBenefit } = useFieldArray<Benefit>('benefits');
-const { fields: services, push: addService, replace: setServices, remove: removeService } = useFieldArray<Service>('service');
+const { fields: services, push: addService, replace: setServices, remove: removeService } = useFieldArray<Service>('services');
 watch(
-    benefits,
+    [benefits, services],
     () => {
         validate()
     },
@@ -125,10 +120,12 @@ const handleReset = () => {
         values: {
             description: props.level.description,
             passCriteria: Number((props.level.passCriteria * 100).toFixed(0)),
-            benefits: defaultBenefits.value
+            benefits: defaultBenefits.value,
+            services: defaultServices.value
         }
     })
     deletedBenefitIds.value = []
+    deletedServiceIds.value = []
 }
 
 const handleDeleteBenefit = (index: number) => {
@@ -148,6 +145,24 @@ const handleAddBenefit = () => {
         description: "",
         level: props.level
     } as Benefit)
+}
+
+const handleDeleteService = (index: number) => {
+    const service = services.value[index]?.value;
+    // Send to deleted id for backend only existed service.
+    if (service && service.id > 0) {
+        deletedServiceIds.value.push(service.id);
+    }
+    removeService(index);
+}
+
+const handleAddService = () => {
+    const tempId = -(Date.now() + Math.floor(Math.random() * 1000))
+    addService({
+        id: tempId,
+        name: "",
+        level: props.level
+    } as Service)
 }
 
 </script>
@@ -205,20 +220,20 @@ const handleAddBenefit = () => {
             <div class="flex flex-row items-center justify-center bg-brand-dark-blue rounded-xl">
                 <button 
                     class="cursor-pointer flex items-center justify-center w-fit h-full px-3 rounded-l-xl font-semibold shrink-0 hover:scale-110 transition-all text-brand-gray hover:text-brand-red" 
-                    @click="handleDeleteBenefit(index)" 
+                    @click="handleDeleteService(index)" 
                     title="Delete this service."
                     type="button"
                 >
                     <Trash2 class="size-6" />
                 </button>
-                <FormInput :id="String(service.value.id)" label="" placeholder="Level Benefit Description" v-model="service.value.name" class="w-full"/>
+                <FormInput :id="String(service.value.id)" label="" placeholder="Level Service Description" v-model="service.value.name" class="w-full"/>
             </div>
             <!-- For empty benefit description input -->
-            <FormError :errors="errors[`benefits[${index}].description`]" />
+            <FormError :errors="errors[`services[${index}].name`]" />
         </div>
-        <Button @click.prevent="handleAddBenefit" label="Add new service +" textColor="brand-black" bgColor="transparent" class="place-self-center underline"/>
+        <Button @click.prevent="handleAddService" label="Add new service +" textColor="brand-black" bgColor="transparent" class="place-self-center underline"/>
         <!-- For benefit description that is less than 1 -->
-        <FormError :errors="benefits?.length === 0 ? errors.benefits : undefined" />
+        <FormError :errors="services?.length === 0 ? errors.services : undefined" />
         
 
         <!-- Buttons section -->

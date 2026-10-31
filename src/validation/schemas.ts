@@ -41,3 +41,36 @@ export const url = (message = 'Must be a valid URL') =>
 
 export const oneOf = (values: string[], message = 'Invalid selection') =>
   yup.string().oneOf(values, message).required('This field is required')
+
+export const levelDescription = (max = 20) =>
+  yup
+    .string()
+    .trim()
+    .required('Level Description is required.')
+    .max(max, `Maximum ${max} characters.`)
+
+export const passCriteria = () =>
+  yup
+    .number()
+    .typeError('Level Pass Criteria is required.')
+    .required('Level Pass Criteria is required.')
+    .min(1, 'Minimum 1%')
+    .max(100, 'Maximum 100%')
+
+export const benefitSchema = (max = 128) =>
+  yup.object({
+    description: yup
+      .string()
+      .trim()
+      .required('Benefit Description is required.')
+      .max(max, `Maximum ${max} characters.`),
+  })
+
+export const serviceSchema = (max = 128) =>
+  yup.object({
+    name: yup
+      .string()
+      .trim()
+      .required('Service name is required.')
+      .max(max, `Maximum ${max} characters.`),
+  })
