@@ -2,7 +2,7 @@
 import { X, Check } from '@lucide/vue';
 import Button from '../Button.vue';
 import ModalContainer from './ModalContainer.vue';
-import { useRouter } from 'vue-router';
+import { useRouter, type RouteLocationRaw } from 'vue-router';
 
 const router = useRouter();
 
@@ -10,12 +10,18 @@ const props = defineProps<{
     operationMsg: string,
     success: boolean,
     successMsg?: string
+    closeModalRouterPush?: RouteLocationRaw
 }>();
 
 const isModalOpen = defineModel<boolean>()
 const closeModal = () => {
     isModalOpen.value = false
-    router.go(0);
+    if (props.closeModalRouterPush) {
+        router.push(props.closeModalRouterPush);
+    }
+    else {
+        router.go(0);
+    }
 }
 </script>
 
