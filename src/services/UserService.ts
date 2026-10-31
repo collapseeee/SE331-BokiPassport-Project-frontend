@@ -45,5 +45,10 @@ export default {
     deactivateUser(id: number) {
         return apiClient.patch(`/v1/users/${id}/deactivate`)
     },
-
+    saveUserByUser(user: Partial<User>) {
+        return apiClient.put('/v1/users/me', user)
+    },
+    saveUserByAdmin(id: number, user: Partial<User>) {
+        return apiClient.put(`/v1/users/${id}`, user)
+    } 
 }
