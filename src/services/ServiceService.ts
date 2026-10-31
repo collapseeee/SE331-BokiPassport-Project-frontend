@@ -1,4 +1,4 @@
-import type { Service } from "@/types"
+import type { ServicePayload } from "@/types"
 import { apiClient } from "./apiClient"
 
 export default {
@@ -8,7 +8,7 @@ export default {
   getServiceByLevelId(levelId: number) {
     return apiClient.get(`/v1/services/level/${levelId}`)
   },
-  saveServices(levelId: number, services: Service[]) {
+  saveServices(levelId: number, services: (ServicePayload)[]) {
     return apiClient.put(`v1/levels/${levelId}/services`, services)
   },
   deleteServices(serviceIds: number[]) {

@@ -62,6 +62,12 @@ export interface Service {
   name: string
 }
 
+export interface ServicePayload {
+  id: number | null
+  level: Level
+  name: string
+}
+
 export interface ServicesState {
   services: Service[] | []
 }
