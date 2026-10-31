@@ -6,6 +6,7 @@ import { Plus, Trash2 } from '@lucide/vue';
 import { computed, watch } from 'vue';
 import * as yup from 'yup';
 import { useForm, useIsFormValid } from 'vee-validate';
+import FormError from '@/components/form/FormError.vue';
 
 const props = defineProps<{
     questionNumber: number
@@ -31,7 +32,8 @@ const { errors, setValues } = useForm({
     initialValues: {
         questionText: model.value.questionText,
         answerChoices: model.value.answerChoices
-    }
+    },
+    validateOnMount: true
 })
 
 const isValid = useIsFormValid();
