@@ -38,7 +38,7 @@ const validationSchema = yup.object({
     .min(1, 'At least 1 service is required.'),
 });
 
-const { errors, handleSubmit, resetForm, validate } = useForm({
+const { errors, handleSubmit, resetForm, validate, meta } = useForm({
     validationSchema,
     initialValues: {
         description: props.level.description ?? '',
@@ -193,7 +193,7 @@ const handleAddService = () => {
                 </div>
                 <FormError :errors="errors.description"></FormError>
             </div>
-            <div class="flex flex-col gap-y-0">
+            <div v-if="props.level.id !== 1" class="flex flex-col gap-y-0">
                 <h3 class="text-end">Pass Criteria </h3>
                 <div class="flex flex-row items-center gap-x-2 justify-end">
                     <FormInput :id="'passCriteria-' + String(level.id)" type="number" label="" placeholder="Level Pass Criteria" v-model="levelPassCriteria" class="h-fit w-24 text-md py-0"/>
@@ -253,7 +253,7 @@ const handleAddService = () => {
         <!-- Buttons section -->
         <div class="flex flex-row gap-x-2 justify-between w-full mt-auto">
             <Button @click="handleReset" textColor="brand-black" bgColor="brand-white" label="Reset" class="w-full"/>
-            <Button @click="handleSave" label="Save" class="w-full"/>
+            <Button @click="handleSave" :disabled="!meta.valid" label="Save" class="w-full"/>
         </div>
     </div>
 </template>
