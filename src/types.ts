@@ -12,6 +12,13 @@ export interface User {
   levels: Level[]
 }
 
+export interface UserPayload {
+  firstName: string
+  lastName: string
+  province: string
+  image?: string
+}
+
 export interface Profile {
   id: number
   firstName: string

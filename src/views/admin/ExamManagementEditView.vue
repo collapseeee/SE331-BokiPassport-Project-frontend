@@ -18,7 +18,6 @@ const isSuccess = ref(true);
 const operationMsg = ref('Exam Update');
 const successMsg = ref('');
 
-
 const currentQuestion = computed(() => questions.value[currentIndex.value]);
 const router = useRouter();
 const route = useRoute();
@@ -153,6 +152,7 @@ const handleSave = async () => {
             :operationMsg="operationMsg" 
             :success="isSuccess" 
             :successMsg="successMsg" 
+            :close-modal-router-push="{ name: 'AdminExamManagement' }"
         />
 
         <div v-if="loading" class="flex items-center justify-center py-16">

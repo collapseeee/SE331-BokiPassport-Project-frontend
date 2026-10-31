@@ -4,7 +4,7 @@ import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Level, Profile } from '@/types.ts';
 import BadgeService from '@/services/BadgeService.ts';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
 import Button from '../Button.vue';
@@ -12,15 +12,12 @@ import { storeToRefs } from 'pinia';
 import BenefitService from '@/services/BenefitService.ts';
 import { getPresignedImageUrl } from '@/services/ImageService.ts';
 import ModalContainer from '@/components/modal/ModalContainer.vue';
-import ImageUpload from '@/components/form/ImageUpload.vue';
 import { UserRound } from '@lucide/vue';
+import PostOperationModal from '@/components/modal/PostOperationModal.vue';
+
 
 const route = useRoute()
-const router = useRouter()
 const authStore = useAuthStore()
-const isChangeImageOpen = ref(false)
-const uploadedImages = ref<string[]>([])
-
 
 const { isAdmin, user: authUser } = storeToRefs(authStore)
 const benefits = ref<Benefit[] | null>(null)
@@ -44,19 +41,6 @@ const assignUserBadges = (userId: number) => {
     }
 }
 
-const handleProfileImageChange = async (filename: string) => {
-    await UserService.updateUserImage(filename)
-
-    authStore.updateProfileImage(filename)
-
-    if (user.value) {
-        user.value.image = await getPresignedImageUrl(filename)
-    }
-
-    isChangeImageOpen.value = false
-    uploadedImages.value = []
-}
-
 /* Handle reactivate/deactivate user */
 const isReactivateModalOpen = ref(false)
 const isDeactivateModalOpen = ref(false)
@@ -66,8 +50,18 @@ const handleReactivateUser = async () => {
         await UserService.reactivateUser(user.value.id)
         isReactivateModalOpen.value = false
         isActive.value = true
+
+        operationMsg.value = 'User Reactivation'
+        successMsg.value = `${user?.value.firstName} ${user?.value.lastName} reactivated successfully.`
+        isSuccess.value = true
+        isPostModalOpen.value = true
     } catch (err) {
         console.error('Failed to reactivate the user', err)
+
+        isReactivateModalOpen.value = false
+        operationMsg.value = 'User Reactivation'
+        isSuccess.value = false
+        isPostModalOpen.value = true
     }
 }
 
@@ -77,8 +71,18 @@ const handleDeactivateUser = async () => {
         await UserService.deactivateUser(user.value.id)
         isDeactivateModalOpen.value = false
         isActive.value = false
+
+        operationMsg.value = 'User Deactivation'
+        successMsg.value = `${user?.value.firstName} ${user?.value.lastName} deactivated successfully.`
+        isSuccess.value = true
+        isPostModalOpen.value = true
     } catch (err) {
         console.error('Failed to reactivate the user', err)
+
+        isReactivateModalOpen.value = false
+        operationMsg.value = 'User Deactivation'
+        isSuccess.value = false
+        isPostModalOpen.value = true
     }
 }
 
@@ -87,16 +91,13 @@ const handleOpenDeactivateModal = () => isDeactivateModalOpen.value = true
 const handleCloseReactivateModal = () => isReactivateModalOpen.value = false
 const handleCloseDeactivateModal = () => isDeactivateModalOpen.value = false
 
-watch(uploadedImages, (newImages: string[]) => {
-    if (newImages.length > 0) {
-        handleProfileImageChange(newImages[0]!)
-    }
-})
+// Post Operation Modal state
+const isPostModalOpen = ref(false)
+const isSuccess = ref(true)
+const operationMsg = ref('')
+const successMsg = ref('')
 
-onMounted(() => {
-    BadgeService.getBadges()
-        .then(res => badges.value = res.data)
-    
+const loadUserData = async () => {
     /* Fetch user data based on Admin's route or User's route */
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
@@ -119,7 +120,7 @@ onMounted(() => {
                 assignLevelBenefits(userLevel.value)
             })
     } else {
-        ;(async () => {
+        (async () => {
             if (authUser.value) {
                 const imageSrc = await getPresignedImageUrl(authUser.value.image)
                 user.value = {
@@ -141,22 +142,58 @@ onMounted(() => {
             }
         })()
     }
-})
+};
+
+onMounted(() => {
+    BadgeService.getBadges().then(res => badges.value = res.data);
+    loadUserData();
+});
+// Watch route changes: When navigating back to badges or history from edit, refresh user info immediately
+watch(
+    () => route.path,
+    (newPath) => {
+        if (!newPath.includes('edit')) {
+            loadUserData();
+        }
+    }
+);
+// Watch authUser changes for normal user profile updates
+watch(
+    () => authUser.value,
+    () => {
+        if (!route.params.id) {
+            loadUserData();
+        }
+    },
+    { deep: true }
+);
 </script>
 
 <template>
+    <PostOperationModal 
+        v-model="isPostModalOpen" 
+        :operationMsg="operationMsg" 
+        :success="isSuccess" 
+        :successMsg="successMsg" 
+    />
     <ModalContainer v-model="isDeactivateModalOpen">
-        <h2>Deactivate User?</h2>
-        <div class="w-full flex flex-row gap-x-2 justify-between">
-            <Button @click="handleCloseDeactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
-            <Button @click="handleDeactivateUser" bg-color="brand-red" class="w-full!" label="Deactivate"/>
+        <div class="flex flex-col gap-y-4">
+            <h2>Deactivate User?</h2>
+            <p>Are you sure that you want to deactivate {{ user?.firstName + ' ' + user?.lastName }}?</p>
+            <div class="w-full flex flex-row gap-x-2 justify-between">
+                <Button @click="handleCloseDeactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
+                <Button @click="handleDeactivateUser" bg-color="brand-red" class="w-full!" label="Deactivate"/>
+            </div>
         </div>
     </ModalContainer>
     <ModalContainer v-model="isReactivateModalOpen">
-        <h2>Re-activate User?</h2>
-        <div class="w-full flex flex-row gap-x-2 justify-between">
-            <Button @click="handleCloseReactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
-            <Button @click="handleReactivateUser" bg-color="brand-green" class="w-full!" label="Reactivate"/>
+        <div class="flex flex-col gap-y-4">
+            <h2>Re-activate User?</h2>
+            <p>Are you sure that you want to reactivate {{ user?.firstName + ' ' + user?.lastName }}?</p>
+            <div class="w-full flex flex-row gap-x-2 justify-between">
+                <Button @click="handleCloseReactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
+                <Button @click="handleReactivateUser" bg-color="brand-green" class="w-full!" label="Reactivate"/>
+            </div>
         </div>
     </ModalContainer>
     <CardContainer class="md:w-2/3 lg:w-1/2 relative">
@@ -173,14 +210,6 @@ onMounted(() => {
                         <div v-else class="flex justify-center items-center size-24 rounded-full border border-brand-blue bg-gray-300">
                             <UserRound class="w-16 h-16 text-brand-dark-blue"/>
                         </div>
-                        <button
-                            v-if="!isAdmin"
-                            type="button"
-                            @click="isChangeImageOpen = true"
-                            class="absolute bottom-0 bg-brand-blue text-white text-xs px-1 py-1 rounded-full hover:bg-brand-dark-blue"
-                        >
-                            Change Image
-                        </button>
                     </div>
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
                     <p class="text-md text-mist-800">{{ user?.username }}</p>
@@ -197,6 +226,14 @@ onMounted(() => {
                     <p class="text-mist-50">Badges:</p>
                     <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges?.length ?? 0 }} / {{ badges?.length }}</p>
                 </div>
+                <div class="flex flex-row justify-center mt-2">
+                    <Button 
+                        label="Edit Profile" 
+                        :to="{ name: isAdmin ? 'AdminUserProfileEditView' : 'UserProfileEditView', params: { id: route.params.id } }" 
+                        :disabled="route.path.includes('edit')" 
+                        class="w-fit! px-8!"
+                    />
+                </div>
             </div>
 
             <!-- Right side of card -->
@@ -205,8 +242,5 @@ onMounted(() => {
                 <BenefitItem :isEligible="true" v-for="benefit in benefits" :benefit="benefit" :key="benefit.id"/>
             </div>
         </div>
-        <ModalContainer v-model="isChangeImageOpen">
-            <ImageUpload v-model="uploadedImages" :max-size="2" @cancel="isChangeImageOpen = false" />
-        </ModalContainer>
     </CardContainer>
 </template>
