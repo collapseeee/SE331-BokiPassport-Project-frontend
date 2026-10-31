@@ -19,8 +19,8 @@ const AdminExamManagement = 'AdminExamManagement';
 const examId = route.params.id as string;
 const examFormRef = ref()
 const questionFormRef = ref()
-const examFormValid = computed(() => examFormRef.value?.isValid?.value ?? false)
-const questionFormValid = computed(() => questionFormRef.value?.isValid?.value ?? false)
+const examFormValid = computed(() => examFormRef.value?.isValid ?? false)
+const questionFormValid = computed(() => questionFormRef.value?.isValid ?? false)
 const allValid = computed(() => examFormValid.value && (!currentQuestion.value || questionFormValid.value))
 
 // Pull data to store temporary for editing

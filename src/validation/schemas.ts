@@ -19,7 +19,7 @@ export const username = (max = 20) =>
     .required('Username is required')
     .min(3, 'Username must be at least 3 characters')
     .max(max, `Username must be at most ${max} characters`)
-    .matches(/^[A-Za-z0-9_]+$/, 'Username may only contain letters, numbers, and underscores')
+    .matches(/^\w+$/, 'Username may only contain letters, numbers, and underscores')
 
 export const email = (message = 'Invalid email address') =>
   yup.string().email(message).required('Email is required')
@@ -39,5 +39,5 @@ export const confirmPassword = (
 export const url = (message = 'Must be a valid URL') =>
   yup.string().url(message).required('URL is required')
 
-export const oneOf = (values: any[], message = 'Invalid selection') =>
+export const oneOf = (values: string[], message = 'Invalid selection') =>
   yup.string().oneOf(values, message).required('This field is required')
