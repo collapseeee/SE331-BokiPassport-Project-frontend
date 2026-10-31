@@ -4,7 +4,7 @@ import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Level, Profile } from '@/types.ts';
 import BadgeService from '@/services/BadgeService.ts';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
 import Button from '../Button.vue';
@@ -14,9 +14,10 @@ import { getPresignedImageUrl } from '@/services/ImageService.ts';
 import ModalContainer from '@/components/modal/ModalContainer.vue';
 import ImageUpload from '@/components/form/ImageUpload.vue';
 import { UserRound } from '@lucide/vue';
+import PostOperationModal from '@/components/modal/PostOperationModal.vue';
+
 
 const route = useRoute()
-const router = useRouter()
 const authStore = useAuthStore()
 const isChangeImageOpen = ref(false)
 const uploadedImages = ref<string[]>([])
@@ -66,8 +67,18 @@ const handleReactivateUser = async () => {
         await UserService.reactivateUser(user.value.id)
         isReactivateModalOpen.value = false
         isActive.value = true
+
+        operationMsg.value = 'User Reactivation'
+        successMsg.value = `${user?.value.firstName} ${user?.value.lastName} reactivated successfully.`
+        isSuccess.value = true
+        isPostModalOpen.value = true
     } catch (err) {
         console.error('Failed to reactivate the user', err)
+
+        isReactivateModalOpen.value = false
+        operationMsg.value = 'User Reactivation'
+        isSuccess.value = false
+        isPostModalOpen.value = true
     }
 }
 
@@ -77,8 +88,18 @@ const handleDeactivateUser = async () => {
         await UserService.deactivateUser(user.value.id)
         isDeactivateModalOpen.value = false
         isActive.value = false
+
+        operationMsg.value = 'User Deactivation'
+        successMsg.value = `${user?.value.firstName} ${user?.value.lastName} deactivated successfully.`
+        isSuccess.value = true
+        isPostModalOpen.value = true
     } catch (err) {
         console.error('Failed to reactivate the user', err)
+
+        isReactivateModalOpen.value = false
+        operationMsg.value = 'User Deactivation'
+        isSuccess.value = false
+        isPostModalOpen.value = true
     }
 }
 
@@ -86,6 +107,12 @@ const handleOpenReactivateModal = () => isReactivateModalOpen.value = true
 const handleOpenDeactivateModal = () => isDeactivateModalOpen.value = true
 const handleCloseReactivateModal = () => isReactivateModalOpen.value = false
 const handleCloseDeactivateModal = () => isDeactivateModalOpen.value = false
+
+// Post Operation Modal state
+const isPostModalOpen = ref(false)
+const isSuccess = ref(true)
+const operationMsg = ref('')
+const successMsg = ref('')
 
 watch(uploadedImages, (newImages: string[]) => {
     if (newImages.length > 0) {
@@ -145,18 +172,30 @@ onMounted(() => {
 </script>
 
 <template>
+    <PostOperationModal 
+        v-model="isPostModalOpen" 
+        :operationMsg="operationMsg" 
+        :success="isSuccess" 
+        :successMsg="successMsg" 
+    />
     <ModalContainer v-model="isDeactivateModalOpen">
-        <h2>Deactivate User?</h2>
-        <div class="w-full flex flex-row gap-x-2 justify-between">
-            <Button @click="handleCloseDeactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
-            <Button @click="handleDeactivateUser" bg-color="brand-red" class="w-full!" label="Deactivate"/>
+        <div class="flex flex-col gap-y-4">
+            <h2>Deactivate User?</h2>
+            <p>Are you sure that you want to deactivate {{ user?.firstName + ' ' + user?.lastName }}?</p>
+            <div class="w-full flex flex-row gap-x-2 justify-between">
+                <Button @click="handleCloseDeactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
+                <Button @click="handleDeactivateUser" bg-color="brand-red" class="w-full!" label="Deactivate"/>
+            </div>
         </div>
     </ModalContainer>
     <ModalContainer v-model="isReactivateModalOpen">
-        <h2>Re-activate User?</h2>
-        <div class="w-full flex flex-row gap-x-2 justify-between">
-            <Button @click="handleCloseReactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
-            <Button @click="handleReactivateUser" bg-color="brand-green" class="w-full!" label="Reactivate"/>
+        <div class="flex flex-col gap-y-4">
+            <h2>Re-activate User?</h2>
+            <p>Are you sure that you want to reactivate {{ user?.firstName + ' ' + user?.lastName }}?</p>
+            <div class="w-full flex flex-row gap-x-2 justify-between">
+                <Button @click="handleCloseReactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
+                <Button @click="handleReactivateUser" bg-color="brand-green" class="w-full!" label="Reactivate"/>
+            </div>
         </div>
     </ModalContainer>
     <CardContainer class="md:w-2/3 lg:w-1/2 relative">
