@@ -8,7 +8,7 @@
 }
 
 @font-face {
-    font-family: 'raleway';
+    font-family: 'raleway', Arial, Helvetica, sans-serif;
     src: url('/fonts/Raleway-Italic-VariableFont_wght.ttf');
     font-style: italic;
     font-weight: 100 900;
