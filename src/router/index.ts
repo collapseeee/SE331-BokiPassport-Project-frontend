@@ -41,7 +41,7 @@ import BadgeService from '@/services/BadgeService'
 
 const publicRoutes = new Set(['Home', 'Login', 'Register', 'NotFound', 'NoPermission']);
 const userRoutes = new Set(['UserProfile', 'UserProfileBadgesView', 'UserProfileExamHistoryView', 'UserServices', 'CourseList', 'CourseView', 'ExamList', 'ExamView', 'ExamQuestionView']);
-const adminRoutes = new Set(['AdminView', 'AdminDashboard', 'AdminExamManagement', 'AdminExamManagementEdit', 'AdminUserManagement', 'AdminLevelManagement', 'AdminCourseManagement']);
+const adminRoutes = new Set(['AdminView', 'AdminDashboard', 'AdminExamManagement', 'AdminExamManagementEdit', 'AdminUserManagement', 'AdminLevelManagement', 'AdminCourseManagement', 'AdminUserManagementDetail', 'AdminUserProfileBadgesView', 'AdminUserProfileExamHistoryView',]);
 
 const isPublicRoute = (route: RouteLocation) => {
   return publicRoutes.has(route.name as string)
@@ -50,7 +50,7 @@ const isUserRoute = (route: RouteLocation) => {
   return userRoutes.has(route.name as string)
 };
 const isAdminRoute = (route: RouteLocation) => {
-  return adminRoutes.has(route.name as string)
+  return route.path.startsWith('/admin') || adminRoutes.has(route.name as string)
 };
 
 const router = createRouter({
