@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import CardContainer from '../cards/CardContainer.vue';
 import BenefitItem from './BenefitItem.vue';
 import type { Badge, Benefit, Level, Profile } from '@/types.ts';
 import BadgeService from '@/services/BadgeService.ts';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService.ts';
 import { useAuthStore } from '@/stores/auth.ts';
 import Button from '../Button.vue';
@@ -12,17 +12,12 @@ import { storeToRefs } from 'pinia';
 import BenefitService from '@/services/BenefitService.ts';
 import { getPresignedImageUrl } from '@/services/ImageService.ts';
 import ModalContainer from '@/components/modal/ModalContainer.vue';
-import ImageUpload from '@/components/form/ImageUpload.vue';
 import { UserRound } from '@lucide/vue';
 import PostOperationModal from '@/components/modal/PostOperationModal.vue';
 
 
 const route = useRoute()
-const router = useRouter()
 const authStore = useAuthStore()
-const isChangeImageOpen = ref(false)
-const uploadedImages = ref<string[]>([])
-
 
 const { isAdmin, user: authUser } = storeToRefs(authStore)
 const benefits = ref<Benefit[] | null>(null)
@@ -44,19 +39,6 @@ const assignUserBadges = (userId: number) => {
             .then(res => userBadges.value = res.data)
             .catch(() => userBadges.value = [])
     }
-}
-
-const handleProfileImageChange = async (filename: string) => {
-    await UserService.updateUserImage(filename)
-
-    authStore.updateProfileImage(filename)
-
-    if (user.value) {
-        user.value.image = await getPresignedImageUrl(filename)
-    }
-
-    isChangeImageOpen.value = false
-    uploadedImages.value = []
 }
 
 /* Handle reactivate/deactivate user */
@@ -114,12 +96,6 @@ const isPostModalOpen = ref(false)
 const isSuccess = ref(true)
 const operationMsg = ref('')
 const successMsg = ref('')
-
-watch(uploadedImages, (newImages: string[]) => {
-    if (newImages.length > 0) {
-        handleProfileImageChange(newImages[0]!)
-    }
-})
 
 onMounted(() => {
     BadgeService.getBadges()
@@ -213,14 +189,6 @@ onMounted(() => {
                         <div v-else class="flex justify-center items-center size-24 rounded-full border border-brand-blue bg-gray-300">
                             <UserRound class="w-16 h-16 text-brand-dark-blue"/>
                         </div>
-                        <button
-                            v-if="!isAdmin"
-                            type="button"
-                            @click="isChangeImageOpen = true"
-                            class="absolute bottom-0 bg-brand-blue text-white text-xs px-1 py-1 rounded-full hover:bg-brand-dark-blue"
-                        >
-                            Change Image
-                        </button>
                     </div>
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
                     <p class="text-md text-mist-800">{{ user?.username }}</p>
@@ -250,8 +218,5 @@ onMounted(() => {
                 <BenefitItem :isEligible="true" v-for="benefit in benefits" :benefit="benefit" :key="benefit.id"/>
             </div>
         </div>
-        <ModalContainer v-model="isChangeImageOpen">
-            <ImageUpload v-model="uploadedImages" :max-size="2" @cancel="isChangeImageOpen = false" />
-        </ModalContainer>
     </CardContainer>
 </template>
