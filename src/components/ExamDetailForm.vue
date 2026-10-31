@@ -48,6 +48,7 @@ const levelOptions = computed(() => levels.value.map((level) => level.name));
 const handleLevelChange = (levelName: string) => {
     const matched = levels.value.find((level) => level.name === levelName);
     model.value.levelId = matched ? matched.id : null;
+    setValues({ levelId: model.value.levelId }, true);
 };
 
 </script>
@@ -56,22 +57,22 @@ const handleLevelChange = (levelName: string) => {
     <div class="bg-brand-black rounded-2xl p-8 flex flex-col gap-6">
         <h3 class="text-brand-white">Exam Details</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormInput
-                id="exam-name"
-                label="Exam name"
-                placeholder="e.g., Basic AI"
-                v-model="model.name"
-                textcolor="text-brand-white"
-
-            />
-            <FormError :errors="errors.name"/>
-
+            <div>
+                <FormInput
+                    id="exam-name"
+                    label="Exam name"
+                    placeholder="e.g., Basic AI"
+                    v-model="model.name"
+                    textcolor="text-brand-white"
+                />
+                <FormError :errors="errors.name"/>
+            </div>
             <div>
                 <label for="exam-target-level" class="block text-sm font-medium text-brand-white mb-1">Target Level</label>
                 <SelectInput
                     name="Target Level"
                     :options="levelOptions"
-                    @change="handleLevelChange"
+                    @update-value="handleLevelChange"
                 />
                 <FormError :errors="errors.levelId"/>
             </div>
