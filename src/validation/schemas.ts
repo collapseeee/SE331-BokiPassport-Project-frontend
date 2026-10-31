@@ -3,6 +3,24 @@ import * as yup from 'yup'
 export const requiredString = (message = 'This field is required') =>
   yup.string().required(message)
 
+// Letters (incl. Thai combining marks), spaces, hyphens; must contain at least one letter.
+const personNamePattern = /^(?=.*\p{L})[\p{L}\p{M}\s-]+$/u
+
+export const personName = (label: string, max = 50) =>
+  yup.string()
+    .trim()
+    .required(`${label} is required`)
+    .max(max, `${label} must be at most ${max} characters`)
+    .matches(personNamePattern, `${label} may only contain letters, spaces, and hyphens`)
+
+export const username = (max = 20) =>
+  yup.string()
+    .trim()
+    .required('Username is required')
+    .min(3, 'Username must be at least 3 characters')
+    .max(max, `Username must be at most ${max} characters`)
+    .matches(/^[A-Za-z0-9_]+$/, 'Username may only contain letters, numbers, and underscores')
+
 export const email = (message = 'Invalid email address') =>
   yup.string().email(message).required('Email is required')
 
