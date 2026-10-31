@@ -2,11 +2,12 @@
 import type { Question } from '@/types';
 import FormInput from '@/components/form/FormInput.vue';
 import FormRadio from '@/components/form/FormRadio.vue';
-import { Plus, Trash2 } from '@lucide/vue';
+import { Trash2 } from '@lucide/vue';
 import { computed, watch } from 'vue';
 import * as yup from 'yup';
 import { useForm, useIsFormValid } from 'vee-validate';
 import FormError from '@/components/form/FormError.vue';
+import Button from './Button.vue';
 
 const props = defineProps<{
     questionNumber: number
@@ -101,7 +102,7 @@ const correctChoice = computed({
         <FormError :errors="errors.questionText"/>
 
         <!-- Answer Choices -->
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col">
             <div
                 v-for="(choice, index) in model.answerChoices"
                 :key="choice.id"
@@ -127,15 +128,13 @@ const correctChoice = computed({
                     <Trash2 class="size-6" />
                 </button>
             </div>
-            <button
+            <Button
                 type="button"
-                class="flex items-center gap-1 self-end text-brand-blue font-semibold text-sm hover:opacity-75 transition"
+                label="+ Add choice"
+                class=" my-8"
                 @click="addChoice"
-            >
-                <Plus class="size-4" /> Add choice
-            </button>
+            />
         </div>
-
         <FormRadio
             label="Select the correct answer"
             :question-index="props.questionNumber"
