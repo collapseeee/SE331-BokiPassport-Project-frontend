@@ -45,11 +45,14 @@ defineExpose({
 
 const levelOptions = computed(() => levels.value.map((level) => level.name));
 
-const handleLevelChange = (levelName: string) => {
-    const matched = levels.value.find((level) => level.name === levelName);
-    model.value.levelId = matched ? matched.id : null;
-    setValues({ levelId: model.value.levelId }, true);
-};
+const selectedLevelName = computed({
+    get: () => levels.value.find((level) => level.id === model.value.levelId)?.name ?? '',
+    set: (name: string) => {
+        const matched = levels.value.find((level) => level.name === name);
+        model.value.levelId = matched ? matched.id : null;
+        setValues({ levelId: model.value.levelId }, true);
+    },
+});
 
 </script>
 
@@ -72,7 +75,7 @@ const handleLevelChange = (levelName: string) => {
                 <SelectInput
                     name="Target Level"
                     :options="levelOptions"
-                    @update-value="handleLevelChange"
+                    v-model="selectedLevelName"
                 />
                 <FormError :errors="errors.levelId"/>
             </div>
