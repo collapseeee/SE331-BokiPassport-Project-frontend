@@ -13,6 +13,7 @@ import BenefitService from '@/services/BenefitService.ts';
 import { getPresignedImageUrl } from '@/services/ImageService.ts';
 import ModalContainer from '@/components/modal/ModalContainer.vue';
 import ImageUpload from '@/components/form/ImageUpload.vue';
+import { UserRound } from '@lucide/vue';
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -123,7 +124,10 @@ onMounted(() => {
             <div class="w-full flex flex-col gap-y-2">
                 <div class="flex flex-col items-center">
                     <div class="flex flex-col items-center relative">
-                        <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
+                        <img v-if="user?.image" class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
+                        <div v-else class="flex justify-center items-center size-24 rounded-full border border-brand-blue bg-gray-300">
+                            <UserRound class="w-16 h-16 text-brand-dark-blue"/>
+                        </div>
                         <button
                             type="button"
                             @click="isChangeImageOpen = true"
