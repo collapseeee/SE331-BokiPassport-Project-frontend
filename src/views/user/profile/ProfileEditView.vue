@@ -166,6 +166,7 @@ const onSubmit = handleSubmit(async (values) => {
             :operationMsg="operationMsg"
             :success="isSuccess"
             :successMsg="successMsg"
+            :close-modal-router-push="authStore.isAdmin ? { name: 'AdminUserManagementDetail', params: { id: route.params.id } } : { name: 'UserProfile' }"
         />
 
         <!-- Image Upload Modal -->
