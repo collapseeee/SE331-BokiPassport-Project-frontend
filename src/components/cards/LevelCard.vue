@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BenefitService from '@/services/BenefitService';
-import type { Benefit, BenefitPayload, Level, Service } from '@/types';
+import type { Benefit, BenefitPayload, Level, Service, ServicePayload } from '@/types';
 import { onMounted, ref, watchEffect, watch } from 'vue';
 import FormInput from '../form/FormInput.vue';
 import Button from '../Button.vue';
@@ -91,6 +91,10 @@ const handleSave = handleSubmit(async (values) => {
             await BenefitService.deleteBenefits(deletedBenefitIds.value);
             deletedBenefitIds.value = [];
         }
+        if (deletedServiceIds.value.length > 0) {
+            await ServiceService.deleteServices(deletedServiceIds.value);
+            deletedServiceIds.value = [];
+        }
 
         const benefitsPayload = values.benefits.map((b: BenefitPayload) => ({
             id: b.id && b.id > 0 ? b.id : null,
@@ -98,9 +102,19 @@ const handleSave = handleSubmit(async (values) => {
             level: props.level
         }))
 
+        const servicesPayload = values.services.map((s: ServicePayload) => ({
+            id: s.id && s.id > 0 ? s.id : null,
+            name: s.name,
+            level: props.level
+        }))
+
         const savedBenefitsRes = await BenefitService.saveBenefits(props.level.id, benefitsPayload)
         setBenefits(savedBenefitsRes.data)
         defaultBenefits.value = JSON.parse(JSON.stringify(savedBenefitsRes.data))
+
+        const savedServicesRes = await ServiceService.saveServices(props.level.id, servicesPayload)
+        setServices(savedServicesRes.data)
+        defaultServices.value = JSON.parse(JSON.stringify(savedServicesRes.data))
 
         await LevelService.saveLevel(props.level.id, {
             ...props.level,
