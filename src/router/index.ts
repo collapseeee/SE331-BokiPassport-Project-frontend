@@ -38,10 +38,11 @@ import NoPermissionView from '@/views/NoPermissionView.vue'
 import nProgress from 'nprogress'
 import { useBadgesStore } from '@/stores/badges'
 import BadgeService from '@/services/BadgeService'
+import UserProfileEditView from '@/views/user/profile/ProfileEditView.vue'
 
 const publicRoutes = new Set(['Home', 'Login', 'Register', 'NotFound', 'NoPermission']);
-const userRoutes = new Set(['UserProfile', 'UserProfileBadgesView', 'UserProfileExamHistoryView', 'UserServices', 'CourseList', 'CourseView', 'ExamList', 'ExamView', 'ExamQuestionView']);
-const adminRoutes = new Set(['AdminView', 'AdminDashboard', 'AdminExamManagement', 'AdminExamManagementEdit', 'AdminUserManagement', 'AdminLevelManagement', 'AdminCourseManagement', 'AdminUserManagementDetail', 'AdminUserProfileBadgesView', 'AdminUserProfileExamHistoryView',]);
+const userRoutes = new Set(['UserProfile', 'UserProfileBadgesView', 'UserProfileExamHistoryView', 'UserProfileEditView', 'UserServices', 'CourseList', 'CourseView', 'ExamList', 'ExamView', 'ExamQuestionView']);
+const adminRoutes = new Set(['AdminView', 'AdminDashboard', 'AdminExamManagement', 'AdminExamManagementEdit', 'AdminUserManagement', 'AdminUserProfileEditView', 'AdminLevelManagement', 'AdminCourseManagement', 'AdminUserManagementDetail', 'AdminUserProfileBadgesView', 'AdminUserProfileExamHistoryView',]);
 
 const isPublicRoute = (route: RouteLocation) => {
   return publicRoutes.has(route.name as string)
@@ -111,6 +112,11 @@ const router = createRouter({
           name: 'UserProfileExamHistoryView', 
           component: UserProfileExamHistoryView,
           props: route => ({ page: route.query.page ? Number(route.query.page) : 1 })
+        },
+        {
+          path: 'edit',
+          name: 'UserProfileEditView',
+          component: UserProfileEditView
         },
       ]
     },
@@ -215,6 +221,11 @@ const router = createRouter({
                   name: 'AdminUserProfileExamHistoryView', 
                   component: UserProfileExamHistoryView,
                   props: route => ({ page: route.query.page ? Number(route.query.page) : 1 })
+                },
+                {
+                  path: 'edit',
+                  name: 'AdminUserProfileEditView',
+                  component: UserProfileEditView,
                 },
               ]
             }
