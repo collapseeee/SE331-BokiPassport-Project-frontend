@@ -6,11 +6,18 @@ import { useRouter, useRoute } from 'vue-router';
 import ExamDetailForm from '@/components/ExamDetailForm.vue';
 import QuestionBuilder from '@/components/QuestionBuilder.vue';
 import QuestionService from '@/services/QuestionService';
-import type { Question } from '@/types';
+import type { Exam, Question, QuestionPayload } from '@/types';
 import ExamService from '@/services/ExamService';
+import PostOperationModal from '@/components/modal/PostOperationModal.vue';
 
 
 const loading = ref<boolean>(false);
+
+const isModalOpen = ref(false);
+const isSuccess = ref(true);
+const operationMsg = ref('Exam Update');
+const successMsg = ref('');
+
 
 const currentQuestion = computed(() => questions.value[currentIndex.value]);
 const router = useRouter();
@@ -65,13 +72,6 @@ const addQuestion = () => {
     currentIndex.value = questions.value.length - 1;
 };
 
-const deleteQuestion = () => {
-    questions.value.splice(currentIndex.value, 1);
-    if (currentIndex.value >= questions.value.length) {
-        currentIndex.value = Math.max(0, questions.value.length - 1);
-    }
-};
-
 const goPrevious = () => {
     if (currentIndex.value > 0) currentIndex.value--;
 };
@@ -84,18 +84,64 @@ const handleCancel = () => {
     router.push({ name: AdminExamManagement });
 };
 
-const handleSave = () => {
-    if (!allValid.value) {
-        // This is already blocked by disabled save btn
-        alert("Please make sure that your inputs are correct!")
+const deletedQuestionIds = ref<number[]>([]);
+const handleDeleteQuestion = () => {
+    const question = questions.value[currentIndex.value];
+    if (question && question.id > 0) {
+        deletedQuestionIds.value.push(question.id);
     }
-    // Implement save logic here
-    router.push({ name: AdminExamManagement });
+    questions.value.splice(currentIndex.value, 1);
+    if (currentIndex.value >= questions.value.length) {
+        currentIndex.value = Math.max(0, questions.value.length - 1);
+    }
+};
+
+const handleSave = async () => {
+    if (!allValid.value) return;
+
+    try {
+        const questionsPayload: QuestionPayload[] = questions.value.map((q) => ({
+            id: q.id && q.id > 0 ? q.id : null,
+            questionText: q.questionText,
+            answerChoices: q.answerChoices.map((c) => ({
+                id: c.id && c.id > 0 ? c.id : null,
+                answerText: c.answerText,
+                isCorrect: Boolean(c.isCorrect ?? false),
+            })),
+        }));
+
+        await ExamService.saveExam(Number(examId), {
+            id: Number(examId),
+            name: examMeta.name,
+            description: examMeta.description,
+            level: { id: examMeta.levelId }, // Only 
+            questionCount: questions.value.length,
+        } as Exam);
+
+        await QuestionService.saveQuestions(Number(examId), questionsPayload);
+
+        isSuccess.value = true;
+        operationMsg.value = 'Exam Update';
+        successMsg.value = `${examMeta.name} updated successfully.`;
+        isModalOpen.value = true;
+    } catch (error) {
+        console.error('Failed to save exam: ', error);
+        isSuccess.value = false;
+        operationMsg.value = 'Exam Update';
+        isModalOpen.value = true;
+    }
 };
 </script>
 
 <template>
     <div class="bg-brand-white min-h-screen">
+        <PostOperationModal
+            v-model="isModalOpen" 
+            :operationMsg="operationMsg" 
+            :success="isSuccess" 
+            :successMsg="successMsg" 
+        />
+
         <div v-if="loading" class="flex items-center justify-center py-16">
             <p class="text-brand-white">Loading exam...</p>
         </div>
@@ -131,7 +177,7 @@ const handleSave = () => {
                     :key="currentQuestion.id"
                     v-model="currentQuestion"
                     :question-number="currentIndex + 1"
-                    @delete-question="deleteQuestion"
+                    @delete-question="handleDeleteQuestion"
                 />
 
                 <p v-else class="text-brand-white text-center py-8">
