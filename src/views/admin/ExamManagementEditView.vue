@@ -48,7 +48,7 @@ const questions = ref<Question[]>([]);
 const currentIndex = ref<number>(0);
 
 
-const newTempId = () => -(Date.now() + Math.floor(Math.random() * 1000));
+const newTempId = () => -(Date.now());
 onMounted(async () => {
     try{
         const examRes = await ExamService.getExamById(Number(examId));
