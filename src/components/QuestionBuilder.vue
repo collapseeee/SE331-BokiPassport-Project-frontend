@@ -52,7 +52,7 @@ defineExpose({
 });
 
 const addChoice = () => {
-    const tempId = -(Date.now() + Math.floor(Math.random() * 1000));
+    const tempId = -(Date.now());
     model.value.answerChoices.push({
         id: tempId,
         answerText: '',
