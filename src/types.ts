@@ -177,3 +177,11 @@ export interface ExamSubmitResponse {
   isPassed: boolean
   awardedLevelId: number | null
 }
+
+export interface DashboardMetrics {
+  userCount: number;
+  levelCounts: { lvl1: number; lvl2: number; lvl3: number; lvl4: number };
+  activeUsers: number;
+  inactiveUsers: number;
+  courseCount: number;
+}

@@ -170,7 +170,7 @@ const handleDeleteBenefit = (index: number) => {
 
 const handleAddBenefit = () => {
     // Temporary assign id for benefit id, must be removed before send to backend.
-    const tempId = -(Date.now() + Math.floor(Math.random() * 1000))
+    const tempId = -(Date.now())
     addBenefit({
         id: tempId,
         description: "",
@@ -188,7 +188,7 @@ const handleDeleteService = (index: number) => {
 }
 
 const handleAddService = () => {
-    const tempId = -(Date.now() + Math.floor(Math.random() * 1000))
+    const tempId = -(Date.now())
     addService({
         id: tempId,
         name: "",

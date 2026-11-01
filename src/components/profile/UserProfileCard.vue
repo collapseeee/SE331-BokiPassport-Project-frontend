@@ -18,6 +18,8 @@ import PostOperationModal from '@/components/modal/PostOperationModal.vue';
 
 const route = useRoute()
 const authStore = useAuthStore()
+const isChangeImageOpen = ref(false)
+const uploadedImages = ref<string[]>([])
 
 const { isAdmin, user: authUser } = storeToRefs(authStore)
 const benefits = ref<Benefit[] | null>(null)
@@ -242,5 +244,8 @@ watch(
                 <BenefitItem :isEligible="true" v-for="benefit in benefits" :benefit="benefit" :key="benefit.id"/>
             </div>
         </div>
+        <ModalContainer v-model="isChangeImageOpen">
+            <ImageUpload v-model="uploadedImages" :max-size="2" @cancel="isChangeImageOpen = false" />
+        </ModalContainer>
     </CardContainer>
 </template>
