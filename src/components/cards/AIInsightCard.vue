@@ -33,7 +33,7 @@ const runAnalysis = async () => {
                 </div>
                 <div>
                     <h3 class="text-xl font-bold text-brand-black">BokiAI Executive Summary</h3>
-                    <p class="text-sm text-brand-black">Analyzed by Gemini 3.8 Flash.</p>
+                    <p class="text-sm text-brand-black">Analyzed by Gemini 3.5 Flash Lite.</p>
                 </div>
             </div>
             <Button
@@ -52,7 +52,7 @@ const runAnalysis = async () => {
             <div v-else class="flex items-center gap-2 text-md text-brand-black italic">
                 <span class="inline-block size-2 rounded-full bg-brand-blue animate-ping"></span>
                 Analyzing insight by Gemini...
-                <span class="text-gray-400">(This takes longer than 15 seconds)</span>
+                <span class="text-gray-400">(This might take longer than 5 seconds)</span>
             </div>
         </div>
     </div>

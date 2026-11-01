@@ -28,7 +28,7 @@ export const generateDashboardSummary = async (metrics: DashboardMetrics): Promi
 
     try {
         const interaction  = await ai.interactions.create({
-            model: "gemini-3.8-flash",
+            model: "gemini-3.5-flash-lite",
             input: prompt,
         });
         return interaction.output_text || 'Summary could not be generated at this time.';
