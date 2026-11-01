@@ -16,6 +16,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@google/genai": "^2.32.0",
     "@lucide/vue": "^1.31.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/nprogress": "^0.2.3",
@@ -23,12 +24,14 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "axios": "^1.19.0",
+    "chart.js": "^4.6.1",
     "media-icons": "^1.1.5",
     "nprogress": "^0.2.0",
     "pinia": "^4.0.2",
     "tailwindcss": "^4.3.3",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.40",
+    "vue-chartjs": "^5.3.4",
     "vue-router": "4.5.0",
     "yup": "^1.7.1"
   },
