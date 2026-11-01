@@ -10,7 +10,7 @@ withDefaults(
 </script>
 
 <template>
-    <main class="flex flex-col items-center justify-center h-full">
+    <main class="flex flex-col items-center justify-center h-full gap-y-4">
         <h2>Oops! The {{ resource }} you're looking for is not found</h2>
         <RouterLink class="text-brand-blue underline decoration-0" :to="{name: 'Home'}">Back to the home page</RouterLink>
     </main>

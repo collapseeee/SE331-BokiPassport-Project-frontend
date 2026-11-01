@@ -1,17 +1,17 @@
-import type { Exam } from "@/types"
+import type { Exam } from "@/types";
 import { apiClient } from "./apiClient"
 
 export default {
   getExams() {
-    return apiClient.get('/exams?_embed=questions')
+    return apiClient.get('/v1/exams')
   },
   getExamById(id: number) {
-    return apiClient.get(`/exams?_embed=questions`)
-    .then((res) => {
-      return res.data.find((exam: Exam) => String(exam.id) === String(id))
-    })
-    .catch((err) => {
-      console.error("Error occurs while get data: ", err)
-    })
+    return apiClient.get(`/v1/exams/${id}`)
+  },
+  submit(examId: number, answers: Record<number, number>) {
+    return apiClient.post(`/v1/exams/${examId}/submit`, { answers });
+  },
+  saveExam(examId: number, exam: Exam) {
+    return apiClient.put(`/v1/exams/${examId}`, exam)
   }
 }

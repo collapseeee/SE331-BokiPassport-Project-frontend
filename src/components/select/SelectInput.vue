@@ -1,33 +1,47 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import SelectInputItem from './SelectInputItem.vue';
 import { ChevronDown } from '@lucide/vue';
-defineProps<{
-    options: Array<string>
+import { computed, useId } from 'vue';
+interface SelectInputProps {
+    id?: string
+    label?: string
     name: string
-}>()
-const emit = defineEmits(['change'])
-const selectedValue = ref<string>('')
-
-const isOpen = ref<boolean>(false)
-const handleClick = () => {
-    isOpen.value = !isOpen.value
+    options: Array<string>
+    chooseAll?: boolean
 }
-const handleSelect = (newValue: string) => {
-    selectedValue.value = newValue
-    emit('change', newValue)
-}
+const autoId = useId()
+const props = withDefaults(defineProps<SelectInputProps>(), {
+    label: ''
+})
+const inputId = computed(() => props.id || autoId)
+const emit = defineEmits(['update-value'])
 
+const updateModelValue = () => {
+    emit('update-value', modelValue.value)
+}
+const modelValue = defineModel<string>()
 </script>
 
 <template>
-    <div class="bg-brand-white flex flex-col rounded-xl cursor-pointer relative" @click="handleClick">
-        <div class="flex flex-row w-full items-center text-md px-3 py-2 rounded-xl hover:bg-brand-fade-blue transition-colors truncate">
-            <p class="">{{ selectedValue !== '' ? selectedValue : `Select ${name}` }}</p>
-            <ChevronDown/>
-        </div>
-        <div class="absolute flex flex-col top-full" v-if="isOpen">
-            <SelectInputItem class="odd:bg-brand-gray even:bg-brand-white last:rounded-b-xl" :class="{ '!bg-brand-sky-blue font-bold' :selectedValue === option }" @select="handleSelect" v-for="option in options" :key="option" :name="option"/>
+    <div class="flex flex-col w-full max-w-64">
+        {{ props.label }}
+        <div class="relative w-full">
+            <select @change="updateModelValue"
+                :id="inputId"
+                class="bg-brand-white h-12 w-full pl-3 text-md
+                    appearance-none rounded-xl border border-gray-300 
+                    focus:border-brand-blue focus:outline-none transition-colors 
+                    truncate *:odd:bg-brand-gray *:last:rounded-2xl"
+                v-model="modelValue"
+                v-bind="$attrs"
+            >
+                <option v-if="chooseAll" value="" selected>All {{ name }}</option>
+                <option v-for="option in props.options" :key="option" :value="option">
+                    {{ option }}
+                </option>
+            </select>
+            <div class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 flex items-center">
+                <ChevronDown class="w-5 h-5" />
+            </div>
         </div>
     </div>
 </template>

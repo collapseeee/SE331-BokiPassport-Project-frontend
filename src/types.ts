@@ -1,34 +1,39 @@
-// Must match data in jsonserver
 
 export interface User {
   id: number
   firstName: string
   lastName: string
   province: string
-  imageUrl: string
+  image: string
   username: string
-  password: string
-  role: string // This may changed to Role interface later.
   isActive: boolean
-  levelId: string
-  userLevels: UserLevel
+  roles: string[]
+  badges: Badge[]
+  levels: Level[]
 }
 
-export interface UserResponse {
+export interface UserPayload {
+  firstName: string
+  lastName: string
+  province: string
+  image?: string
+}
+
+export interface Profile {
   id: number
   firstName: string
   lastName: string
   province: string
-  imageUrl: string
+  image: string
   username: string
-  password: string
-  role: string
-  isActive: boolean
-  userLevels: UserLevel[]
+  roles: string[]
+  badges: Badge[]
+  levels: Level[]
 }
 
-export interface UserState {
-  user: User | null
+export interface AuthToken {
+  accessToken: string
+  refreshToken: string
 }
 
 export interface Level {
@@ -38,13 +43,6 @@ export interface Level {
   passCriteria: number
 }
 
-export interface UserLevel {
-  id: number
-  createdAt: Date
-  userId: number
-  levelId: number
-}
-
 export interface LevelsState {
   levels: Level[] | []
 }
@@ -52,7 +50,13 @@ export interface LevelsState {
 export interface Benefit {
   id: number
   description: string
-  levelId: number
+  level: Level
+}
+
+export interface BenefitPayload {
+  id: number | null
+  description: string
+  level: Level
 }
 
 export interface BenefitsState {
@@ -61,7 +65,13 @@ export interface BenefitsState {
 
 export interface Service {
   id: number
-  levelId: number
+  level: Level
+  name: string
+}
+
+export interface ServicePayload {
+  id: number | null
+  level: Level
   name: string
 }
 
@@ -75,11 +85,8 @@ export interface Badge {
   description: string
 }
 
-export interface UserBadge {
-  id: number
-  earnedAt: Date
-  userId: string
-  badgeId: string
+export interface BadgeStates {
+  badges: Badge[] | []
 }
 
 export interface Course {
@@ -88,7 +95,14 @@ export interface Course {
   videoUrl: string
   name: string
   description: string
-  levelId: number
+  level: Level
+}
+
+export interface CourseRequest {
+  name: string
+  description: string
+  videoUrl: string
+  level: { id: number }
 }
 
 export interface CourseStates {
@@ -96,11 +110,11 @@ export interface CourseStates {
 }
 
 export interface Exam {
-  id: string
+  id: number
   name: string
   description: string
-  levelId: number
-  questions: Question[]
+  level: Level
+  questionCount: number
 }
 
 export interface ExamState {
@@ -112,15 +126,21 @@ export interface ExamHistory {
   createdAt: Date
   totalScore: number
   isPassed: boolean
-  examId: number
-  userId: number
+  name: string
+  description: string
+  level: string
 }
 
 export interface Question {
   id: number
   questionText: string
-  examId: number
   answerChoices: AnswerChoice[]
+}
+
+export interface QuestionPayload {
+  id: number | null
+  questionText: string
+  answerChoices: AnswerChoicePayload[]
 }
 
 export interface QuestionsState {
@@ -130,11 +150,30 @@ export interface QuestionsState {
 export interface AnswerChoice {
   id: number
   answerText: string
+  isCorrect?: boolean
+}
+
+export interface AnswerChoicePayload {
+  id: number | null
+  answerText: string
   isCorrect: boolean
-  questionId: number
 }
 
 export interface DashboardItem {
   key: string
   value: number
+}
+
+export interface UserSearchOption {
+  name: string
+  province: string
+  level: string
+}
+
+export interface ExamSubmitResponse {
+  examId: number
+  totalScore: number
+  maxScore: number
+  isPassed: boolean
+  awardedLevelId: number | null
 }

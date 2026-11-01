@@ -4,7 +4,7 @@ import NotFoundText from '@/components/NotFoundText.vue';
 import TableContainer from '@/components/table/TableContainer.vue';
 import UserService from '@/services/UserService';
 import Pagination from '@/components/Pagination.vue';
-import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
 import type { ExamHistory } from '@/types';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
@@ -12,7 +12,7 @@ const props = defineProps<{
     page: number
 }>()
 
-const userStore = useUserStore()
+const authStore = useAuthStore()
 const route = useRoute()
 
 const headers = ref<string[]>(['DATE', 'Exam Name', 'Score', 'Status'])
@@ -22,23 +22,25 @@ const totalExams = ref<number>(0)
 const currentItems = ref<number>(0)
 
 const assignExams = (id: number) => {
-    UserService.getPaginatedUserExams(id, props.page)
+    UserService.getExamHistories(id, props.page)
         .then(res => {
-            paginatedExam.value = res.data as ExamHistory[]
+            paginatedExam.value = res.data
             currentItems.value = res.data.length
+            const totalHeader = res.headers['x-total-count']
+            totalExams.value = totalHeader ? Number(totalHeader) : res.data.length
         })
-    UserService.getUserExams(id)
-        .then(res => {
-            totalExams.value = res.data.userExamHistories.length
+    
+        .catch(() => {
+            totalExams.value = 0
         })
 }
 
 onMounted(() => {
     watchEffect(() => {
-        if (route.name?.toString().startsWith('Admin')) {
+        if (authStore.isAdmin) {
             assignExams(Number(route.params.id))
         } else {
-            assignExams(userStore.id)
+            assignExams(authStore.id ?? 0)
         }
     })
 })

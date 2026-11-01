@@ -2,12 +2,12 @@ import { apiClient } from "./apiClient"
 
 export default {
     getBadges() {
-        return apiClient.get('badges')
+        return apiClient.get('/v1/badges')
     },
     getBadgeById(id: number) {
-        return apiClient.get(`badges/${id}`)
+        return apiClient.get(`/v1/badges/${id}`)
     },
     getBadgesByUserId(id: number) {
-        return apiClient.get(`users/${id}?_embed=userBadges`)
+        return apiClient.get(`/v1/badges/users/${id}`)
     }
 }

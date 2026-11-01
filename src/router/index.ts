@@ -22,7 +22,6 @@ import AdminUserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminLevelManagementView from '@/views/admin/LevelManagementView.vue'
 import AdminCourseManagementView from '@/views/admin/CourseManagementView.vue'
 import { useAuthStore } from '@/stores/auth'
-import { useUserStore } from '@/stores/user'
 import { useLevelsStore } from '@/stores/levels'
 import { useBenefitsStore } from '@/stores/benefits'
 import { useServicesStore } from '@/stores/services'
@@ -33,25 +32,26 @@ import { useExamStore } from '@/stores/exam'
 import ExamService from '@/services/ExamService'
 import QuestionService from '@/services/QuestionService'
 import { useQuestionStore } from '@/stores/questions'
-import BadgeService from '@/services/BadgeService'
-import type { Badge, UserBadge } from '@/types'
 import courseService from '@/services/courseService'
 import { useCourseStore } from '@/stores/course'
 import NoPermissionView from '@/views/NoPermissionView.vue'
 import nProgress from 'nprogress'
+import { useBadgesStore } from '@/stores/badges'
+import BadgeService from '@/services/BadgeService'
+import UserProfileEditView from '@/views/user/profile/ProfileEditView.vue'
 
-const publicRoutes = ['Home', 'Login', 'Register'];
-const userRoutes = ['UserProfile', 'UserProfileBadgesView', 'UserProfileExamHistoryView', 'UserServices', 'CourseList', 'CourseView', 'ExamList', 'ExamView', 'ExamQuestionView'];
-const adminRoutes = ['AdminView', 'AdminDashboard', 'AdminExamManagement', 'AdminExamManagementEdit', 'AdminUserManagement', 'AdminLevelManagement', 'AdminCourseManagement'];
+const publicRoutes = new Set(['Home', 'Login', 'Register', 'NotFound', 'NoPermission']);
+const userRoutes = new Set(['UserProfile', 'UserProfileBadgesView', 'UserProfileExamHistoryView', 'UserProfileEditView', 'UserServices', 'CourseList', 'CourseView', 'ExamList', 'ExamView', 'ExamQuestionView']);
+const adminRoutes = new Set(['AdminView', 'AdminDashboard', 'AdminExamManagement', 'AdminExamManagementEdit', 'AdminUserManagement', 'AdminUserProfileEditView', 'AdminLevelManagement', 'AdminCourseManagement', 'AdminUserManagementDetail', 'AdminUserProfileBadgesView', 'AdminUserProfileExamHistoryView',]);
 
 const isPublicRoute = (route: RouteLocation) => {
-  return publicRoutes.includes(route.name as string)
+  return publicRoutes.has(route.name as string)
 };
 const isUserRoute = (route: RouteLocation) => {
-  return userRoutes.includes(route.name as string)
+  return userRoutes.has(route.name as string)
 };
 const isAdminRoute = (route: RouteLocation) => {
-  return adminRoutes.includes(route.name as string)
+  return route.path.startsWith('/admin') || adminRoutes.has(route.name as string)
 };
 
 const router = createRouter({
@@ -63,9 +63,8 @@ const router = createRouter({
       component: HomeView,
       beforeEnter: () => {
         const authStore = useAuthStore()
-        const userStore = useUserStore()
-        if (authStore.isAuthenticated()) {
-          if (userStore.role === 'ADMIN') {
+        if (authStore.isAuthenticated) {
+          if (authStore.isAdmin) {
             return { name: 'AdminView' }
           }
           return { name: 'UserProfile' }
@@ -78,9 +77,8 @@ const router = createRouter({
       component: LoginView,
       beforeEnter: () => {
         const authStore = useAuthStore()
-        const userStore = useUserStore()
-        if (authStore.isAuthenticated()) {
-          if (userStore.role === 'ADMIN') {
+        if (authStore.isAuthenticated) {
+          if (authStore.isAdmin) {
             return { name: 'AdminView' }
           }
           return { name: 'UserProfile' }
@@ -92,9 +90,8 @@ const router = createRouter({
       component: RegisterView,
       beforeEnter: () => {
         const authStore = useAuthStore()
-        const userStore = useUserStore()
-        if (authStore.isAuthenticated()) {
-          if (userStore.role === 'ADMIN') {
+        if (authStore.isAuthenticated) {
+          if (authStore.isAdmin) {
             return { name: 'AdminView' }
           }
           return { name: 'UserProfile' }
@@ -110,20 +107,16 @@ const router = createRouter({
         { path: 'badges', 
           name: 'UserProfileBadgesView', 
           component: UserProfileBadgesView,
-          beforeEnter: async route => {
-            const badges = await BadgeService.getBadgesByUserId(useUserStore().id)
-            route.meta.userBadges = await Promise.all(
-              badges.data.userBadges.map((userBadge: UserBadge) =>
-                BadgeService.getBadgeById(Number(userBadge.badgeId)).then(res => res.data)
-              )
-            )
-          },
-          props: route => ({ badges: (route.meta.userBadges as Badge[]) ?? null })
         },
         { path: 'history', 
           name: 'UserProfileExamHistoryView', 
           component: UserProfileExamHistoryView,
           props: route => ({ page: route.query.page ? Number(route.query.page) : 1 })
+        },
+        {
+          path: 'edit',
+          name: 'UserProfileEditView',
+          component: UserProfileEditView
         },
       ]
     },
@@ -168,17 +161,24 @@ const router = createRouter({
         const examStore = useExamStore();
         const questionStore = useQuestionStore();
         const examRes = await ExamService.getExamById(Number(to.params.id))
-        if (!examRes) {
+        if (!examRes?.data) {
           return { name: 'NotFound', params: { catchAll: '404' }, query: { resource: 'exam' } }
         }
-        const userStore = useUserStore();
-        const userLevel = userStore.level;
-        if (examRes.levelId > Number(userLevel)){
+        const authStore = useAuthStore();
+        const userLevel = authStore.level;
+        if (examRes.data.level.id > Number(userLevel)){
           return { name: 'NoPermission', query: { role: 'User with lower level' } }
         }
-        const questionsRes = await QuestionService.getQuestionsByExamId(Number(to.params.id))
-        examStore.updateExam(examRes);
-        questionStore.updateQuestions(questionsRes);
+        try {
+          const questionsRes = await QuestionService.getQuestionsByExamId(Number(to.params.id))
+          examStore.updateExam(examRes.data);
+          questionStore.updateQuestions(questionsRes.data);
+        } catch (err: unknown) {
+          if ((err as { response?: { status?: number } })?.response?.status === 403) {
+            return { name: 'NoPermission', query: { role: 'User with lower level' } }
+          }
+          throw err
+        }
       }
     },
     {
@@ -216,21 +216,16 @@ const router = createRouter({
                 { path: 'badges', 
                   name: 'AdminUserProfileBadgesView', 
                   component: UserProfileBadgesView,
-                  beforeEnter: async route => {
-                    const badges = await BadgeService.getBadgesByUserId(Number(route.params.id))
-                    route.meta.userBadges = await Promise.all(
-                      badges.data.userBadges.map((userBadge: UserBadge) =>
-                        BadgeService.getBadgeById(Number(userBadge.badgeId))
-                          .then(res => res.data)
-                      )
-                    )
-                  },
-                  props: route => ({ badges: (route.meta.userBadges as Badge[]) ?? null })
                 },
                 { path: 'history', 
                   name: 'AdminUserProfileExamHistoryView', 
                   component: UserProfileExamHistoryView,
                   props: route => ({ page: route.query.page ? Number(route.query.page) : 1 })
+                },
+                {
+                  path: 'edit',
+                  name: 'AdminUserProfileEditView',
+                  component: UserProfileEditView,
                 },
               ]
             }
@@ -247,8 +242,9 @@ const router = createRouter({
           component: AdminCourseManagementView,
           beforeEnter: () => {
             const courseStore = useCourseStore()
-            courseService.getCourses()
+            void courseService.getCourses()
               .then(res => courseStore.courses = res.data)
+              .catch(error => console.error('Failed to load courses:', error))
           }
         }
       ]
@@ -278,29 +274,31 @@ const router = createRouter({
 router.beforeEach(async to => {
   nProgress.start();
   const authStore = useAuthStore()
-  if (!authStore.isAuthenticated() && !isPublicRoute(to)) {
+  if (!authStore.isAuthenticated && !isPublicRoute(to)) {
     return { name: 'Home' }
   }
-  const userStore = useUserStore();
-  const userRole = userStore.role.charAt(0).toUpperCase() + userStore.role.slice(1).toLowerCase();
-  if (isUserRoute(to) && userRole !== 'User') {
+  const userRole = authStore.isAdmin ? 'Admin' : 'User';
+  if (isUserRoute(to) && !authStore.isUser) {
     return { name: 'NoPermission', query: { role: userRole } }
   }
-  if (isAdminRoute(to) && userRole !== 'Admin') {
+  if (isAdminRoute(to) && !authStore.isAdmin) {
     return { name: 'NoPermission', query: { role: userRole } }
   }
-  if (authStore.isAuthenticated() && !isPublicRoute(to)) {
+  if (authStore.isAuthenticated && !isPublicRoute(to)) {
     const servicesStore = useServicesStore();
     const levelStore = useLevelsStore();
     const benefitStore = useBenefitsStore();
-    const [servicesRes, levelsRes, benefitsRes] = await Promise.all([
+    const badgesStore = useBadgesStore()
+    const [servicesRes, levelsRes, benefitsRes, badgesRes] = await Promise.all([
             ServicesService.getServices(),
             LevelService.getLevels(),
-            BenefitService.getBenefits()
+            BenefitService.getBenefits(),
+            BadgeService.getBadgesByUserId(authStore.id ?? 0)
         ]);
     servicesStore.updateServices(servicesRes.data);
     levelStore.updateLevels(levelsRes.data);
     benefitStore.updateBenefits(benefitsRes.data);
+    badgesStore.updateBadges(badgesRes.data)
   }
 })
 

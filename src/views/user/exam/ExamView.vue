@@ -4,12 +4,20 @@ import ExamResultModal from '@/components/modal/ExamResultModal.vue';
 import { useExamStore } from '@/stores/exam';
 import { useLevelsStore } from '@/stores/levels';
 import { storeToRefs } from 'pinia';
-import { ref, computed, onBeforeUnmount } from 'vue';
+import { ref, computed, onBeforeUnmount, onMounted } from 'vue';
 import { Brain } from '@lucide/vue';
 import Button from '@/components/Button.vue';
-import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
+import ExamService from '@/services/ExamService';
+import UserService from '@/services/UserService';
+import type { Badge } from '@/types';
+import { useRoute } from 'vue-router';
+import BadgeService from '@/services/BadgeService';
+import { useBadgesStore } from '@/stores/badges';
 
-const userStore = useUserStore();
+const route = useRoute()
+const authStore = useAuthStore();
+const badgesStore = useBadgesStore()
 const timeLimitInSecond = 600; // Unit = Second.
 const isModalOpen = ref<boolean>(false);
 
@@ -45,6 +53,14 @@ const stopTimer = () => {
 };
 
 const userScore = ref<number>(0);
+const badge = ref<Badge | null>(null)
+
+onMounted(() => {
+    if (route.params.id) {
+        BadgeService.getBadgeById(Number(route.params.id) + 2)
+            .then(res => badge.value = res.data)
+    }
+})
 
 onBeforeUnmount(() => {
     stopTimer();
@@ -53,23 +69,28 @@ onBeforeUnmount(() => {
 const examStore = useExamStore();
 const levelStore = useLevelsStore();
 const { exam } = storeToRefs(examStore);
-const level = computed(() => levelStore.getLevelById(Number(exam.value!.levelId) + 1));
-const passCriteria = computed(() => Number(level.value!.passCriteria));
-const questionLength = computed(() => exam.value!.questions.length);
-const isPassed = computed(() => {
-    return userScore.value >= Math.round(passCriteria.value * questionLength.value);
-});
-const updateUserLevel = () => {
-    if (isPassed.value) {
-        userStore.updateUserLevel(Number(exam.value!.levelId) + 1);
-    }
-};
+const level = computed(() => levelStore.getLevelById(Number(exam.value!.level.id) + 1));
+const questionLength = ref<number>(exam.value?.questionCount ?? 0);
+const passCriteria = computed(() => Number(level.value?.passCriteria ?? 0));
+const isPassed = ref<boolean>(false);
 
-const handleSubmit = (score: number = 0) => {
-    userScore.value = score;
+const passMark = computed(() => Math.round(passCriteria.value * questionLength.value));
+
+
+const handleSubmit = async (answers: Record<number, number>) => {
     stopTimer();
-    updateUserLevel();
+    const { data } = await ExamService.submit(exam.value!.id, answers);
+    userScore.value = data.totalScore;
+    questionLength.value = data.maxScore;
+    isPassed.value = data.isPassed;
+    if (data.awardedLevelId && authStore.id !== null) {
+        const { data: profileRes } = await UserService.getUser(authStore.id);
+        authStore.user = profileRes;
+        UserService.updateUserBadge(exam.value!.level.id + 2)
+    }
+    if (!isPassed.value && !badgesStore.isEarned(7)) UserService.updateUserBadge(7)
     isModalOpen.value = true;
+
 };
 
 const colorClass: Record<number, string> = {
@@ -84,6 +105,7 @@ const colorClass: Record<number, string> = {
         :total-score="userScore"
         :max-score="questionLength"
         :is-passed="isPassed"
+        :exam-level="exam?.level.id ?? 1"
         v-model="isModalOpen"
     />
     <div class="flex flex-col py-16 px-32">
@@ -102,7 +124,7 @@ const colorClass: Record<number, string> = {
             <SubCardContainer class="col-span-4 lg:col-span-1">
                 <template #default>
                     <p class="font-bold">Pass Criteria:</p>
-                    <h1 class="text-6xl!" :class="`text-${colorClass[Number(exam!.levelId) + 1]}`">{{ Math.round(passCriteria * 100) }}%</h1>
+                    <h1 class="text-6xl! w-full text-center" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`">{{ passMark }} / {{ questionLength }} (>{{ passCriteria * 100 }}%)</h1>
                     <p class="text-gray-800 pt-2">Correct Answer</p>
                 </template>
             </SubCardContainer>
@@ -117,24 +139,22 @@ const colorClass: Record<number, string> = {
                 <template #default>
                     <p class="font-bold">Earn Badge:</p>
                     <div class="mx-auto">
-                        <Brain class="size-20" :class="`text-${colorClass[Number(exam!.levelId) + 1]}`"/>
+                        <Brain class="size-20" :class="`text-${colorClass[Number(exam!.level.id) + 1]}`"/>
                     </div>
-                    <p>foo</p>
+                    <p>{{ badge?.name }}</p>
                 </template>
             </SubCardContainer>
             <SubCardContainer class="col-span-4 lg:col-span-3">
                 <template #default>
                     <p class="font-bold">Questions:</p>
                     <h1 class="text-6xl! my-auto">{{ questionLength }}</h1>
-                    <p class="text-gray-800 pt-2 text-center">You need at least {{ Math.round(passCriteria * questionLength) }} correct answers to pass this examination.</p>
+                    <p class="text-gray-800 pt-2 text-center">You need at least {{ passMark }} correct answers to pass this examination.</p>
                 </template>
             </SubCardContainer>
             <div class="col-span-4 justify-self-center py-4">
                 <Button label="Take examination" right-arrow @click="startTimer" :to="{ name: 'ExamQuestionView' }"/>
             </div>
         </div>
-        <div v-else>
-            <RouterView @submit="handleSubmit" />
-        </div>
+        <RouterView v-else @submit="handleSubmit" />
     </div>
 </template>

@@ -1,75 +1,54 @@
-import type { User, UserResponse } from "@/types"
+import type { User, UserPayload, UserSearchOption } from "@/types"
 import { apiClient } from "./apiClient"
 
 export default {
-    getUsers() {
-        /* This will get UserResponse interface first, then map it to User interface.
-        * If calls this for further usage in here must map it to User interface.
-        */
-        return apiClient.get('/users?_embed=userLevels')
-            .then((res) => {
-                return res.data.map((user: UserResponse) => ({
-                    ...user,
-                    userLevels: user.userLevels[0]
-                }))
-            })
-            .catch((err) => {
-                console.error("Error occurs while get data: ", err)
-            })
+    getUsers(pageSize: number, page: number, searchOption: UserSearchOption) {
+       return apiClient.get('/v1/users?_limit=' + pageSize + '&_page=' + page + '&search=' + searchOption.name + '&province=' + searchOption.province + '&level=' + searchOption.level)
     },
     getUser(id: number) {
-        return apiClient.get(`users/${id}`)
+        return apiClient.get('/v1/users/' + id)
     },
-    getUserUsers() {
-        return apiClient.get('/users?_embed=userLevels&role=user')
-            .then((res) => {
-                return res.data.map((user: UserResponse) => ({
-                    ...user,
-                    userLevels: user.userLevels[0]
-                }))
-            })
-            .catch((err) => {
-                console.error("Error occurs while get data: ", err)
-            })
-    },
-    getPaginatedUser(page: number) {
-        return apiClient.get(`/users?_embed=userLevels&role=user&_limit=5&_page=${page}`)
-            .then(res => {
-                const users = res.data.map((user: UserResponse) => ({
-                    ...user,
-                    userLevels: user.userLevels[0]
-                }))
-                return { users }
-            })
-    },
-    getUserExams(id: number) {
-        return apiClient.get(`/users/${id}?_embed=userExamHistories`)
-    },
-    getPaginatedUserExams(id: number, page: number) {
-        return apiClient.get(`/userExamHistories?userId=${id}&_page=${page}&_limit=5`)
+    getExamHistories(id: number, page: number) {
+        return apiClient.get(`/v1/exams/users/${id}?_page=${page}&_limit=5`)
     },
     getUserByLevelId(levelId: number) {
-        return this.getUsers()
-            .then((res) => {
-                return res.filter((user: User) => {
-                    return Number(user.userLevels.levelId) === levelId && user.role === 'user'
-                })
-            })
+        return this.getUsers(100, 1, { name: '', province: '', level: String(levelId) })
+        .then((res) => {
+            return res.data.filter((user: User) => !user.roles.includes('ROLE_ADMIN') && Number(Math.max(...user.levels.map(l => l.id))) === levelId)
+        })
     },
-    getAdmins() {
-        return this.getUsers()
-            .then((res) => {
-                return res.filter((user: User) => {
-                    return user.role === 'admin'
-                })
-            })
+    getAdmin() {
+        return this.getUsers(100, 1, { name: '', province: '', level: '' })
+        .then((res) => {
+            return res.data.filter((user: User) => user.roles.includes('ROLE_ADMIN'))
+        })
     },
     getActiveUsers() {
-        return this.getUsers()
-            .then((res) => {
-                return res.filter((user: User) => {
-                    return user.isActive === true && user.role === 'user'
-                })
-            })
-    }
+        return this.getUsers(100, 1, { name: '', province: '', level: '' })
+        .then((res) => {
+            return res.data.filter((user: User) => user.isActive && !user.roles.includes('ROLE_ADMIN'))
+        })
+    },
+     getProvinces() {
+        return apiClient.get('/v1/users/provinces')
+    },
+    async updateUserImage(imageUrl: string) {
+        const { data } = await apiClient.put('/v1/users/me', { image: imageUrl })
+        return data
+    },
+    updateUserBadge(badgeId: number) {
+        return apiClient.patch('/v1/users/me/badges/' + badgeId)
+    },
+    reactivateUser(id: number) {
+        return apiClient.patch(`/v1/users/${id}/reactivate`)
+    },
+    deactivateUser(id: number) {
+        return apiClient.patch(`/v1/users/${id}/deactivate`)
+    },
+    saveUserByUser(user: UserPayload) {
+        return apiClient.put('/v1/users/me', user)
+    },
+    saveUserByAdmin(id: number, user: UserPayload) {
+        return apiClient.put(`/v1/users/${id}`, user)
+    } 
 }

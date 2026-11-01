@@ -12,13 +12,13 @@ const props = defineProps<{
   textcolor?: string
 }>()
 
-const model = defineModel<string>()
+const model = defineModel<string | number>()
 const inputTextColor = computed(() => props.textcolor ? props.textcolor : 'text-brand-black')
 </script>
 
 <template>
   <div>
-    <label :for="id" :class="['block text-sm font-medium mb-1', inputTextColor]">{{ props.label }}</label>
+    <label v-if="label" :for="id" :class="['block text-sm font-medium mb-1', inputTextColor]">{{ props.label }}</label>
     <div class="relative">
       <span v-if="props.icon" class="absolute inset-y-0 left-3 flex items-center text-brand-black">
         <component :is="props.icon" class="w-5 h-5" />

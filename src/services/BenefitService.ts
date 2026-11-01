@@ -1,16 +1,20 @@
+import type { BenefitPayload } from "@/types"
 import { apiClient } from "./apiClient"
 
 export default {
   getBenefits() {
-    return apiClient.get('/benefits')
+    return apiClient.get('/v1/benefits')
   },
-  getBenefitsByLevelId(levelId: number) {
-    return apiClient.get(`/levels/${levelId}?_embed=benefits`)
+  getBenefitsByLevel(level: number) {
+    return apiClient.get('/v1/benefits?level=' + level)
   },
-  addBenefit(levelId: number) {
-    return apiClient.post('/benefits', {
-      description: '',
-      levelId: levelId
-    })
+  saveBenefits(levelId: number, benefits: BenefitPayload[]) {
+    return apiClient.put(`/v1/levels/${levelId}/benefits`, benefits)
   },
+  deleteBenefits(benefitIds: number[]) {
+    return apiClient.delete('/v1/levels/benefits', { data: benefitIds })
+  },
+  deleteBenefit(benefitId: number) {
+    return apiClient.delete(`/v1/levels/benefits/${benefitId}`)
+  }
 }

@@ -238,3 +238,9 @@ research/
 .same
 .mcp.json
 .sameignore
+.ua
+decisions.md
+decisions/
+projects/
+sessions/
+/docs
