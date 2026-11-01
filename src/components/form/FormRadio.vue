@@ -19,8 +19,8 @@ const model = defineModel();
             </h3>
             <div class="flex flex-col gap-2 mt-4">
                 <div 
-                    v-for="choice in props.choices" 
-                    :key="choice.id" 
+                    v-for="(choice, choiceIndex) in props.choices" 
+                    :key="choice.id ?? choiceIndex" 
                     class="flex items-center border rounded-2xl py-2 px-4 cursor-pointer transition"
                     :class="[
                         (model === choice || model === choice.id)
@@ -30,13 +30,18 @@ const model = defineModel();
                 >
                     <input 
                         type="radio" 
-                        :id="String(choice.id)" 
-                        :name="String(questionIndex)" 
+                        :id="`q${questionIndex}-choice-${choice.id ?? choiceIndex}`" 
+                        :name="`question-${questionIndex}`" 
                         :value="choice"
                         v-model="model"
                         class="cursor-pointer"
                     >
-                    <label :for="String(choice.id)" class="pl-2 cursor-pointer w-full">{{ choice.answerText }}</label>
+                    <label 
+                        :for="`q${questionIndex}-choice-${choice.id ?? choiceIndex}`" 
+                        class="pl-2 cursor-pointer w-full select-none"
+                    >
+                        {{ choice.answerText }}
+                    </label>
                 </div>
             </div>
         </form>

@@ -12,6 +12,13 @@ export interface User {
   levels: Level[]
 }
 
+export interface UserPayload {
+  firstName: string
+  lastName: string
+  province: string
+  image?: string
+}
+
 export interface Profile {
   id: number
   firstName: string
@@ -46,12 +53,24 @@ export interface Benefit {
   level: Level
 }
 
+export interface BenefitPayload {
+  id: number | null
+  description: string
+  level: Level
+}
+
 export interface BenefitsState {
   benefits: Benefit[] | []
 }
 
 export interface Service {
   id: number
+  level: Level
+  name: string
+}
+
+export interface ServicePayload {
+  id: number | null
   level: Level
   name: string
 }
@@ -118,6 +137,12 @@ export interface Question {
   answerChoices: AnswerChoice[]
 }
 
+export interface QuestionPayload {
+  id: number | null
+  questionText: string
+  answerChoices: AnswerChoicePayload[]
+}
+
 export interface QuestionsState {
   questions: Question[] | []
 }
@@ -126,6 +151,12 @@ export interface AnswerChoice {
   id: number
   answerText: string
   isCorrect?: boolean
+}
+
+export interface AnswerChoicePayload {
+  id: number | null
+  answerText: string
+  isCorrect: boolean
 }
 
 export interface DashboardItem {

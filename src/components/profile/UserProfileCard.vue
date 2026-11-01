@@ -12,13 +12,14 @@ import { storeToRefs } from 'pinia';
 import BenefitService from '@/services/BenefitService.ts';
 import { getPresignedImageUrl } from '@/services/ImageService.ts';
 import ModalContainer from '@/components/modal/ModalContainer.vue';
-import ImageUpload from '@/components/form/ImageUpload.vue';
+import { UserRound } from '@lucide/vue';
+import PostOperationModal from '@/components/modal/PostOperationModal.vue';
+
 
 const route = useRoute()
 const authStore = useAuthStore()
 const isChangeImageOpen = ref(false)
 const uploadedImages = ref<string[]>([])
-
 
 const { isAdmin, user: authUser } = storeToRefs(authStore)
 const benefits = ref<Benefit[] | null>(null)
@@ -42,29 +43,63 @@ const assignUserBadges = (userId: number) => {
     }
 }
 
-const handleProfileImageChange = async (filename: string) => {
-    await UserService.updateUserImage(filename)
+/* Handle reactivate/deactivate user */
+const isReactivateModalOpen = ref(false)
+const isDeactivateModalOpen = ref(false)
+const handleReactivateUser = async () => {
+    if (!user.value?.id) return
+    try {
+        await UserService.reactivateUser(user.value.id)
+        isReactivateModalOpen.value = false
+        isActive.value = true
 
-    authStore.updateProfileImage(filename)
+        operationMsg.value = 'User Reactivation'
+        successMsg.value = `${user?.value.firstName} ${user?.value.lastName} reactivated successfully.`
+        isSuccess.value = true
+        isPostModalOpen.value = true
+    } catch (err) {
+        console.error('Failed to reactivate the user', err)
 
-    if (user.value) {
-        user.value.image = await getPresignedImageUrl(filename)
+        isReactivateModalOpen.value = false
+        operationMsg.value = 'User Reactivation'
+        isSuccess.value = false
+        isPostModalOpen.value = true
     }
-
-    isChangeImageOpen.value = false
-    uploadedImages.value = []
 }
 
-watch(uploadedImages, (newImages: string[]) => {
-    if (newImages.length > 0) {
-        handleProfileImageChange(newImages[0]!)
-    }
-})
+const handleDeactivateUser = async () => {
+    if (!user.value?.id) return
+    try {
+        await UserService.deactivateUser(user.value.id)
+        isDeactivateModalOpen.value = false
+        isActive.value = false
 
-onMounted(() => {
-    BadgeService.getBadges()
-        .then(res => badges.value = res.data)
-    
+        operationMsg.value = 'User Deactivation'
+        successMsg.value = `${user?.value.firstName} ${user?.value.lastName} deactivated successfully.`
+        isSuccess.value = true
+        isPostModalOpen.value = true
+    } catch (err) {
+        console.error('Failed to reactivate the user', err)
+
+        isReactivateModalOpen.value = false
+        operationMsg.value = 'User Deactivation'
+        isSuccess.value = false
+        isPostModalOpen.value = true
+    }
+}
+
+const handleOpenReactivateModal = () => isReactivateModalOpen.value = true
+const handleOpenDeactivateModal = () => isDeactivateModalOpen.value = true
+const handleCloseReactivateModal = () => isReactivateModalOpen.value = false
+const handleCloseDeactivateModal = () => isDeactivateModalOpen.value = false
+
+// Post Operation Modal state
+const isPostModalOpen = ref(false)
+const isSuccess = ref(true)
+const operationMsg = ref('')
+const successMsg = ref('')
+
+const loadUserData = async () => {
     /* Fetch user data based on Admin's route or User's route */
     if (route.params.id) {
         UserService.getUser(Number(route.params.id))
@@ -87,7 +122,7 @@ onMounted(() => {
                 assignLevelBenefits(userLevel.value)
             })
     } else {
-        ;(async () => {
+        (async () => {
             if (authUser.value) {
                 const imageSrc = await getPresignedImageUrl(authUser.value.image)
                 user.value = {
@@ -109,28 +144,74 @@ onMounted(() => {
             }
         })()
     }
-})
+};
+
+onMounted(() => {
+    BadgeService.getBadges().then(res => badges.value = res.data);
+    loadUserData();
+});
+// Watch route changes: When navigating back to badges or history from edit, refresh user info immediately
+watch(
+    () => route.path,
+    (newPath) => {
+        if (!newPath.includes('edit')) {
+            loadUserData();
+        }
+    }
+);
+// Watch authUser changes for normal user profile updates
+watch(
+    () => authUser.value,
+    () => {
+        if (!route.params.id) {
+            loadUserData();
+        }
+    },
+    { deep: true }
+);
 </script>
 
 <template>
+    <PostOperationModal 
+        v-model="isPostModalOpen" 
+        :operationMsg="operationMsg" 
+        :success="isSuccess" 
+        :successMsg="successMsg" 
+    />
+    <ModalContainer v-model="isDeactivateModalOpen">
+        <div class="flex flex-col gap-y-4">
+            <h2>Deactivate User?</h2>
+            <p>Are you sure that you want to deactivate {{ user?.firstName + ' ' + user?.lastName }}?</p>
+            <div class="w-full flex flex-row gap-x-2 justify-between">
+                <Button @click="handleCloseDeactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
+                <Button @click="handleDeactivateUser" bg-color="brand-red" class="w-full!" label="Deactivate"/>
+            </div>
+        </div>
+    </ModalContainer>
+    <ModalContainer v-model="isReactivateModalOpen">
+        <div class="flex flex-col gap-y-4">
+            <h2>Re-activate User?</h2>
+            <p>Are you sure that you want to reactivate {{ user?.firstName + ' ' + user?.lastName }}?</p>
+            <div class="w-full flex flex-row gap-x-2 justify-between">
+                <Button @click="handleCloseReactivateModal" bg-color="brand-white" class="text-brand-black! w-full!" label="Cancel"/>
+                <Button @click="handleReactivateUser" bg-color="brand-green" class="w-full!" label="Reactivate"/>
+            </div>
+        </div>
+    </ModalContainer>
     <CardContainer class="md:w-2/3 lg:w-1/2 relative">
         <div v-if="isAdmin" class="absolute left-0 top-0 p-5">
-            <Button v-if="isActive" bgColor="brand-red" label="Deactivate"/>
-            <Button v-else bgColor="brand-green" label="Re-activate"/>
+            <Button v-if="isActive" @click="handleOpenDeactivateModal" bgColor="brand-red" label="Deactivate"/>
+            <Button v-else @click="handleOpenReactivateModal" bgColor="brand-green" label="Re-activate"/>
         </div>
         <div class="flex flex-row gap-x-10 w-full relative">
             <!-- Left side of card -->
             <div class="w-full flex flex-col gap-y-2">
                 <div class="flex flex-col items-center">
                     <div class="flex flex-col items-center relative">
-                        <img class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
-                        <button
-                            type="button"
-                            @click="isChangeImageOpen = true"
-                            class="absolute bottom-0 bg-brand-blue text-white text-xs px-1 py-1 rounded-full hover:bg-brand-dark-blue"
-                        >
-                            Change Image
-                        </button>
+                        <img v-if="user?.image" class="rounded-full border-2 border-sky-500 size-24" :src="user?.image" alt="">
+                        <div v-else class="flex justify-center items-center size-24 rounded-full border border-brand-blue bg-gray-300">
+                            <UserRound class="w-16 h-16 text-brand-dark-blue"/>
+                        </div>
                     </div>
                     <p class="text-xl/7 font-bold">{{  user?.firstName + ' ' + user?.lastName }}</p>
                     <p class="text-md text-mist-800">{{ user?.username }}</p>
@@ -146,6 +227,14 @@ onMounted(() => {
                     <p class="text-sky-400 font-bold text-2xl text-right">{{ authStore.level }}</p>
                     <p class="text-mist-50">Badges:</p>
                     <p class="text-sky-400 font-bold text-2xl text-right">{{ user?.badges?.length ?? 0 }} / {{ badges?.length }}</p>
+                </div>
+                <div class="flex flex-row justify-center mt-2">
+                    <Button 
+                        label="Edit Profile" 
+                        :to="{ name: isAdmin ? 'AdminUserProfileEditView' : 'UserProfileEditView', params: { id: route.params.id } }" 
+                        :disabled="route.path.includes('edit')" 
+                        class="w-fit! px-8!"
+                    />
                 </div>
             </div>
 

@@ -32,7 +32,7 @@ const authStore = useAuthStore()
   <!-- The Home Page -->
   <div v-else-if="$route.name != 'Login' && $route.name != 'Register'">
     <NavBar/>
-    <RouterView/>
+    <RouterView class="min-h-screen" />
     <Footer/>
   </div>
   <!-- Login and Register Page -->

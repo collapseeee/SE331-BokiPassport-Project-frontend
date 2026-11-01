@@ -6,37 +6,48 @@ import SubmitButton from '@/components/Button.vue';
 import FormInput from '@/components/form/FormInput.vue'
 import PasswordInput from '@/components/form/FormPasswordInput.vue'
 import { useRouter } from 'vue-router';
+import * as yup from 'yup'
+import { useForm, useField, useIsFormValid } from 'vee-validate'
+import { requiredString } from '@/validation/schemas'
 
 const authStore = useAuthStore()
 const router = useRouter()
-
-const username = ref('')
-const password = ref('')
 const errorMessage = ref('')
 
-function handleLogin(){
-    errorMessage.value = ''
+const validationSchema = yup.object({
+    username: requiredString('Username is required.'),
+    password: requiredString('Password is required.'),
+})
 
-    if (!username.value || !password.value) {
-        errorMessage.value = 'Please enter both username and password.'
-        return
-    }
+const { errors, handleSubmit } = useForm({
+  validationSchema,
+  initialValues: { 
+      username: '', 
+      password: '' 
+    },
+})
 
-    authStore.authenticate({
-        username: username.value,
-        password: password.value
+const isValid = useIsFormValid()
+
+const { value: username } = useField<string>('username')
+const { value: password } = useField<string>('password')
+
+const onSubmit = handleSubmit(async (values) => {
+    try {
+    const res = await authStore.authenticate({
+      username: values.username,
+      password: values.password
     })
-        .then((res) => {
-            if (res.success && res.user) {
-                router.go(0)
-                router.push( authStore.isAdmin ? { name: 'AdminView' } : { name: 'UserProfile' } )
-            }
-            return errorMessage.value = res.error ?? 'Login failed. Please try again.'
-        })
-        .catch((err) => {
-            console.error('An error occurs while login: ', err)
-        })
-}
+    if (res.success && res.user) {
+      router.go(0)
+      router.push(authStore.isAdmin ? { name: 'AdminView' } : { name: 'UserProfile' })
+    } else {
+      errorMessage.value = res.error ?? 'Login failed. Please try again.'
+    }
+  } catch (err) {
+    console.error('An error occurs while login: ', err)
+  }
+})
 
 
 </script>
@@ -55,9 +66,10 @@ function handleLogin(){
                     <p class="text-brand-black">Sign in to access your AI.</p>
                 </div>
 
-                <form @submit.prevent="handleLogin" class="space-y-4">
+                <form @submit.prevent="onSubmit" class="space-y-4">
                     <!-- Username -->
                     <FormInput v-model="username" id="username" label="Username" placeholder="Enter your username" :icon="UserRound" required />
+                    <FormError :errors="errors.username" />
 
                     <!-- Password -->
                     <div>
@@ -71,6 +83,7 @@ function handleLogin(){
                             
                         </div>
                         <PasswordInput v-model="password" id="password" label="" required />
+                        <FormError :errors="errors.password" />
                     </div>
 
                     <!-- Error banner -->
@@ -82,7 +95,8 @@ function handleLogin(){
                     <!-- Sign In button -->
                     <SubmitButton type="submit"
                         class="w-full px-4 py-3 mt-2"
-                        label="Sign In"/>
+                        label="Sign In"
+                        :disabled="!isValid" />
                     
                 
                 </form>

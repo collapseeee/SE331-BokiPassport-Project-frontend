@@ -1,4 +1,4 @@
-import type { User, UserSearchOption } from "@/types"
+import type { User, UserPayload, UserSearchOption } from "@/types"
 import { apiClient } from "./apiClient"
 
 export default {
@@ -38,5 +38,17 @@ export default {
     },
     updateUserBadge(badgeId: number) {
         return apiClient.patch('/v1/users/me/badges/' + badgeId)
-    }
+    },
+    reactivateUser(id: number) {
+        return apiClient.patch(`/v1/users/${id}/reactivate`)
+    },
+    deactivateUser(id: number) {
+        return apiClient.patch(`/v1/users/${id}/deactivate`)
+    },
+    saveUserByUser(user: UserPayload) {
+        return apiClient.put('/v1/users/me', user)
+    },
+    saveUserByAdmin(id: number, user: UserPayload) {
+        return apiClient.put(`/v1/users/${id}`, user)
+    } 
 }
