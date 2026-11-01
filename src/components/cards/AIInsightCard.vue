@@ -52,6 +52,7 @@ const runAnalysis = async () => {
             <div v-else class="flex items-center gap-2 text-md text-brand-black italic">
                 <span class="inline-block size-2 rounded-full bg-brand-blue animate-ping"></span>
                 Analyzing insight by Gemini...
+                <span class="text-gray-400">(This takes longer than 15 seconds)</span>
             </div>
         </div>
     </div>
