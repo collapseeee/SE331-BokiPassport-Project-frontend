@@ -16,6 +16,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@google/genai": "^2.32.0",
     "@lucide/vue": "^1.31.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/nprogress": "^0.2.3",
