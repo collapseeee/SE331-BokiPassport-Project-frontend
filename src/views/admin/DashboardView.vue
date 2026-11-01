@@ -9,6 +9,7 @@ import { ClipboardList, UserRoundCheck, UserRoundX } from '@lucide/vue';
 import { computed, onMounted, ref } from 'vue';
 import DoughnutChart from '@/components/charts/DoughnutChart.vue';
 import type { ChartData } from 'chart.js';
+import BarChart from '@/components/charts/BarChart.vue';
 
 const LEVEL_LABELS = ['Level 1', 'Level 2', 'Level 3', 'Level 4'];
 const LEVEL_COLORS = ['#38bdf8', '#0284c7', '#1e3a8a', '#dc2626'];
@@ -68,6 +69,24 @@ const commonChartOptions = {
         }
     }
 };
+const courseBarOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            display: false
+        }
+    },
+    scales: {
+        y: {
+            beginAtZero: true,
+            ticks: {
+                stepSize: 1,
+                precision: 0
+            }
+        }
+    }
+};
 const statusChartData = computed<ChartData<'doughnut'>>(() => ({
     labels: ['Active Users', 'Inactive Users'],
     datasets: [
@@ -90,9 +109,17 @@ const userLevelChartData = computed<ChartData<'doughnut'>>(() => ({
         }
     ]
 }));
-
-// Cards
-const toItems = (arr: number[]) => LEVEL_LABELS.map((key, i) => ({ key, value: arr[i] ?? 0 }));
+const courseBarData = computed<ChartData<'bar'>>(() => ({
+    labels: LEVEL_LABELS,
+    datasets: [
+        {
+            label: 'Courses Available',
+            data: courseLevels.value,
+            backgroundColor: LEVEL_COLORS,
+            borderRadius: 8
+        }
+    ]
+}));
 </script>
 
 <template>
@@ -165,9 +192,42 @@ const toItems = (arr: number[]) => LEVEL_LABELS.map((key, i) => ({ key, value: a
                 </div>
             </div>
         </SubCardContainer>
-        
-        <div class="grid grid-cols-2 gap-x-4">
-            <DashboardCard :icon="ClipboardList" :header="{ key: 'Courses', value: courseCount }" :value="toItems(courseLevels)" />
-        </div>
+        <!-- Courses Row -->
+        <SubCardContainer class="border border-gray-300 rounded-xl shadow-lg bg-brand-white px-8 flex flex-col items-center justify-between w-full">
+            <div class="flex items-center justify-between w-full mb-2">
+                <h3 class="font-bold text-brand-black text-lg">Courses per Level</h3>
+                <p>(Total {{ courseCount }} courses)</p>
+            </div>
+            <div class="relative h-56 w-full flex justify-center items-center mx-auto">
+                <BarChart 
+                    v-if="isLoaded" 
+                    :chart-data="courseBarData" 
+                    :chart-options="courseBarOptions" 
+                />
+                <span v-else class="text-brand-black">Loading chart...</span>
+            </div>
+            <div class="flex flex-col justify-center gap-2 mt-4 w-full">
+                <div class="flex flex-row justify-center gap-2">
+                    <span class="flex flex-row items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold bg-sky-50 text-sky-700 border border-sky-600">
+                        <span class="size-2.5 rounded-full bg-sky-400"></span>
+                        Level 1: {{ courseLevels[0] }} ({{ (((courseLevels[0] ?? 0) / (courseCount || 1)) * 100).toFixed(1) }}%)
+                    </span>
+                    <span class="flex flex-row items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold bg-blue-50 text-blue-700 border border-blue-600">
+                        <span class="size-2.5 rounded-full bg-blue-600"></span>
+                        Level 2: {{ courseLevels[1] }} ({{ (((courseLevels[1] ?? 0) / (courseCount || 1)) * 100).toFixed(1) }}%)
+                    </span>
+                </div>
+                <div class="flex flex-row justify-center gap-2">
+                    <span class="flex flex-row items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold bg-indigo-50 text-indigo-800 border border-indigo-700">
+                        <span class="size-2.5 rounded-full bg-indigo-800"></span>
+                        Level 3: {{ courseLevels[2] }} ({{ (((courseLevels[2] ?? 0) / (courseCount || 1)) * 100).toFixed(1) }}%)
+                    </span>
+                    <span class="flex flex-row items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold bg-red-50 text-red-700 border border-red-600">
+                            <span class="size-2.5 rounded-full bg-red-600"></span>
+                        Level 4: {{ courseLevels[3] }} ({{ (((courseLevels[3] ?? 0) / (courseCount || 1)) * 100).toFixed(1) }}%)
+                    </span>
+                </div>
+            </div>
+        </SubCardContainer>
     </div>
 </template>
