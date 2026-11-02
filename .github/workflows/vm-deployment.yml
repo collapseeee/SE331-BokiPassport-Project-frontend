@@ -37,6 +37,8 @@ jobs:
                 tags: |
                     gerryexpress/se331-frontend:latest
                     gerryexpress/se331-frontend:${{ github.sha }}
+                build-args: |
+                  VITE_GEMINI_API_KEY=${{ secrets.VITE_GEMINI_API_KEY }}
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
             

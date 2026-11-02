@@ -5,7 +5,7 @@ import courseService from '@/services/courseService';
 import UserService from '@/services/UserService';
 import SubCardContainer from '@/components/cards/SubCardContainer.vue';
 import type { Course, DashboardMetrics, User as UserType} from '@/types';
-import { ClipboardList, UserRoundCheck, UserRoundX } from '@lucide/vue';
+import { UserRoundCheck, UserRoundX } from '@lucide/vue';
 import { computed, onMounted, ref } from 'vue';
 import DoughnutChart from '@/components/charts/DoughnutChart.vue';
 import type { ChartData } from 'chart.js';
