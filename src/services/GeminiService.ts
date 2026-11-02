@@ -2,6 +2,8 @@ import type { DashboardMetrics } from '@/types';
 import { GoogleGenAI } from '@google/genai';
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+console.log("Gemini Key Exists:", !!apiKey);
+console.log("Key Length:", apiKey?.length);
 
 const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
