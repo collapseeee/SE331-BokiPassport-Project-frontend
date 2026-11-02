@@ -1,6 +1,11 @@
 # build stage
 FROM node:24-alpine AS build-stage
 WORKDIR /app
+
+# Get args from guthib action and inject env during building dockerfile
+ARG VITE_GEMINI_API_KEY
+ENV VITE_GEMINI_API_KEY=${VITE_GEMINI_API_KEY}
+
 COPY package*.json ./
 RUN npm ci
 COPY . .
