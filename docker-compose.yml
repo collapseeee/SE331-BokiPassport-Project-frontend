@@ -1,8 +1,6 @@
 services:
   web:
     image: gerryexpress/se331-frontend:latest
-    environment:
-      VITE_GEMINI_API_KEY: ${VITE_GEMINI_API_KEY}
     ports:
       - "8001:80"
     restart: unless-stopped
